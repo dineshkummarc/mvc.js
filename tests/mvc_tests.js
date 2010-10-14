@@ -9,6 +9,9 @@ TestCase("init", {
         
         mvc.create(context);
     },
+    tearDown: function() {
+        mvc.events.reset();
+    },
     
     "test that a startup_complete signal is registered": function(){
         mvc.events.expects('register')
@@ -30,3 +33,17 @@ TestCase("init", {
         assertTrue(mvc.events.verify());
     }
 });
+
+TestCase("events", {
+    setUp: function(){
+        
+    },
+    
+    "test that when events are registered they are added to the event bus": function(){
+        mvc.events.register('example');
+        
+        assertTrue(mvc.events.check('example'));
+    }
+    
+});
+
