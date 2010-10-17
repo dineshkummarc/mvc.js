@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>MVC - Hello World</title>
+		
+		<script src="../../libs/underscore.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../src/mvc.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+	
+		<input type="button" name="some_name" value="Add" id="add" />
+		
+		<div class="count">
+			
+		</div>
+		
+		<script type="text/javascript" charset="utf-8">
+			var my_app = mvc.create(function() {
+				
+				this.register.model('count', (function() {
+					
+					var current_count = 0;
+					
+					return {
+						add: function() {
+							current_count++;
+							
+							this.dispatch('number_added', [current_count]);
+						}
+					}
+					
+				})());
+				
+				this.register.view($('.count'), (function() {
+					
+					return {
+						init: function() {
+							console.log(this);
+							this.element.html('No numbers have been entered.');
+						},
+						
+						number_added: function(number) {
+							console.log(this);
+							//this.element.html(number);
+						}
+					}
+					
+				})());
+				
+				this.register.view($('#add'), (function() {
+					
+					var count;
+					
+					return {
+						init: function() {
+							var that = this;
+							
+							count = this.models('count');
+							
+							this.element.click(function() {
+								count.add();
+							})
+						}
+					}
+					
+				})());
+				
+			});
+		</script>
+	</body>
+</html>

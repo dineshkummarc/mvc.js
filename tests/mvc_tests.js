@@ -11,11 +11,21 @@ TestCase("init", {
             init: {}
         });
         
+        xray_specs.mock(mvc, 'views', {
+            init: {}
+        });
+        
+        xray_specs.mock(mvc, 'controllers', {
+            init: {}
+        });
+        
         app = mvc.create(context);
     },
     tearDown: function() {
         mvc.events.reset();
         mvc.models.reset();
+        mvc.views.reset();
+        mvc.controllers.reset();
     },
     
     "test that context function is called": function(){
@@ -43,6 +53,61 @@ TestCase("init", {
             .with_args.matching(mvc.events.dispatch);
           
         assertTrue(mvc.models.verify());
+    },
+    
+    "test that views is initialised": function(){
+        mvc.views.expects('init')
+          .to_be_called.times(1)
+            .with_args.matching(mvc.events, mvc.models.get);
+          
+        assertTrue(mvc.views.verify());
+    },
+    
+    "test that controllers is initialised": function(){
+        mvc.controllers.expects('init')
+          .to_be_called.times(1)
+            .with_args.matching(mvc.events, mvc.models);
+          
+        assertTrue(mvc.controllers.verify());
+    },
+    
+    "test that dispatch is available to the context function": function(){
+        var dispatch;
+        
+        mvc.create(function() {
+            dispatch = this.dispatch;
+        });
+        
+        assertEquals(mvc.events.dispatch, dispatch);
+    },
+    
+    "test that register_event is available to context": function(){
+        var register_event;
+        
+        mvc.create(function() {
+            register_event = this.register.controller;
+        });
+        
+        assertEquals(mvc.controllers.register, register_event);
+    },
+    "test that register_model is available to context": function(){
+        var register_model;
+        
+        mvc.create(function() {
+            register_model = this.register.model;
+        });
+        
+        assertEquals(mvc.models.register, register_model);
+    },
+    
+    "test that register_view is available to context": function(){
+        var register_view;
+        
+        mvc.create(function() {
+            register_view = this.register.view;
+        });
+        
+        assertEquals(mvc.views.register, register_view);
     }
     
 });
@@ -244,16 +309,93 @@ TestCase("views", {
         });
         
         assertTrue(mvc.events.verify());
+    },
+    
+    "test that views can dispatch events": function(){
+        mvc.events.expects('dispatch')
+          .to_be_called.times(1)
+            .with_args.matching('view_initialised');
+            
+        mvc.views.register($('.list'), {
+            init: function() {
+                this.events.dispatch('view_initialised');
+            }
+        });
+        
+        assertTrue(mvc.events.verify());
+    },
+    
+    "test that views can listen for events": function(){
+        mvc.events.expects('listen')
+          .to_be_called.times(1)
+            .with_args.matching('view_initialised');
+            
+        mvc.views.register($('.list'), {
+            init: function() {
+                this.events.listen('view_initialised');
+            }
+        });
+        
+        assertTrue(mvc.events.verify());
+    },
+    
+    "test that views can retrieve models": function(){
+        mvc.models.expects('get')
+          .to_be_called.times(1)
+            .with_args.matching('items');
+            
+        mvc.views.register($('.list'), {
+            init: function() {
+                this.models('items');
+            }
+        });
+        
+        assertTrue(mvc.models.verify());
     }
     
 });
 
 TestCase("controllers", {
     setUp: function(){
+        xray_specs.mock(mvc, 'events', {
+            dispatch: {},
+            listen: {}
+        });
         
+        xray_specs.mock(mvc, 'models', {
+            get: {}
+        });
+        
+        mvc.controllers.init(mvc.events, mvc.models);
     },
     
-    "test that ": function(){
+    tearDown: function() {
+        mvc.events.reset();
+        mvc.models.reset();
+    },
+    
+    "test that functions can be registered as controllers": function(){
+        mvc.events.expects('listen')
+          .with_args.including('item_added');
         
+        mvc.controllers.register('item_added', function() {});
+        
+        assertTrue(mvc.events.verify());
+    },
+    
+    "test that controllers have access to the model layer": function(){
+        var controller = function() {};
+        
+        mvc.controllers.register('item_added', controller);
+        
+        assertEquals(mvc.models, controller.models);
+    },
+    
+    "test that controller have access to the events bus": function(){
+        var controller = function() {};
+        
+        mvc.controllers.register('item_added', controller);
+        
+        assertEquals(mvc.events, controller.events);
     }
 });
