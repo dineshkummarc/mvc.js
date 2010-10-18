@@ -14,12 +14,20 @@ var mvc = (function() {
             this.views.init(this.events, this.models.get);
             this.controllers.init(this.events, this.models);
             
+            var that = this;
+            
             context.apply({
                 dispatch: this.events.dispatch,
-                register: {
-                    controller: this.controllers.register,
-                    model: this.models.register,
-                    view: this.views.register
+                map: {
+                    event: this.controllers.register,
+                    
+                    singleton: this.models.register,
+                    
+                    view: function(elements, view) {
+                        _.each(elements, function(el) {
+                            that.views.register(el, view);
+                        })
+                    }
                 }
             });
 
@@ -28,23 +36,28 @@ var mvc = (function() {
         
         events: (function() {
 
-            var registered;
+            var registered,
+                contexts;
 
             return {
 
                 init: function() {
-                    registered = {};
+                    contexts = registered = {};
                 },
 
-                listen: function(event, callback) {
-                    if(!registered[event])
-                      registered[event] = [];
+                listen: function(event, callback, context) {
+                    if(!registered[event]) {
+                        registered[event] = {};
+                        registered[event].callbacks = [];
+                        registered[event].contexts = [];
+                    }
 
-                    registered[event].push(callback);
+                    registered[event].callbacks.push(callback);
+                    registered[event].contexts.push(context || this);
                 },
 
                 remove: function(event, callback) {
-                    var callbacks = registered[event],
+                    var callbacks = registered[event].callbacks,
                         position = _.indexOf(callbacks, callback);
 
                     if(position !== -1) {
@@ -57,11 +70,14 @@ var mvc = (function() {
                 },
 
                 dispatch: function(event, params) {
-                    var callbacks = registered[event];
-                    
-                    if(callbacks) {
-                        for(var i = 0, l = callbacks.length; i < l; i++) {
-                            callbacks[i].apply(this, params);
+                    if(registered[event]) {
+                        var callbacks = registered[event].callbacks,
+                            contexts = registered[event].contexts;
+
+                        if(callbacks) {
+                            for(var i = 0, l = callbacks.length; i < l; i++) {
+                                callbacks[i].apply(contexts[i], params);
+                            }
                         }
                     }
                 }
@@ -83,6 +99,7 @@ var mvc = (function() {
                 },
                 
                 register: function(name, model) {
+                    
                     if(registered[name])
                       return;
                     
@@ -114,19 +131,20 @@ var mvc = (function() {
                 },
                 
                 register: function(element, view) {
-                    var methods = _.functions(view);
+                    var view_instance = _.clone(view),
+                        methods = _.functions(view_instance);
                       
                     for(var i = 0, l = methods.length; i < l; i++) {
                         if(methods[i] !== 'init')
-                          events.listen(methods[i], view[methods[i]]);
+                          events.listen(methods[i], view_instance[methods[i]], view_instance);
                     }
                     
-                    view.element = element;
-                    view.events = events;
-                    view.models = models;
+                    view_instance.element = element;
+                    view_instance.events = events;
+                    view_instance.models = models;
 
-                    if(view.init)
-                      view.init();
+                    if(view_instance.init)
+                      view_instance.init();
                 }
             }
         })(),

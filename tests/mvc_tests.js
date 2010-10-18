@@ -12,7 +12,8 @@ TestCase("init", {
         });
         
         xray_specs.mock(mvc, 'views', {
-            init: {}
+            init: {},
+            register: {}
         });
         
         xray_specs.mock(mvc, 'controllers', {
@@ -85,7 +86,7 @@ TestCase("init", {
         var register_event;
         
         mvc.create(function() {
-            register_event = this.register.controller;
+            register_event = this.map.event;
         });
         
         assertEquals(mvc.controllers.register, register_event);
@@ -94,20 +95,38 @@ TestCase("init", {
         var register_model;
         
         mvc.create(function() {
-            register_model = this.register.model;
+            register_model = this.map.singleton;
         });
         
         assertEquals(mvc.models.register, register_model);
     },
     
-    "test that register_view is available to context": function(){
-        var register_view;
+    "test that each view is registered": function(){
+        /*:DOC +=
+            <div id="jstd">
+                <div class="list">
+                    List 1
+                </div>
+                
+                <div class="list">
+                    List 2
+                </div>
+            </div>
+        */
+        
+        var view = {
+            do_something: function() {}
+        }
+        
+        mvc.views.expects('register')
+          .to_be_called.times(2)
+            .with_args.always_including(view);
         
         mvc.create(function() {
-            register_view = this.register.view;
+            this.map.view($('.list'), view);
         });
         
-        assertEquals(mvc.views.register, register_view);
+        assertTrue(mvc.views.verify());
     }
     
 });
@@ -187,6 +206,21 @@ TestCase("events", {
         
         assertFalse(listener.called());
         assertTrue(another_listener.called());
+    },
+    
+    "test that you can specify a context for the callback to fire in": function(){
+        var another_planet = {
+            lyrics: xray_specs.stub()
+        }
+        
+        var callback = function() {
+            this.lyrics();
+        }
+        
+        mvc.events.listen('another_girl', callback, another_planet);
+        mvc.events.dispatch('another_girl');
+        
+        assertTrue(another_planet.lyrics.called());
     }
     
 });
@@ -242,8 +276,8 @@ TestCase("views", {
                     <h1>This is a list</h1>
                 </div>
                 
-                <div class="list_two">
-                    <h1>This is a list</h1>
+                <div class="list">
+                    <h1>This is another list</h1>
                 </div>
             </div>
         */
@@ -381,21 +415,5 @@ TestCase("controllers", {
         mvc.controllers.register('item_added', function() {});
         
         assertTrue(mvc.events.verify());
-    },
-    
-    "test that controllers have access to the model layer": function(){
-        var controller = function() {};
-        
-        mvc.controllers.register('item_added', controller);
-        
-        assertEquals(mvc.models, controller.models);
-    },
-    
-    "test that controller have access to the events bus": function(){
-        var controller = function() {};
-        
-        mvc.controllers.register('item_added', controller);
-        
-        assertEquals(mvc.events, controller.events);
     }
 });
