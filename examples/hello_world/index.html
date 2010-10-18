@@ -20,9 +20,13 @@
 				
 				this.map.singleton('count', (function() {
 					
-					var current_count = 0;
+					var current_count;
 					
 					return {
+						init: function() {
+							current_count = 0;
+						},
+						
 						add: function() {
 							current_count++;
 							
