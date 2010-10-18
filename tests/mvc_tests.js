@@ -415,5 +415,9 @@ TestCase("controllers", {
         mvc.controllers.register('item_added', function() {});
         
         assertTrue(mvc.events.verify());
+    },
+    
+    "test that controllers can dispatch events": function(){
+        
     }
 });
