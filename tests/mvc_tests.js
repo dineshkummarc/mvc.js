@@ -12,10 +12,15 @@ TestCase("init", {
         });
         
         xray_specs.mock(mvc, 'views', {
-            init: {}
+            init: {},
+            register: {}
         });
         
         xray_specs.mock(mvc, 'controllers', {
+            init: {}
+        });
+        
+        xray_specs.mock(mvc, 'dependencies', {
             init: {}
         });
         
@@ -25,6 +30,7 @@ TestCase("init", {
         mvc.events.reset();
         mvc.models.reset();
         mvc.views.reset();
+        mvc.dependencies.reset();
         mvc.controllers.reset();
     },
     
@@ -58,15 +64,23 @@ TestCase("init", {
     "test that views is initialised": function(){
         mvc.views.expects('init')
           .to_be_called.times(1)
-            .with_args.matching(mvc.events, mvc.models.get);
+            .with_args.matching(mvc.events, mvc.dependencies);
           
         assertTrue(mvc.views.verify());
+    },
+    
+    "test that dependencies is initialised": function(){
+        mvc.dependencies.expects('init')
+          .to_be_called.times(1)
+            .with_args.matching(mvc.models);
+          
+        assertTrue(mvc.dependencies.verify());
     },
     
     "test that controllers is initialised": function(){
         mvc.controllers.expects('init')
           .to_be_called.times(1)
-            .with_args.matching(mvc.events, mvc.models);
+            .with_args.matching(mvc.events, mvc.dependencies);
           
         assertTrue(mvc.controllers.verify());
     },
@@ -85,7 +99,7 @@ TestCase("init", {
         var register_event;
         
         mvc.create(function() {
-            register_event = this.register.controller;
+            register_event = this.map.event;
         });
         
         assertEquals(mvc.controllers.register, register_event);
@@ -94,20 +108,38 @@ TestCase("init", {
         var register_model;
         
         mvc.create(function() {
-            register_model = this.register.model;
+            register_model = this.map.singleton;
         });
         
         assertEquals(mvc.models.register, register_model);
     },
     
-    "test that register_view is available to context": function(){
-        var register_view;
+    "test that each view is registered": function(){
+        /*:DOC +=
+            <div id="jstd">
+                <div class="list">
+                    List 1
+                </div>
+                
+                <div class="list">
+                    List 2
+                </div>
+            </div>
+        */
+        
+        var view = {
+            do_something: function() {}
+        }
+        
+        mvc.views.expects('register')
+          .to_be_called.times(2)
+            .with_args.always_including(view);
         
         mvc.create(function() {
-            register_view = this.register.view;
+            this.map.view($('.list'), view);
         });
         
-        assertEquals(mvc.views.register, register_view);
+        assertTrue(mvc.views.verify());
     }
     
 });
@@ -189,17 +221,19 @@ TestCase("events", {
         assertTrue(another_listener.called());
     },
     
-    "test that callback context can be defined": function(){
-        var value;
-        
-        var callback = function() {
-            value = this.context_value; 
+    "test that you can specify a context for the callback to fire in": function(){
+        var another_planet = {
+            lyrics: xray_specs.stub()
         }
         
-        mvc.events.listen('context_test', callback, {context_value: "hello"});
-        mvc.events.dispatch('context_test');
+        var callback = function() {
+            this.lyrics();
+        }
         
-        assertEquals("hello", value);
+        mvc.events.listen('another_girl', callback, another_planet);
+        mvc.events.dispatch('another_girl');
+        
+        assertTrue(another_planet.lyrics.called());
     }
     
 });
@@ -255,8 +289,8 @@ TestCase("views", {
                     <h1>This is a list</h1>
                 </div>
                 
-                <div class="list_two">
-                    <h1>This is a list</h1>
+                <div class="list">
+                    <h1>This is another list</h1>
                 </div>
             </div>
         */
@@ -266,16 +300,16 @@ TestCase("views", {
             listen: {}
         });
         
-        xray_specs.mock(mvc, 'models', {
-            get: {}
+        xray_specs.mock(mvc, 'dependencies', {
+            inject: {}
         });
         
-        mvc.views.init(mvc.events, mvc.models.get);
+        mvc.views.init(mvc.events, mvc.dependencies);
     },
     
     tearDown: function() {
         mvc.events.reset();
-        mvc.models.reset();
+        mvc.dependencies.reset();
     },
     
     "test that init is called if present": function(){
@@ -352,18 +386,16 @@ TestCase("views", {
         assertTrue(mvc.events.verify());
     },
     
-    "test that views can retrieve models": function(){
-        mvc.models.expects('get')
+    "test that views can define dependencies": function(){
+        mvc.dependencies.expects('inject')
           .to_be_called.times(1)
-            .with_args.matching('items');
-            
+            .with_args.including('items');
+        
         mvc.views.register($('.list'), {
-            init: function() {
-                this.models('items');
-            }
+            dependencies: 'items'
         });
         
-        assertTrue(mvc.models.verify());
+        assertTrue(mvc.dependencies.verify());
     }
     
 });
@@ -375,16 +407,16 @@ TestCase("controllers", {
             listen: {}
         });
         
-        xray_specs.mock(mvc, 'models', {
-            get: {}
+        xray_specs.mock(mvc, 'dependencies', {
+            inject: {}
         });
         
-        mvc.controllers.init(mvc.events, mvc.models);
+        mvc.controllers.init(mvc.events, mvc.dependencies);
     },
     
     tearDown: function() {
         mvc.events.reset();
-        mvc.models.reset();
+        mvc.dependencies.reset();
     },
     
     "test that functions can be registered as controllers": function(){
@@ -396,19 +428,50 @@ TestCase("controllers", {
         assertTrue(mvc.events.verify());
     },
     
-    "test that controllers have access to the model layer": function(){
-        var controller = function() {};
+    "test that dependencies are injected by arguments": function(){
+        mvc.dependencies.expects('inject')
+          .to_be_called.times(1)
+            .with_args.including('items');
         
-        mvc.controllers.register('item_added', controller);
+        mvc.controllers.register('item_added', function() {}, 'items');
         
-        //assertEquals(mvc.models, controller.models);
-    },
-    
-    "test that controller have access to the events bus": function(){
-        var controller = function() {};
-        
-        mvc.controllers.register('item_added', controller);
-        
-        //assertEquals(mvc.events, controller.events);
+        assertTrue(mvc.dependencies.verify());
     }
 });
+
+TestCase("dependencies", {
+    setUp: function(){
+        xray_specs.mock(mvc, 'models', {
+            get: {}
+        });
+        
+        mvc.dependencies.init(mvc.models);
+    },
+    
+    tearDown: function() {
+        mvc.models.reset();
+    },
+    
+    "test that models are searched for dependencies": function(){
+        mvc.models.expects('get')
+          .to_be_called.times(2)
+            .with_args.including('items', 'cart');
+            
+        mvc.dependencies.inject({}, ['items', 'cart']);
+        
+        assertTrue(mvc.models.verify());
+    },
+    
+    "test that target object is injected with dependencies": function(){
+        mvc.models.get.returns('this was injected');
+        
+        var target = {};
+            
+        mvc.dependencies.inject(target, ['items', 'cart']);
+        
+        assertEquals('this was injected', target.items);
+        assertEquals('this was injected', target.cart);
+    }
+});
+
+

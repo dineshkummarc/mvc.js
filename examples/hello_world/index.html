@@ -12,18 +12,20 @@
 	
 		<input type="button" name="some_name" value="Add" id="add" />
 		
-		<div class="count">
-			
-		</div>
+		<div class="count"></div>
 		
 		<script type="text/javascript" charset="utf-8">
 			var my_app = mvc.create(function() {
 				
-				this.register.model('count', (function() {
+				this.map.singleton('count', (function() {
 					
-					var current_count = 0;
+					var current_count;
 					
 					return {
+						init: function() {
+							current_count = 0;
+						},
+						
 						add: function() {
 							current_count++;
 							
@@ -33,39 +35,45 @@
 					
 				})());
 				
-				this.register.view($('.count'), (function() {
+				this.map.view($('.count'), (function() {
 					
 					return {
 						init: function() {
-							console.log(this);
-							this.element.html('No numbers have been entered.');
+							$(this.element).html('No numbers have been entered.');
 						},
 						
 						number_added: function(number) {
-							console.log(this);
-							//this.element.html(number);
+							$(this.element).html(number);
 						}
 					}
 					
 				})());
 				
-				this.register.view($('#add'), (function() {
+				this.map.view($('#add'), (function() {
 					
-					var count;
+					var that;
 					
 					return {
+						dependencies: ['count'],
+						
 						init: function() {
-							var that = this;
+							that = this;
 							
-							count = this.models('count');
-							
-							this.element.click(function() {
-								count.add();
-							})
+							$(this.element).click(function() {
+								that.count.add();
+							});
 						}
 					}
 					
 				})());
+				
+				this.map.event('debug', function(msg, value) {
+					console.log(msg, value);
+				});
+				
+				this.map.event('number_added', function() {
+					this.dispatch('debug', ['Count model: ', this.count]);
+				}, ['count']);
 				
 			});
 		</script>
