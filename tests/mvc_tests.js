@@ -301,7 +301,7 @@ TestCase("views", {
         });
         
         xray_specs.mock(mvc, 'dependencies', {
-            fulfill: {}
+            inject: {}
         });
         
         mvc.views.init(mvc.events, mvc.dependencies);
@@ -387,7 +387,7 @@ TestCase("views", {
     },
     
     "test that views can define dependencies": function(){
-        mvc.dependencies.expects('fulfill')
+        mvc.dependencies.expects('inject')
           .to_be_called.times(1)
             .with_args.including('items');
         
@@ -408,7 +408,7 @@ TestCase("controllers", {
         });
         
         xray_specs.mock(mvc, 'dependencies', {
-            fulfill: {}
+            inject: {}
         });
         
         mvc.controllers.init(mvc.events, mvc.dependencies);
@@ -428,16 +428,12 @@ TestCase("controllers", {
         assertTrue(mvc.events.verify());
     },
     
-    "test that controllers can dispatch events": function(){
-        
-    },
-    
     "test that dependencies are injected by arguments": function(){
-        mvc.dependencies.expects('fulfill')
+        mvc.dependencies.expects('inject')
           .to_be_called.times(1)
             .with_args.including('items');
         
-        mvc.controllers.register('item_added', function(items, cart) {});
+        mvc.controllers.register('item_added', function() {}, 'items');
         
         assertTrue(mvc.dependencies.verify());
     }
@@ -461,7 +457,7 @@ TestCase("dependencies", {
           .to_be_called.times(2)
             .with_args.including('items', 'cart');
             
-        mvc.dependencies.fulfill({}, ['items', 'cart']);
+        mvc.dependencies.inject({}, ['items', 'cart']);
         
         assertTrue(mvc.models.verify());
     },
@@ -469,21 +465,12 @@ TestCase("dependencies", {
     "test that target object is injected with dependencies": function(){
         mvc.models.get.returns('this was injected');
         
-        var _items, _cart;
-        
-        var target = {
-            test: function(items, cart) {
-                _items = items;
-                _cart = cart;
-            }
-        };
+        var target = {};
             
-        mvc.dependencies.fulfill(target, ['items', 'cart']);
+        mvc.dependencies.inject(target, ['items', 'cart']);
         
-        target.test();
-        
-        assertEquals('this was injected', _items);
-        assertEquals('this was injected', _cart);
+        assertEquals('this was injected', target.items);
+        assertEquals('this was injected', target.cart);
     }
 });
 

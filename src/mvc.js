@@ -136,7 +136,7 @@ var mvc = (function() {
                         methods = _.functions(view_instance);
                         
                     if(view_instance.dependencies) {
-                        dependencies.fulfill(view_instance, view_instance.dependencies);
+                        dependencies.inject(view_instance, view_instance.dependencies);
                     }
                       
                     for(var i = 0, l = methods.length; i < l; i++) {
@@ -164,8 +164,15 @@ var mvc = (function() {
                     dependencies = _dependencies;
                 },
                 
-                register: function(event, callback) {                
-                    events.listen(event, callback);
+                register: function(event, callback, depends_on) {
+                    var context = {
+                        dispatch: events.dispatch
+                    };
+                    
+                    if(depends_on)
+                      dependencies.inject(context, depends_on);
+                                    
+                    events.listen(event, callback, context);
                 }
             }
         })(),
@@ -179,7 +186,7 @@ var mvc = (function() {
                     models = _models;
                 },
                 
-                fulfill: function(inject_into, dependencies) {
+                inject: function(inject_into, dependencies) {
                     _.each(dependencies, function(dependency) {
                         inject_into[dependency] = models.get(dependency);
                     });

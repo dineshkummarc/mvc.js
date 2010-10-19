@@ -67,6 +67,14 @@
 					
 				})());
 				
+				this.map.event('debug', function(msg, value) {
+					console.log(msg, value);
+				});
+				
+				this.map.event('number_added', function(number) {
+					this.dispatch('debug', ['Number value: ', number]);
+				});
+				
 			});
 		</script>
 	</body>
