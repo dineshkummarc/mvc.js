@@ -71,9 +71,9 @@
 					console.log(msg, value);
 				});
 				
-				this.map.event('number_added', function(number) {
-					this.dispatch('debug', ['Number value: ', number]);
-				});
+				this.map.event('number_added', function() {
+					this.dispatch('debug', ['Count model: ', this.count]);
+				}, ['count']);
 				
 			});
 		</script>
