@@ -36,11 +36,11 @@ var mvc = (function() {
                     registered = {};
                 },
 
-                listen: function(event, callback) {
+                listen: function(event, callback, context) {
                     if(!registered[event])
                       registered[event] = [];
 
-                    registered[event].push(callback);
+                    registered[event].push({fn: callback, context: context});
                 },
 
                 remove: function(event, callback) {
@@ -57,11 +57,14 @@ var mvc = (function() {
                 },
 
                 dispatch: function(event, params) {
-                    var callbacks = registered[event];
+                    var callbacks = registered[event],
+                        context
                     
                     if(callbacks) {
                         for(var i = 0, l = callbacks.length; i < l; i++) {
-                            callbacks[i].apply(this, params);
+                            context = callbacks[i].context || this;
+                            
+                            callbacks[i].fn.apply(context, params);
                         }
                     }
                 }
