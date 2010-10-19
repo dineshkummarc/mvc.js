@@ -10,7 +10,7 @@ var mvc = (function() {
         
         init: function(context) {
             this.events.init();
-            this.models.init(this.events.dispatch);
+            this.models.init(this.events.dispatch, this.dependencies);
             this.dependencies.init(this.models);
             this.views.init(this.events, this.dependencies);
             this.controllers.init(this.events, this.dependencies);
@@ -28,7 +28,11 @@ var mvc = (function() {
                         _.each(elements, function(el) {
                             that.views.register(el, view);
                         })
-                    }
+                    },
+                    
+                    value: this.dependencies.register.singleton,
+                    
+                    instance: this.dependencies.register.instance
                 }
             });
 
@@ -90,13 +94,15 @@ var mvc = (function() {
         models: (function() {
             
             var registered,
-                dispatch;
+                dispatch,
+                dependencies;
             
             return {
                 
-                init: function(_dispatch) {
+                init: function(_dispatch, _dependencies) {
                     registered = {};
                     dispatch = _dispatch;
+                    dependencies = _dependencies;
                 },
                 
                 register: function(name, model) {
@@ -105,6 +111,10 @@ var mvc = (function() {
                       return;
                     
                     registered[name] = model;
+                    
+                    if(model.dependencies) {
+                        dependencies.inject(model, model.dependencies);
+                    }
                     
                     if(model.init)
                       model.init();
@@ -192,13 +202,13 @@ var mvc = (function() {
                 
                 inject: function(inject_into, dependencies) {
                     _.each(dependencies, function(dependency) {
-                        var inject_value;
-                        
                         if(models.get(dependency)) {
                             inject_into[dependency] = models.get(dependency);
                             return;
                         }
                         else if(singletons[dependency]){
+                            console.log(singletons[dependency]);
+                            
                             inject_into[dependency] = singletons[dependency];
                             return;
                         }
@@ -214,7 +224,8 @@ var mvc = (function() {
                     },
                     
                     singleton: function(name, object) {
-                        singletons[name] = object;
+                        if(!singletons[name])
+                          singletons[name] = object;
                     }
                 }
             }

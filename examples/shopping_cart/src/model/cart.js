@@ -3,8 +3,10 @@ exports.cart_model = (function() {
     var items;
     
     return {
+        dependencies: ['shipping'],
+        
         init: function() {
-            items = {}
+            items = {};
         },
         
         add_item: function(item) {
@@ -20,10 +22,12 @@ exports.cart_model = (function() {
         
         get_total_price: function() {
             var price = 0;
-            
+
             _.each(items, function(item) {
                 price += (item.price * item.quantity);
             });
+            
+            price += this.shipping;
             
             return '£' + price.toString();
         }

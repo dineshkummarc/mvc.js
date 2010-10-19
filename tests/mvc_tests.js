@@ -104,6 +104,7 @@ TestCase("init", {
         
         assertEquals(mvc.controllers.register, register_event);
     },
+    
     "test that register_model is available to context": function(){
         var register_model;
         

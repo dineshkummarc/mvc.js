@@ -260,14 +260,27 @@ var modulr = (function(global) {
 })(this);
 
 (function(require, module) {require.define({
+'model/vo/product': function(require, exports, module) {
+exports.product = (function() {
+    
+    return {
+        name: 'No name defined',
+        price: 0,
+        quantity: 0
+    }
+    
+})();
+}, 
 'model/cart': function(require, exports, module) {
 exports.cart_model = (function() {
     
     var items;
     
     return {
+        dependencies: ['shipping'],
+        
         init: function() {
-            items = {}
+            items = {};
         },
         
         add_item: function(item) {
@@ -283,10 +296,12 @@ exports.cart_model = (function() {
         
         get_total_price: function() {
             var price = 0;
-            
+
             _.each(items, function(item) {
                 price += (item.price * item.quantity);
             });
+            
+            price += this.shipping;
             
             return '£' + price.toString();
         }
@@ -333,18 +348,23 @@ exports.cart_view = (function() {
 }, 
 'controller/additem': function(require, exports, module) {
 exports.add_item = function(item) {
-    var data = {
-        name: $(item).html(),
-        price: 12.99,
-        quantity: 1
-    };
     
-    this.cart.add_item(data);
+    this.product.name = $(item).html();
+    this.product.price = 12.99;
+    this.product.quantity = 1;
+    
+    this.cart.add_item(this.product);
 }
 }
 });
-require.ensure(['model/cart', 'view/items', 'view/cart', 'controller/additem'], function() {
+require.ensure(['model/vo/product', 'model/cart', 'view/items', 'view/cart', 'controller/additem'], function() {
 var shopping_cart = mvc.create(function() {
+    
+    // Map values
+    this.map.value('shipping', 5);
+    
+    // Map instances
+    this.map.instance('product', require('model/vo/product').product);
     
     // Map models
     this.map.singleton('cart', require('model/cart').cart_model);
@@ -354,7 +374,7 @@ var shopping_cart = mvc.create(function() {
     this.map.view($('.cart'), require('view/cart').cart_view);
     
     // Map controllers
-    this.map.event('add_item', require('controller/additem').add_item, ['cart']);
+    this.map.event('add_item', require('controller/additem').add_item, ['cart', 'product']);
     
 });
 });
