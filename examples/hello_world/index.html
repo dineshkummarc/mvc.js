@@ -12,8 +12,7 @@
 	
 		<input type="button" name="some_name" value="Add" id="add" />
 		
-		<div class="count">
-		</div>
+		<div class="count"></div>
 		
 		<script type="text/javascript" charset="utf-8">
 			var my_app = mvc.create(function() {
@@ -52,16 +51,16 @@
 				
 				this.map.view($('#add'), (function() {
 					
-					var count;
+					var that;
 					
 					return {
+						dependencies: ['count'],
+						
 						init: function() {
-							var that = this;
-							
-							count = this.models('count');
+							that = this;
 							
 							$(this.element).click(function() {
-								count.add();
+								that.count.add();
 							});
 						}
 					}

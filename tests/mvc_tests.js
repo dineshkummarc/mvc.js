@@ -20,12 +20,17 @@ TestCase("init", {
             init: {}
         });
         
+        xray_specs.mock(mvc, 'dependencies', {
+            init: {}
+        });
+        
         app = mvc.create(context);
     },
     tearDown: function() {
         mvc.events.reset();
         mvc.models.reset();
         mvc.views.reset();
+        mvc.dependencies.reset();
         mvc.controllers.reset();
     },
     
@@ -59,15 +64,23 @@ TestCase("init", {
     "test that views is initialised": function(){
         mvc.views.expects('init')
           .to_be_called.times(1)
-            .with_args.matching(mvc.events, mvc.models.get);
+            .with_args.matching(mvc.events, mvc.dependencies);
           
         assertTrue(mvc.views.verify());
+    },
+    
+    "test that dependencies is initialised": function(){
+        mvc.dependencies.expects('init')
+          .to_be_called.times(1)
+            .with_args.matching(mvc.models);
+          
+        assertTrue(mvc.dependencies.verify());
     },
     
     "test that controllers is initialised": function(){
         mvc.controllers.expects('init')
           .to_be_called.times(1)
-            .with_args.matching(mvc.events, mvc.models);
+            .with_args.matching(mvc.events, mvc.dependencies);
           
         assertTrue(mvc.controllers.verify());
     },
@@ -287,16 +300,16 @@ TestCase("views", {
             listen: {}
         });
         
-        xray_specs.mock(mvc, 'models', {
-            get: {}
+        xray_specs.mock(mvc, 'dependencies', {
+            fulfill: {}
         });
         
-        mvc.views.init(mvc.events, mvc.models.get);
+        mvc.views.init(mvc.events, mvc.dependencies);
     },
     
     tearDown: function() {
         mvc.events.reset();
-        mvc.models.reset();
+        mvc.dependencies.reset();
     },
     
     "test that init is called if present": function(){
@@ -373,18 +386,16 @@ TestCase("views", {
         assertTrue(mvc.events.verify());
     },
     
-    "test that views can retrieve models": function(){
-        mvc.models.expects('get')
+    "test that views can define dependencies": function(){
+        mvc.dependencies.expects('fulfill')
           .to_be_called.times(1)
-            .with_args.matching('items');
-            
+            .with_args.including('items');
+        
         mvc.views.register($('.list'), {
-            init: function() {
-                this.models('items');
-            }
+            dependencies: 'items'
         });
         
-        assertTrue(mvc.models.verify());
+        assertTrue(mvc.dependencies.verify());
     }
     
 });
@@ -396,16 +407,16 @@ TestCase("controllers", {
             listen: {}
         });
         
-        xray_specs.mock(mvc, 'models', {
-            get: {}
+        xray_specs.mock(mvc, 'dependencies', {
+            fulfill: {}
         });
         
-        mvc.controllers.init(mvc.events, mvc.models);
+        mvc.controllers.init(mvc.events, mvc.dependencies);
     },
     
     tearDown: function() {
         mvc.events.reset();
-        mvc.models.reset();
+        mvc.dependencies.reset();
     },
     
     "test that functions can be registered as controllers": function(){
@@ -419,5 +430,61 @@ TestCase("controllers", {
     
     "test that controllers can dispatch events": function(){
         
+    },
+    
+    "test that dependencies are injected by arguments": function(){
+        mvc.dependencies.expects('fulfill')
+          .to_be_called.times(1)
+            .with_args.including('items');
+        
+        mvc.controllers.register('item_added', function(items, cart) {});
+        
+        assertTrue(mvc.dependencies.verify());
     }
 });
+
+TestCase("dependencies", {
+    setUp: function(){
+        xray_specs.mock(mvc, 'models', {
+            get: {}
+        });
+        
+        mvc.dependencies.init(mvc.models);
+    },
+    
+    tearDown: function() {
+        mvc.models.reset();
+    },
+    
+    "test that models are searched for dependencies": function(){
+        mvc.models.expects('get')
+          .to_be_called.times(2)
+            .with_args.including('items', 'cart');
+            
+        mvc.dependencies.fulfill({}, ['items', 'cart']);
+        
+        assertTrue(mvc.models.verify());
+    },
+    
+    "test that target object is injected with dependencies": function(){
+        mvc.models.get.returns('this was injected');
+        
+        var _items, _cart;
+        
+        var target = {
+            test: function(items, cart) {
+                _items = items;
+                _cart = cart;
+            }
+        };
+            
+        mvc.dependencies.fulfill(target, ['items', 'cart']);
+        
+        target.test();
+        
+        assertEquals('this was injected', _items);
+        assertEquals('this was injected', _cart);
+    }
+});
+
+

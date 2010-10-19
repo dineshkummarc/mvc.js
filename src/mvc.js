@@ -11,8 +11,9 @@ var mvc = (function() {
         init: function(context) {
             this.events.init();
             this.models.init(this.events.dispatch);
-            this.views.init(this.events, this.models.get);
-            this.controllers.init(this.events, this.models);
+            this.dependencies.init(this.models);
+            this.views.init(this.events, this.dependencies);
+            this.controllers.init(this.events, this.dependencies);
             
             var that = this;
             
@@ -122,17 +123,21 @@ var mvc = (function() {
         views: (function() {
             
             var events,
-                models;
+                dependencies;
 
             return {
-                init: function(_events, _models) {
+                init: function(_events, _dependencies) {
                     events = _events;
-                    models = _models;
+                    dependencies = _dependencies;
                 },
                 
                 register: function(element, view) {
                     var view_instance = _.clone(view),
                         methods = _.functions(view_instance);
+                        
+                    if(view_instance.dependencies) {
+                        dependencies.fulfill(view_instance, view_instance.dependencies);
+                    }
                       
                     for(var i = 0, l = methods.length; i < l; i++) {
                         if(methods[i] !== 'init')
@@ -141,7 +146,6 @@ var mvc = (function() {
                     
                     view_instance.element = element;
                     view_instance.events = events;
-                    view_instance.models = models;
 
                     if(view_instance.init)
                       view_instance.init();
@@ -152,16 +156,33 @@ var mvc = (function() {
         controllers: (function() {
             
             var events,
-                models;
+                dependencies;
             
             return {
-                init: function(_events, _models) {
+                init: function(_events, _dependencies) {
                     events = _events;
+                    dependencies = _dependencies;
+                },
+                
+                register: function(event, callback) {                
+                    events.listen(event, callback);
+                }
+            }
+        })(),
+        
+        dependencies: (function() {
+            
+            var models;
+            
+            return {
+                init: function(_models) {
                     models = _models;
                 },
                 
-                register: function(event, callback) {                    
-                    events.listen(event, callback);
+                fulfill: function(inject_into, dependencies) {
+                    _.each(dependencies, function(dependency) {
+                        inject_into[dependency] = models.get(dependency);
+                    });
                 }
             }
         })()
