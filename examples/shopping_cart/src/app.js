@@ -8,6 +8,6 @@ var shopping_cart = mvc.create(function() {
     this.map.view($('.cart'), require('view/cart').cart_view);
     
     // Map controllers
-    this.map.event('add_item', require('controller/additem').additem, ['cart']);
+    this.map.event('add_item', require('controller/additem').add_item, ['cart']);
     
 });

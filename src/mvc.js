@@ -179,17 +179,43 @@ var mvc = (function() {
         
         dependencies: (function() {
             
-            var models;
+            var models,
+                instances,
+                singletons;
             
             return {
                 init: function(_models) {
                     models = _models;
+                    instances = {};
+                    singletons = {};
                 },
                 
                 inject: function(inject_into, dependencies) {
                     _.each(dependencies, function(dependency) {
-                        inject_into[dependency] = models.get(dependency);
+                        var inject_value;
+                        
+                        if(models.get(dependency)) {
+                            inject_into[dependency] = models.get(dependency);
+                            return;
+                        }
+                        else if(singletons[dependency]){
+                            inject_into[dependency] = singletons[dependency];
+                            return;
+                        }
+                        else if(instances[dependency]){
+                            inject_into[dependency] = _.clone(instances[dependency]);
+                        }
                     });
+                },
+                
+                register: {
+                    instance: function(name, object) {
+                        instances[name] = object;
+                    },
+                    
+                    singleton: function(name, object) {
+                        singletons[name] = object;
+                    }
                 }
             }
         })()

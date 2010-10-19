@@ -332,7 +332,7 @@ exports.cart_view = (function() {
 })();
 }, 
 'controller/additem': function(require, exports, module) {
-exports.additem = function(item) {
+exports.add_item = function(item) {
     var data = {
         name: $(item).html(),
         price: 12.99,
@@ -353,8 +353,9 @@ var shopping_cart = mvc.create(function() {
     this.map.view($('.items'), require('view/items').items_view);
     this.map.view($('.cart'), require('view/cart').cart_view);
     
-    this.map.event('add_item', require('controller/additem').additem, ['cart']);
+    // Map controllers
+    this.map.event('add_item', require('controller/additem').add_item, ['cart']);
     
-})
+});
 });
 })(modulr.require, modulr.require.main);

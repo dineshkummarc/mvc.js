@@ -471,6 +471,43 @@ TestCase("dependencies", {
         
         assertEquals('this was injected', target.items);
         assertEquals('this was injected', target.cart);
+    },
+    
+    "test that instances can be registered as dependencies": function(){
+        var data = {
+            get: function() {
+                this.called = true;
+            }
+        }
+        
+        mvc.dependencies.register.instance('data_object', data);
+        
+        var target = {};
+        mvc.dependencies.inject(target, ['data_object']);
+        
+        target.data_object.get();
+        
+        assertTrue(target.data_object.called);
+        assertEquals(undefined, data.called);
+    },
+    
+    "test that singletons can be registered as dependencies": function(){
+        var data = {
+            method: false
+        }
+        
+        mvc.dependencies.register.singleton('data_model', data);
+        
+        var target = {};
+        mvc.dependencies.inject(target, ['data_model']);
+        
+        var second_target = {};
+        mvc.dependencies.inject(second_target, ['data_model']);
+        
+        data.method = true;
+
+        assertTrue(target.data_model.method);
+        assertTrue(second_target.data_model.method);
     }
 });
 

@@ -1,4 +1,4 @@
-exports.additem = function(item) {
+exports.add_item = function(item) {
     var data = {
         name: $(item).html(),
         price: 12.99,
