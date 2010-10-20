@@ -299,7 +299,6 @@ exports.cart_model = (function() {
 
             _.each(items, function(item) {
                 price += (item.price * item.quantity);
-                console.log(item.price, item.quantity);
             });
             
             price += this.shipping;
@@ -309,6 +308,12 @@ exports.cart_model = (function() {
     }
     
 })();
+}, 
+'controller/startup': function(require, exports, module) {
+exports.map_views = function() {
+    this.map.view($('.items'), require('view/items').items_view);
+    this.map.view($('.cart'), require('view/cart').cart_view);
+}
 }, 
 'view/items': function(require, exports, module) {
 exports.items_view = (function() {
@@ -358,7 +363,7 @@ exports.add_item = function(item) {
 }
 }
 });
-require.ensure(['model/vo/product', 'model/cart', 'view/items', 'view/cart', 'controller/additem'], function() {
+require.ensure(['model/vo/product', 'model/cart', 'controller/startup', 'controller/additem'], function() {
 var shopping_cart = mvc.create(function() {
     
     // Map values
@@ -372,11 +377,12 @@ var shopping_cart = mvc.create(function() {
     this.map.singleton('cart', require('model/cart').cart_model);
     
     // Map views
-    this.map.view($('.items'), require('view/items').items_view);
-    this.map.view($('.cart'), require('view/cart').cart_view);
+    this.map.event('map_views', require('controller/startup').map_views);
     
     // Map controllers
     this.map.event('add_item', require('controller/additem').add_item, ['cart', 'product']);
+    
+    this.dispatch('map_views');
     
 });
 });

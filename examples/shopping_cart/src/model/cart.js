@@ -25,7 +25,6 @@ exports.cart_model = (function() {
 
             _.each(items, function(item) {
                 price += (item.price * item.quantity);
-                console.log(item.price, item.quantity);
             });
             
             price += this.shipping;
