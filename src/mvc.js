@@ -187,13 +187,21 @@ var mvc = (function() {
                             return;
                         }
                         else if(instances[dependency]){
-                            inject_into[dependency] = _.clone(instances[dependency]);
+                            var instance = _.clone(instances[dependency])
+                            
+                            if(typeof instance.init === 'function')
+                              instance.init();
+                            
+                            inject_into[dependency] = instance;
                         }
                     });
                 },
 
                 register: {
-                    instance: function(name, object) {
+                    instance: function(name, object, dependencies) {
+                        if(dependencies)
+                          that.inject(object, dependencies);
+                        
                         instances[name] = object;
                     },
 
