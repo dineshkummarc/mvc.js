@@ -104,23 +104,25 @@ var mvc = (function() {
                 },
                 
                 register: function(element, view) {
-                    var view_instance = _.clone(view),
-                        methods = _.functions(view_instance);
-                        
-                    if(view_instance.dependencies) {
-                        dependencies.inject(view_instance, view_instance.dependencies);
-                    }
-                      
-                    for(var i = 0, l = methods.length; i < l; i++) {
-                        if(methods[i] !== 'init')
-                          events.listen(methods[i], view_instance[methods[i]], view_instance);
-                    }
-                    
-                    view_instance.element = element;
-                    view_instance.events = events;
+                    _.each(element, function(el) {
+                        var view_instance = _.clone(view),
+                            methods = _.functions(view_instance);
 
-                    if(view_instance.init)
-                      view_instance.init();
+                        if(view_instance.dependencies) {
+                            dependencies.inject(view_instance, view_instance.dependencies);
+                        }
+                        
+                        _.each(methods, function(method) {
+                            if(method !== 'init')
+                              events.listen(method, view_instance[method], view_instance);
+                        });
+
+                        view_instance.element = el;
+                        view_instance.events = events;
+
+                        if(view_instance.init)
+                          view_instance.init();
+                    });
                 }
             }
         })(),
@@ -148,18 +150,10 @@ var mvc = (function() {
                     var context = {
                         dispatch: events.dispatch,
                         map: {
-                            event: that.register,
-
-                            singleton: models.register,
-
-                            view: function(elements, view) {
-                                _.each(elements, function(el) {
-                                    views.register(el, view);
-                                })
-                            },
-                            
-                            value: dependencies.register.singleton,
-
+                            controller: that.register,
+                            model: models.register,
+                            view: views.register,
+                            singleton: dependencies.register.singleton,
                             instance: dependencies.register.instance
                         }
                     };

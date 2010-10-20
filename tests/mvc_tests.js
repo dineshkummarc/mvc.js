@@ -264,7 +264,7 @@ TestCase("views", {
     
     "test that each function is assigned a listener": function(){
         mvc.events.expects('listen')
-          .to_be_called.times(2)
+          .to_be_called.times(4)
             .with_args.always_including('item_registered', 'item_removed');
         
         mvc.views.register($('.list'), {
@@ -277,7 +277,7 @@ TestCase("views", {
     
     "test that init is not assigned as a listener": function(){
         mvc.events.expects('listen')
-          .to_be_called.times(2);
+          .to_be_called.times(4);
           
         mvc.views.register($('.list'), {
             init: function() {},
@@ -290,7 +290,7 @@ TestCase("views", {
     
     "test that views can dispatch events": function(){
         mvc.events.expects('dispatch')
-          .to_be_called.times(1)
+          .to_be_called.times(2)
             .with_args.matching('view_initialised');
             
         mvc.views.register($('.list'), {
@@ -304,7 +304,7 @@ TestCase("views", {
     
     "test that views can listen for events": function(){
         mvc.events.expects('listen')
-          .to_be_called.times(1)
+          .to_be_called.times(2)
             .with_args.matching('view_initialised');
             
         mvc.views.register($('.list'), {
@@ -318,7 +318,7 @@ TestCase("views", {
     
     "test that views can define dependencies": function(){
         mvc.dependencies.expects('inject')
-          .to_be_called.times(1)
+          .to_be_called.times(2)
             .with_args.including('items');
         
         mvc.views.register($('.list'), {
@@ -326,16 +326,6 @@ TestCase("views", {
         });
         
         assertTrue(mvc.dependencies.verify());
-    },
-    
-    "test that each view is registered": function(){
-        var view = {
-            do_something: function() {}
-        }
-        
-        mvc.views.register($('.list'), view);
-        
-        // TODO: Think of a way to verify a new view is created for every element
     }
     
 });
@@ -419,32 +409,15 @@ TestCase("controllers", {
 
 TestCase("dependencies", {
     setUp: function(){
-        xray_specs.mock(mvc, 'models', {
-            get: {}
-        });
-        
-        mvc.dependencies.init(mvc.models);
-    },
-    
-    tearDown: function() {
-        mvc.models.reset();
-    },
-    
-    "test that models are searched for dependencies": function(){
-        mvc.models.expects('get')
-          .to_be_called.times(2)
-            .with_args.including('items', 'cart');
-            
-        mvc.dependencies.inject({}, ['items', 'cart']);
-        
-        assertTrue(mvc.models.verify());
+        mvc.dependencies.init();
     },
     
     "test that target object is injected with dependencies": function(){
-        mvc.models.get.returns('this was injected');
+        var target = {},
+            dependency = "this was injected";
         
-        var target = {};
-            
+        mvc.dependencies.register.singleton('items', "this was injected"); 
+        mvc.dependencies.register.singleton('cart', "this was injected"); 
         mvc.dependencies.inject(target, ['items', 'cart']);
         
         assertEquals('this was injected', target.items);
