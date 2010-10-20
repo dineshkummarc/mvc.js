@@ -2,6 +2,7 @@ var shopping_cart = mvc.create(function() {
     
     // Map values
     this.map.value('shipping', 5);
+    this.map.value('highlight_colour', '#ff0000');
     
     // Map instances
     this.map.instance('product', require('model/vo/product').product);

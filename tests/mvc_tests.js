@@ -35,7 +35,11 @@ TestCase("init", {
     },
     
     "test that context function is called": function(){
-        assertEquals(1, context.called_exactly(1));
+        mvc.controllers.expects('register')
+          .to_be_called.times(1)
+            .with_args.matching('start_up', context);
+            
+        assertTrue(mvc.controllers.verify());
     },
     
     "test that the events object is initialised": function(){
@@ -48,7 +52,7 @@ TestCase("init", {
     "test that once context has been set up a startup_complete event is triggered": function(){
         mvc.events.expects('dispatch')
           .to_be_called.times(1)
-            .with_args.including('startup_complete');
+            .with_args.including('start_up');
             
         assertTrue(mvc.events.verify());
     },
@@ -56,7 +60,7 @@ TestCase("init", {
     "test that models is initialised": function(){
         mvc.models.expects('init')
           .to_be_called.times(1)
-            .with_args.matching(mvc.events.dispatch);
+            .with_args.matching(mvc.events.dispatch, mvc.dependencies);
           
         assertTrue(mvc.models.verify());
     },
@@ -83,64 +87,6 @@ TestCase("init", {
             .with_args.matching(mvc.events, mvc.dependencies);
           
         assertTrue(mvc.controllers.verify());
-    },
-    
-    "test that dispatch is available to the context function": function(){
-        var dispatch;
-        
-        mvc.create(function() {
-            dispatch = this.dispatch;
-        });
-        
-        assertEquals(mvc.events.dispatch, dispatch);
-    },
-    
-    "test that register_event is available to context": function(){
-        var register_event;
-        
-        mvc.create(function() {
-            register_event = this.map.event;
-        });
-        
-        assertEquals(mvc.controllers.register, register_event);
-    },
-    
-    "test that register_model is available to context": function(){
-        var register_model;
-        
-        mvc.create(function() {
-            register_model = this.map.singleton;
-        });
-        
-        assertEquals(mvc.models.register, register_model);
-    },
-    
-    "test that each view is registered": function(){
-        /*:DOC +=
-            <div id="jstd">
-                <div class="list">
-                    List 1
-                </div>
-                
-                <div class="list">
-                    List 2
-                </div>
-            </div>
-        */
-        
-        var view = {
-            do_something: function() {}
-        }
-        
-        mvc.views.expects('register')
-          .to_be_called.times(2)
-            .with_args.always_including(view);
-        
-        mvc.create(function() {
-            this.map.view($('.list'), view);
-        });
-        
-        assertTrue(mvc.views.verify());
     }
     
 });
@@ -397,6 +343,16 @@ TestCase("views", {
         });
         
         assertTrue(mvc.dependencies.verify());
+    },
+    
+    "test that each view is registered": function(){
+        var view = {
+            do_something: function() {}
+        }
+        
+        mvc.views.register($('.list'), view);
+        
+        // TODO: Think of a way to verify a new view is created for every element
     }
     
 });
@@ -437,6 +393,36 @@ TestCase("controllers", {
         mvc.controllers.register('item_added', function() {}, 'items');
         
         assertTrue(mvc.dependencies.verify());
+    },
+    
+    "test that dispatch is available to the context function": function(){
+        var dispatch;
+        
+        mvc.create(function() {
+            dispatch = this.dispatch;
+        });
+        
+        assertEquals(mvc.events.dispatch, dispatch);
+    },
+    
+    "test that map.event is available to context": function(){
+        var map_event;
+        
+        mvc.create(function() {
+            map_event = this.map.event;
+        });
+        
+        assertEquals(mvc.controllers.register, map_event);
+    },
+    
+    "test that map.singleton is available to context": function(){
+        var map_singleton;
+        
+        mvc.create(function() {
+            map_singleton = this.map.singleton;
+        });
+        
+        assertEquals(mvc.models.register, map_singleton);
     }
 });
 
@@ -511,5 +497,3 @@ TestCase("dependencies", {
         assertTrue(second_target.data_model.method);
     }
 });
-
-

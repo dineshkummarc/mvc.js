@@ -1,5 +1,7 @@
 var mvc = (function() {
     
+    var __;
+    
     return {
         
         create: function(context) {
@@ -9,34 +11,16 @@ var mvc = (function() {
         },
         
         init: function(context) {
+            __ = this;
+            
             this.events.init();
             this.models.init(this.events.dispatch, this.dependencies);
             this.dependencies.init(this.models);
             this.views.init(this.events, this.dependencies);
             this.controllers.init(this.events, this.dependencies);
             
-            var that = this;
-            
-            context.apply({
-                dispatch: this.events.dispatch,
-                map: {
-                    event: this.controllers.register,
-                    
-                    singleton: this.models.register,
-                    
-                    view: function(elements, view) {
-                        _.each(elements, function(el) {
-                            that.views.register(el, view);
-                        })
-                    },
-                    
-                    value: this.dependencies.register.singleton,
-                    
-                    instance: this.dependencies.register.instance
-                }
-            });
-
-            this.events.dispatch('startup_complete')
+            this.controllers.register('start_up', context);
+            this.events.dispatch('start_up');
         },
         
         events: (function() {
@@ -102,23 +86,22 @@ var mvc = (function() {
                 init: function(_dispatch, _dependencies) {
                     registered = {};
                     dispatch = _dispatch;
-                    dependencies = _dependencies;
+                    dependencies = _dependencies
                 },
                 
                 register: function(name, model) {
-                    
                     if(registered[name])
                       return;
-                    
+
                     registered[name] = model;
-                    
+
                     if(model.dependencies) {
                         dependencies.inject(model, model.dependencies);
                     }
-                    
+
                     if(model.init)
                       model.init();
-                      
+
                     model.dispatch = dispatch;
                 },
 
@@ -166,17 +149,36 @@ var mvc = (function() {
         controllers: (function() {
             
             var events,
-                dependencies;
+                dependencies,
+                that;
             
             return {
                 init: function(_events, _dependencies) {
+                    that = this;
+                    
                     events = _events;
                     dependencies = _dependencies;
                 },
                 
                 register: function(event, callback, depends_on) {
+                    
                     var context = {
-                        dispatch: events.dispatch
+                        dispatch: events.dispatch,
+                        map: {
+                            event: that.register,
+
+                            singleton: __.models.register,
+
+                            view: function(elements, view) {
+                                _.each(elements, function(el) {
+                                    __.views.register(el, view);
+                                })
+                            },
+                            
+                            value: dependencies.register.singleton,
+
+                            instance: dependencies.register.instance
+                        }
                     };
                     
                     if(depends_on)
@@ -188,18 +190,18 @@ var mvc = (function() {
         })(),
         
         dependencies: (function() {
-            
+
             var models,
                 instances,
                 singletons;
-            
+
             return {
                 init: function(_models) {
                     models = _models;
                     instances = {};
                     singletons = {};
                 },
-                
+
                 inject: function(inject_into, dependencies) {
                     _.each(dependencies, function(dependency) {
                         if(models.get(dependency)) {
@@ -207,8 +209,6 @@ var mvc = (function() {
                             return;
                         }
                         else if(singletons[dependency]){
-                            console.log(singletons[dependency]);
-                            
                             inject_into[dependency] = singletons[dependency];
                             return;
                         }
@@ -217,12 +217,12 @@ var mvc = (function() {
                         }
                     });
                 },
-                
+
                 register: {
                     instance: function(name, object) {
                         instances[name] = object;
                     },
-                    
+
                     singleton: function(name, object) {
                         if(!singletons[name])
                           singletons[name] = object;

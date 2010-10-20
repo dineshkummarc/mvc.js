@@ -299,6 +299,7 @@ exports.cart_model = (function() {
 
             _.each(items, function(item) {
                 price += (item.price * item.quantity);
+                console.log(item.price, item.quantity);
             });
             
             price += this.shipping;
@@ -332,7 +333,7 @@ exports.cart_view = (function() {
     var that;
     
     return {
-        dependencies: ['cart'],
+        dependencies: ['cart', 'highlight_colour'],
         
         init: function() {
             that = this;
@@ -340,7 +341,7 @@ exports.cart_view = (function() {
         
         item_added: function(item) {
             $(this.element).find('ul').append('<li>' + item.name + '</li>').end()
-                .find('.total_cost').html(this.cart.get_total_price());
+                .find('.total_cost').html(this.cart.get_total_price()).css({color: this.highlight_colour});
         }
     }
     
@@ -362,6 +363,7 @@ var shopping_cart = mvc.create(function() {
     
     // Map values
     this.map.value('shipping', 5);
+    this.map.value('highlight_colour', '#ff0000');
     
     // Map instances
     this.map.instance('product', require('model/vo/product').product);
