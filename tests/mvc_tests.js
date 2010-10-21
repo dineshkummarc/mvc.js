@@ -75,8 +75,7 @@ TestCase("init", {
     
     "test that dependencies is initialised": function(){
         mvc.dependencies.expects('init')
-          .to_be_called.times(1)
-            .with_args.matching(mvc.models);
+          .to_be_called.times(1);
           
         assertTrue(mvc.dependencies.verify());
     },
@@ -84,7 +83,7 @@ TestCase("init", {
     "test that controllers is initialised": function(){
         mvc.controllers.expects('init')
           .to_be_called.times(1)
-            .with_args.matching(mvc.events, mvc.dependencies);
+            .with_args.matching(mvc.events, mvc.views, mvc.models, mvc.dependencies);
           
         assertTrue(mvc.controllers.verify());
     }
@@ -189,42 +188,26 @@ TestCase("models", {
     setUp: function(){
         dispatch = xray_specs.stub();
         
-        mvc.models.init(dispatch);
+        dependencies = {
+            register: {
+                singleton: xray_specs.stub()
+            }
+        }
+        
+        mvc.models.init(dispatch, dependencies);
     },
     
     "test that models can be registered to a key/value store": function(){
         mvc.models.register('items', 'items_model');
-          
-        assertEquals('items_model', mvc.models.get('items'));
+        
     },
     
-    "test that an initialise function is called if present": function(){
-        var init_stub = xray_specs.stub();
+    "test that models are given a reference to dispatch": function(){   
+        var model = {};
+         
+        mvc.models.register('items', model);
         
-        mvc.models.register('items', {
-            init: init_stub
-        });
-        
-        assertTrue(init_stub.called());
-    },
-    
-    "test that models are given a reference to dispatch": function(){    
-        mvc.models.register('items', {
-            register_item: function() {
-                this.dispatch('item_registered');
-            }
-        });
-        
-        mvc.models.get('items').register_item();
-        
-        assertTrue(dispatch.called());
-    },
-    
-    "test that models are not overriden": function(){
-        mvc.models.register('items', 'first_model');
-        mvc.models.register('items', 'this should not exist');
-          
-        assertEquals('first_model', mvc.models.get('items'));
+        assertEquals(dispatch, model.dispatch);
     }
 });
 
@@ -281,7 +264,7 @@ TestCase("views", {
     
     "test that each function is assigned a listener": function(){
         mvc.events.expects('listen')
-          .to_be_called.times(2)
+          .to_be_called.times(4)
             .with_args.always_including('item_registered', 'item_removed');
         
         mvc.views.register($('.list'), {
@@ -294,7 +277,7 @@ TestCase("views", {
     
     "test that init is not assigned as a listener": function(){
         mvc.events.expects('listen')
-          .to_be_called.times(2);
+          .to_be_called.times(4);
           
         mvc.views.register($('.list'), {
             init: function() {},
@@ -307,7 +290,7 @@ TestCase("views", {
     
     "test that views can dispatch events": function(){
         mvc.events.expects('dispatch')
-          .to_be_called.times(1)
+          .to_be_called.times(2)
             .with_args.matching('view_initialised');
             
         mvc.views.register($('.list'), {
@@ -321,7 +304,7 @@ TestCase("views", {
     
     "test that views can listen for events": function(){
         mvc.events.expects('listen')
-          .to_be_called.times(1)
+          .to_be_called.times(2)
             .with_args.matching('view_initialised');
             
         mvc.views.register($('.list'), {
@@ -335,7 +318,7 @@ TestCase("views", {
     
     "test that views can define dependencies": function(){
         mvc.dependencies.expects('inject')
-          .to_be_called.times(1)
+          .to_be_called.times(2)
             .with_args.including('items');
         
         mvc.views.register($('.list'), {
@@ -343,16 +326,6 @@ TestCase("views", {
         });
         
         assertTrue(mvc.dependencies.verify());
-    },
-    
-    "test that each view is registered": function(){
-        var view = {
-            do_something: function() {}
-        }
-        
-        mvc.views.register($('.list'), view);
-        
-        // TODO: Think of a way to verify a new view is created for every element
     }
     
 });
@@ -364,11 +337,19 @@ TestCase("controllers", {
             listen: {}
         });
         
+        xray_specs.mock(mvc, 'views', {
+            register: {}
+        });
+        
+        xray_specs.mock(mvc, 'events', {
+            register: {}
+        });
+        
         xray_specs.mock(mvc, 'dependencies', {
             inject: {}
         });
         
-        mvc.controllers.init(mvc.events, mvc.dependencies);
+        mvc.controllers.init(mvc.events, mvc.views, mvc.models, mvc.dependencies);
     },
     
     tearDown: function() {
@@ -428,32 +409,15 @@ TestCase("controllers", {
 
 TestCase("dependencies", {
     setUp: function(){
-        xray_specs.mock(mvc, 'models', {
-            get: {}
-        });
-        
-        mvc.dependencies.init(mvc.models);
-    },
-    
-    tearDown: function() {
-        mvc.models.reset();
-    },
-    
-    "test that models are searched for dependencies": function(){
-        mvc.models.expects('get')
-          .to_be_called.times(2)
-            .with_args.including('items', 'cart');
-            
-        mvc.dependencies.inject({}, ['items', 'cart']);
-        
-        assertTrue(mvc.models.verify());
+        mvc.dependencies.init();
     },
     
     "test that target object is injected with dependencies": function(){
-        mvc.models.get.returns('this was injected');
+        var target = {},
+            dependency = "this was injected";
         
-        var target = {};
-            
+        mvc.dependencies.register.singleton('items', "this was injected"); 
+        mvc.dependencies.register.singleton('cart', "this was injected"); 
         mvc.dependencies.inject(target, ['items', 'cart']);
         
         assertEquals('this was injected', target.items);
@@ -495,5 +459,31 @@ TestCase("dependencies", {
 
         assertTrue(target.data_model.method);
         assertTrue(second_target.data_model.method);
+    },
+    
+    "test singletons should be able to define their own dependencies": function(){
+        var target = {},
+            dependency = {
+                foo: function(){}
+            },
+            second_dependency = {
+                bar: function() {}
+            };
+            
+        mvc.dependencies.register.singleton('dependency', dependency);
+        mvc.dependencies.register.singleton('second', second_dependency, ['dependency']);
+        mvc.dependencies.inject(target, ['second']);
+        
+        assertEquals(dependency, target.second.dependency);
+    },
+    
+    "test that singleton init functions are called if present": function(){
+        var target = {
+            init: xray_specs.stub()
+        }
+        
+        mvc.dependencies.register.singleton('target', target);
+        
+        assertTrue(target.init.called());
     }
 });

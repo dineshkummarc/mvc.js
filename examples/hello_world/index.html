@@ -23,7 +23,7 @@
 		<script type="text/javascript" charset="utf-8">
 			var my_app = mvc.create(function() {
 				
-				this.map.singleton('count', (function() {
+				this.map.model('count', (function() {
 					
 					var current_count;
 					
@@ -73,11 +73,11 @@
 					
 				})());
 				
-				this.map.event('debug', function(msg, value) {
+				this.map.controller('debug', function(msg, value) {
 					console.log(msg, value);
 				});
 				
-				this.map.event('number_added', function() {
+				this.map.controller('number_added', function() {
 					this.dispatch('debug', ['Count model: ', this.count]);
 				}, ['count']);
 				

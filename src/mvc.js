@@ -1,38 +1,19 @@
 var mvc = (function() {
     
-    var __;
-    
     return {
         
         create: function(context) {
             var instance = _.clone(mvc);
-            
             instance.init(context);
         },
         
         init: function(context) {
+            this.events.init();
             this.dependencies.init();
             
-            this.dependencies.map.singleton('dependencies', this.dependencies);
-            this.dependencies.map.singleton('events', this.events);
-            this.dependencies.map.singleton('dispatch', this.events.dispatch);
-            this.dependencies.map.singleton('views', this.views, ['events', 'dependencies']);
-            this.dependencies.map.singleton('controllers', this.controllers, ['events', 'dependencies']);
-            
-            
-            this.views.init(this.events, this.dependencies);
-            this.controllers.init(this.events, this.dependencies);
-            
-            /*
-            __ = this;
-            
-            this.events.init();
             this.models.init(this.events.dispatch, this.dependencies);
-            this.dependencies.init(this.models);
             this.views.init(this.events, this.dependencies);
-            this.controllers.init(this.events, this.dependencies);
-            
-            */
+            this.controllers.init(this.events, this.views, this.models, this.dependencies);
             
             this.controllers.register('start_up', context);
             this.events.dispatch('start_up');
@@ -51,9 +32,10 @@ var mvc = (function() {
 
                 listen: function(event, callback, context) {
                     if(!registered[event]) {
-                        registered[event] = {};
-                        registered[event].callbacks = [];
-                        registered[event].contexts = [];
+                        registered[event] = {
+                            callbacks: [],
+                            contexts: []
+                        }
                     }
 
                     registered[event].callbacks.push(callback);
@@ -92,38 +74,20 @@ var mvc = (function() {
         
         models: (function() {
             
-            var registered,
-                dispatch,
+            var dispatch,
                 dependencies;
             
             return {
                 
                 init: function(_dispatch, _dependencies) {
-                    registered = {};
                     dispatch = _dispatch;
                     dependencies = _dependencies
                 },
                 
                 register: function(name, model) {
-                    if(registered[name])
-                      return;
-
-                    registered[name] = model;
-
-                    if(model.dependencies) {
-                        dependencies.inject(model, model.dependencies);
-                    }
-
-                    if(model.init)
-                      model.init();
-
                     model.dispatch = dispatch;
-                },
-
-                get: function(name) {
-                    return registered[name];
+                    dependencies.register.singleton(name, model, model.dependencies);
                 }
-                
             }
             
         })(),
@@ -140,23 +104,25 @@ var mvc = (function() {
                 },
                 
                 register: function(element, view) {
-                    var view_instance = _.clone(view),
-                        methods = _.functions(view_instance);
-                        
-                    if(view_instance.dependencies) {
-                        dependencies.inject(view_instance, view_instance.dependencies);
-                    }
-                      
-                    for(var i = 0, l = methods.length; i < l; i++) {
-                        if(methods[i] !== 'init')
-                          events.listen(methods[i], view_instance[methods[i]], view_instance);
-                    }
-                    
-                    view_instance.element = element;
-                    view_instance.events = events;
+                    _.each(element, function(el) {
+                        var view_instance = _.clone(view),
+                            methods = _.functions(view_instance);
 
-                    if(view_instance.init)
-                      view_instance.init();
+                        if(view_instance.dependencies) {
+                            dependencies.inject(view_instance, view_instance.dependencies);
+                        }
+                        
+                        _.each(methods, function(method) {
+                            if(method !== 'init')
+                              events.listen(method, view_instance[method], view_instance);
+                        });
+
+                        view_instance.element = el;
+                        view_instance.events = events;
+
+                        if(view_instance.init)
+                          view_instance.init();
+                    });
                 }
             }
         })(),
@@ -165,14 +131,18 @@ var mvc = (function() {
             
             var events,
                 dependencies,
+                views,
+                models,
                 that;
             
             return {
-                init: function(_events, _dependencies) {
+                init: function(_events, _views, _models, _dependencies) {
                     that = this;
                     
                     events = _events;
                     dependencies = _dependencies;
+                    views = _views;
+                    models = _models;
                 },
                 
                 register: function(event, callback, depends_on) {
@@ -180,19 +150,11 @@ var mvc = (function() {
                     var context = {
                         dispatch: events.dispatch,
                         map: {
-                            event: that.register,
-
-                            singleton: __.models.register,
-
-                            view: function(elements, view) {
-                                _.each(elements, function(el) {
-                                    __.views.register(el, view);
-                                })
-                            },
-                            
-                            value: dependencies.map.singleton,
-
-                            instance: dependencies.map.instance
+                            controller: that.register,
+                            model: models.register,
+                            view: views.register,
+                            singleton: dependencies.register.singleton,
+                            instance: dependencies.register.instance
                         }
                     };
                     
@@ -206,41 +168,53 @@ var mvc = (function() {
         
         dependencies: (function() {
 
-            var models,
-                instances,
-                singletons;
+            var instances,
+                singletons,
+                that;
 
             return {
-                init: function(_models) {
-                    models = _models;
+                init: function() {
+                    that = this;
+                    
                     instances = {};
                     singletons = {};
                 },
 
                 inject: function(inject_into, dependencies) {
                     _.each(dependencies, function(dependency) {
-                        if(models.get(dependency)) {
-                            inject_into[dependency] = models.get(dependency);
-                            return;
-                        }
-                        else if(singletons[dependency]){
+                        if(singletons[dependency]){
                             inject_into[dependency] = singletons[dependency];
                             return;
                         }
                         else if(instances[dependency]){
-                            inject_into[dependency] = _.clone(instances[dependency]);
+                            var instance = _.clone(instances[dependency])
+                            
+                            if(typeof instance.init === 'function')
+                              instance.init();
+                            
+                            inject_into[dependency] = instance;
                         }
                     });
                 },
 
-                map: {
-                    instance: function(name, object) {
+                register: {
+                    instance: function(name, object, dependencies) {
+                        if(dependencies)
+                          that.inject(object, dependencies);
+                        
                         instances[name] = object;
                     },
 
-                    singleton: function(name, object) {
-                        if(!singletons[name])
-                          singletons[name] = object;
+                    singleton: function(name, object, dependencies) {
+                        if(!singletons[name]) {
+                            if(dependencies)
+                              that.inject(object, dependencies);
+                              
+                            if(typeof object.init === 'function')
+                              object.init();
+                            
+                            singletons[name] = object;
+                        }
                     }
                 }
             }
