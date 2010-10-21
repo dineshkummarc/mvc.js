@@ -11,6 +11,19 @@ var mvc = (function() {
         },
         
         init: function(context) {
+            this.dependencies.init();
+            
+            this.dependencies.map.singleton('dependencies', this.dependencies);
+            this.dependencies.map.singleton('events', this.events);
+            this.dependencies.map.singleton('dispatch', this.events.dispatch);
+            this.dependencies.map.singleton('views', this.views, ['events', 'dependencies']);
+            this.dependencies.map.singleton('controllers', this.controllers, ['events', 'dependencies']);
+            
+            
+            this.views.init(this.events, this.dependencies);
+            this.controllers.init(this.events, this.dependencies);
+            
+            /*
             __ = this;
             
             this.events.init();
@@ -18,6 +31,8 @@ var mvc = (function() {
             this.dependencies.init(this.models);
             this.views.init(this.events, this.dependencies);
             this.controllers.init(this.events, this.dependencies);
+            
+            */
             
             this.controllers.register('start_up', context);
             this.events.dispatch('start_up');
@@ -175,9 +190,9 @@ var mvc = (function() {
                                 })
                             },
                             
-                            value: dependencies.register.singleton,
+                            value: dependencies.map.singleton,
 
-                            instance: dependencies.register.instance
+                            instance: dependencies.map.instance
                         }
                     };
                     
@@ -218,7 +233,7 @@ var mvc = (function() {
                     });
                 },
 
-                register: {
+                map: {
                     instance: function(name, object) {
                         instances[name] = object;
                     },

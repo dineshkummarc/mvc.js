@@ -467,7 +467,7 @@ TestCase("dependencies", {
             }
         }
         
-        mvc.dependencies.register.instance('data_object', data);
+        mvc.dependencies.map.instance('data_object', data);
         
         var target = {};
         mvc.dependencies.inject(target, ['data_object']);
@@ -483,7 +483,7 @@ TestCase("dependencies", {
             method: false
         }
         
-        mvc.dependencies.register.singleton('data_model', data);
+        mvc.dependencies.map.singleton('data_model', data);
         
         var target = {};
         mvc.dependencies.inject(target, ['data_model']);
