@@ -1,3 +1,10 @@
+/**
+ * Simple MVC framework for client-side javascript applications.
+ * @fileOverview Simple MVC framework for client-side javascript applications.
+ * @author Richard Layte
+ * @version 0.0.1
+ */
+
 
 /** @namespace */
 var mvc = (function() {
@@ -122,12 +129,12 @@ var mvc = (function() {
 				*/
                 init: function(_dispatch, _dependencies) {
                     dispatch = _dispatch;
-                    dependencies = _dependencies
+                    dependencies = _dependencies;
                 },
                 
 				/** Register a model as a singleton and adds a reference to events.dispatch
 				@param name {String} Identify that is used to later define the model as a dependency
-				@param model {Object} 
+				@param model {Object} Defines the API that is used to set and retrieve data. If init method exists it will be automatically called. All methods have access to event.dispatch via this.dispatch
 				*/
                 register: function(name, model) {
                     model.dispatch = dispatch;
@@ -160,7 +167,7 @@ var mvc = (function() {
                 
 				/** Registers a view object to handle a specified element. If multiple elements are passed a new view object is created for each one.
 				@param element {Object} The element that the view manipulates, usually an HTML node, but could also be the address bar, console, etc.
-				@param view {Object} The object that mediates interaction between the view and framework. If an init function is found it will be called immediately to allow initial state to be defined. All other functions are automatically assigned as event listeners based on their names. Dependencies can be defined by setting an array of strings as a propert on the view object. 
+				@param view {Object} The object that mediates interaction between the view and framework. If an init function is found it will be called immediately to allow initial state to be defined. The view element is provided as a property on the object, i.e. this.element. The events object is fully accessible as this.events. All other functions are automatically assigned as event listeners based on their names. Additional dependencies can be defined by setting an array of strings as a propert on the view object. 
 				*/
                 register: function(element, view) {
                     _.each(element, function(el) {
@@ -274,7 +281,7 @@ var mvc = (function() {
                     });
                 },
 
-				/** @scope mvc.dependencies.register */
+				/** @namespace */
                 register: {
                     instance: function(name, object, dependencies) {
                         if(dependencies)
