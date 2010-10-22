@@ -1,4 +1,4 @@
-var shopping_cart = mvc.create(function() {
+	var shopping_cart = mvc.create(function() {
     
     // Map values
     this.map.singleton('shipping', 5);
