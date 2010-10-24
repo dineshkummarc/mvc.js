@@ -2,5 +2,7 @@
 
 Simple MVC framework for client-side applications.
 
-## Usage
+## Documentation
+
+http://rlayte.github.com/mvc/
 
