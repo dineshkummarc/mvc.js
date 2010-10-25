@@ -54,9 +54,9 @@ var mvc = (function() {
                 },
 
 				/** Assigns a callback function to trigger when the specified event string is fired.
-					@param event {String}
-					@param callback {Function}
-					@param [context] {Object}
+					@param event {String} Unique identifier that triggers all registered callbacks when dispatched
+					@param callback {Function} Called when event string is dispatched
+					@param [context] {Object} Context in whcih the callback is applied. By default the context is the event object.
 				 */
                 listen: function(event, callback, context) {
                     if(!registered[event]) {
@@ -213,6 +213,13 @@ var mvc = (function() {
             
 			/** @scope mvc.controllers */
             return {
+	
+				/** Sets up events, views, models, and dependencies
+					@param _events {Object}
+					@param _views {Object}
+					@param _models {Obejct}
+					@param _dependencies {Obejct}
+				*/
                 init: function(_events, _views, _models, _dependencies) {
                     that = this;
                     
@@ -222,6 +229,11 @@ var mvc = (function() {
                     models = _models;
                 },
                 
+				/** Allows you to register seperate functions to react to defined event strings
+					@param event {Object} Triggers the command
+					@param callback {Object} Triggered when event is event is dispatched
+					@param depends_on {Object} Adds any additional registered dependencies
+				*/
                 register: function(event, callback, depends_on) {
                     
                     var context = {
@@ -257,13 +269,20 @@ var mvc = (function() {
 
 			/** @scope mvc.dependencies */
             return {
+	
+				/** Sets up internal instances and singletons objects.
+				*/
                 init: function() {
                     that = this;
                     
                     instances = {};
                     singletons = {};
                 },
-
+				
+				/** Looks up all required dependencies and injects them as public properties of the supplied object
+					@param inject_into {Object} Target object that dependencies are inject into
+					@param dependencies {Array} list of strings to identify what the target object depends upon
+				*/
                 inject: function(inject_into, dependencies) {
                     _.each(dependencies, function(dependency) {
                         if(singletons[dependency]) {
@@ -283,13 +302,24 @@ var mvc = (function() {
 
 				/** @namespace */
                 register: {
+	
+					/** Creates a new instance of the object whenever requested as a dependency
+						@param name {String} Used to pull back the object as a dependency
+						@param obejct {Object}
+						@param [dependencies] {Array} Any predefined dependencies will be injected if found
+					*/
                     instance: function(name, object, dependencies) {
                         if(dependencies)
                           that.inject(object, dependencies);
                         
                         instances[name] = object;
                     },
-
+					
+					/** Registers object as a global reference
+						@param name {String} Used to pull back the object as a dependency
+						@param obejct {Object}
+						@param [dependencies] {Array} Any predefined dependencies will be injected if found
+					*/
                     singleton: function(name, object, dependencies) {
                         if(!singletons[name]) {
                             if(dependencies)
