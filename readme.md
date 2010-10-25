@@ -6,7 +6,7 @@ Due to this single focus, mvc.js is extremely light-weight weighing in at under 
 
 # Getting started
 
-This is a brief guide to best-practices and how to use the framework. For full a full API reference see the [documentation](http://rlayte.github.com/mvc/) or take a look through the example applications:
+This is a brief guide on how to use the framework. For more information on framework internals take a look at the [API reference](http://rlayte.github.com/mvc/) or the example applications:
 
 + [Hello world](#)
 + [Shopping cart](#)
@@ -62,9 +62,13 @@ Here's a simple example:
 
 ## Models
 
+Models are used to store data, provide business logic and maintain state.
+
 ## Views
+
+Views are representations of the current state held by the application models. The most common representation will be an HTML element (or group of elements), but could also be the url bar, console, etc.
 
 ## Controllers
 
-## Dependency Injection
+Controllers are used to pass information between the views and models
 
