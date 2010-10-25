@@ -229,6 +229,11 @@ var mvc = (function() {
                     models = _models;
                 },
                 
+				/** Allows you to register seperate functions to react to defined event strings
+					@param event {Object} Triggers the command
+					@param callback {Object} Triggered when event is event is dispatched
+					@param depends_on {Object} Adds any additional registered dependencies
+				*/
                 register: function(event, callback, depends_on) {
                     
                     var context = {
@@ -274,7 +279,7 @@ var mvc = (function() {
                     singletons = {};
                 },
 				
-				/**
+				/** Looks up all required dependencies and injects them as public properties of the supplied object
 					@param inject_into {Object} Target object that dependencies are inject into
 					@param dependencies {Array} list of strings to identify what the target object depends upon
 				*/
@@ -298,10 +303,10 @@ var mvc = (function() {
 				/** @namespace */
                 register: {
 	
-					/**
-						@param name {String}
+					/** Creates a new instance of the object whenever requested as a dependency
+						@param name {String} Used to pull back the object as a dependency
 						@param obejct {Object}
-						@param [dependencies] {Array}
+						@param [dependencies] {Array} Any predefined dependencies will be injected if found
 					*/
                     instance: function(name, object, dependencies) {
                         if(dependencies)
@@ -310,10 +315,10 @@ var mvc = (function() {
                         instances[name] = object;
                     },
 					
-					/**
-						@param name {String}
+					/** Registers object as a global reference
+						@param name {String} Used to pull back the object as a dependency
 						@param obejct {Object}
-						@param [dependencies] {Array}
+						@param [dependencies] {Array} Any predefined dependencies will be injected if found
 					*/
                     singleton: function(name, object, dependencies) {
                         if(!singletons[name]) {
