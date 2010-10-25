@@ -60,7 +60,7 @@ Here's a simple example:
 		
 	});
 	
-* Note: you can also map arbitrary values and objects using `map.instance` and `map.singleton`. These can be used to map common values (e.g. animation duration) and objects (e.g. product data object). *
+*Note: you can also map arbitrary values and objects using `map.instance` and `map.singleton`. These can be used to map common values (e.g. animation duration) and objects (e.g. product data object).*
 
 ## Models
 
