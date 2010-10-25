@@ -1,4 +1,4 @@
-# Goals
+# Framework goals
 
 Simple MVC framework for client-side applications.
 
