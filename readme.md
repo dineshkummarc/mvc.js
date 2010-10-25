@@ -4,5 +4,5 @@ Simple MVC framework for client-side applications.
 
 ## Documentation
 
-Can be found [here](http://rlayte.github.com/mvc/)
+[Full API documentation](http://rlayte.github.com/mvc/)
 
