@@ -59,16 +59,32 @@ Here's a simple example:
 		this.dispatch('add_initial_products');
 		
 	});
+	
+* Note: you can also map arbitrary values and objects using `map.instance` and `map.singleton`. These can be used to map common values (e.g. animation duration) and objects (e.g. product data object). *
 
 ## Models
 
-Models are used to store data, provide business logic and maintain state.
+Models are used to store data, process business logic, and maintain state.
+
+** Init method **
+
+** Dispatching events **
 
 ## Views
 
 Views are representations of the current state held by the application models. The most common representation will be an HTML element (or group of elements), but could also be the url bar, console, etc.
 
+** Init method **
+
+** Handling events **
+
+** Defining dependencies **
+
 ## Controllers
 
 Controllers are used to pass information between the views and models
+
+** Mapping system objects **
+
+** Defining dependencies **
 
