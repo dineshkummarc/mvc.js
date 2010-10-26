@@ -4,7 +4,7 @@
 		<meta charset="utf-8" />
 		<title>mvc.js</title>
 		
-		<link rel="stylesheet" href="/css/mvc.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="css/mvc.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	</head>
 	<body>
 		<div class="sidebar">
@@ -12,41 +12,125 @@
 			<p>Simple, light-weight MVC framework for client-side applications.</p>
 			
 			<ul>
-				<li><a href="http://rlayte.github.com/mvc/docs/output/" title="">Downloads</a></li>
-				<li><a href="http://rlayte.github.com/mvc/docs/output/" title="">Geting started</a></li>
+				<li><a href="#downloads" title="">Downloads</a></li>
+				<li><a href="#getting_started" title="">Geting started</a></li>
 				<li><a href="http://rlayte.github.com/mvc/docs/output/" title="">Documentation</a></li>
-				<li><a href="http://rlayte.github.com/mvc/docs/output/" title="">Examples</a></li>
-				<li><a href="http://rlayte.github.com/mvc/docs/output/" title="">FAQs</a></li>
+				<li><a href="#examples" title="">Examples</a></li>
+				<li><a href="#faqs" title="">FAQs</a></li>
 			</ul>
 		</div>
 		
 		<div class="content">
 			<h2>Framework goals</h2>
-			<p>The sole purpose of mvc.js is to provide a way for you to write modular applications - using an implementation of the model-view-controler pattern and a dependency injection container. There are already many frameworks which provide animation, DOM manipulation, and ajax methods (amongst other things) and you are free to use your preferred framework in conjunction with mvc.js.</p>
+			<p>The sole purpose of mvc.js is to provide a way for you to write modular applications - using an implementation of the <a href="#">model-view-controler pattern</a> and a <a href="#">dependency injection</a> container. There are already many frameworks which provide animation, DOM manipulation, and ajax methods (amongst other things) and you are free to use your preferred framework in conjunction with mvc.js.</p>
 
-			<p>Due to this single focus, mvc.js is extremely light-weight at just over 1kb when minified and gzipped.</p>
+			<p>Due to this single focus, mvc.js is extremely light-weight at just over <strong>1kb when minified and gzipped</strong>.</p>
 			
-			<h2>Downloads</h2>
+			<hr />
 			
-			<ul>
-				<li>Development version (Uncompressed with comments) - 12kb</li>
-				<li>Production version (Minified without comments) - 1kb when gzipped</li>
-			</ul>
-			
-			<h2>Getting started</h2>
-			
-			<h2>Examples</h2>
+			<h2><a href="#downloads" name="downloads">Downloads</a></h2>
 			
 			<ul>
-				<li>Hello world</li>
-				<li>Shopping cart</li>
-				<li>Twitter client</li>
-				<li>Carousel</li>
-				<li>Video player</li>
+				<li><a href="http://github.com/rlayte/mvc/raw/master/src/mvc.js">Development version</a> (Uncompressed with comments) - <strong>12kb</strong></li>
+				<li><a href="http://github.com/rlayte/mvc/raw/master/src/mvc.min.js">Production version</a> (Minified without comments) - <strong>1kb when gzipped</strong></li>
 			</ul>
 			
-			<h2>FAQs</h2>
-			<p>Coming soon</p>
+			<hr />
+			
+			<h2><a href="#getting_started" name="getting_started">Getting started</a></h2>
+			
+			<h3>Creating an application</h3>
+
+			<p>To create an application with mvc.js you pass a function to the create method that defines the application objects and how they interact together. Within the function you have access to two objects: dispatch and map. Dispatch allows you to send events across the system, see the events documentation for more information. Map provides an API for registering models, views, and controllers. More details on how this is done can be found below.</p>
+
+			<p>Here's a simple example:</p>
+
+			<pre>
+			mvc.create(function() {
+
+			    map.model('cart', (function() {
+
+			        var current_products;
+
+			        return {
+
+			            init: function() {
+			                // set up initial state
+			            },
+
+			            add_product: function(product) {
+			                // add product to current_products
+			            }
+
+			        }
+
+			    }));
+
+			    map.view($('.items'), {
+
+			        init: function() {
+			            // set up initial view state
+			        },
+
+			        disable: function() {
+			            // disable items
+			        }
+
+			    });
+
+			    map.controller('add_product', function(product) {
+			        // manipulate data and add it to the cart model
+			    });
+
+			    this.dispatch('add_initial_products');
+
+			});
+			</pre>
+			
+			<p><em>Note: you can also map arbitrary values and objects using map.instance and map.singleton. These can be used to map common values (e.g. animation duration) and objects (e.g. product data object).</em></p>
+
+			<h3>Models</h3>
+
+			<p>Models are used to store data, process business logic, and maintain state.</p>
+
+			<h4>Init method</h4>
+
+			<h4>Dispatching events</h4>
+
+			<h3>Views</h3>
+
+			<p>Views are representations of the current state held by the application models. The most common representation will be an HTML element (or group of elements), but could also be the url bar, console, etc.</p>
+
+			<h4>Init method</h4>
+
+			<h4>Handling events</h4>
+
+			<h4>Defining dependencies</h4>
+
+			<h3>Controllers</h3>
+
+			<p>Controllers are used to pass information between the views and models</p>
+
+			<h4>Mapping system objects</h4>
+
+			<h4>Defining dependencies</h4>
+			
+			<hr />
+			
+			<h2><a href="#examples" name="examples">Examples</a></h2>
+			
+			<ul>
+				<li><a href="#">Hello world</a></li>
+				<li><a href="#">Shopping cart</a></li>
+				<li>Twitter client <em>(coming soon)</em></li>
+				<li>Carousel <em>(coming soon)</em></li>
+				<li>Video player <em>(coming soon)</em></li>
+			</ul>
+			
+			<hr />
+			
+			<h2><a href="#faqs" name="faqs">FAQs</a></h2>
+			<p>Coming soon...</p>
 			
 		</div>
 	</body>
