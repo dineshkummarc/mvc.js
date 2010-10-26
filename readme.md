@@ -2,7 +2,7 @@
 
 The sole purpose of mvc.js is to provide a way for you to write modular applications - using an implementation of the [model-view-controler](http://en.wikipedia.org/wiki/Model%E2%80%93View%E2%80%93Controller) pattern and a [dependency injection](http://en.wikipedia.org/wiki/Dependency_injection) container. There are already **many** frameworks which provide animation, DOM manipulation, and ajax methods (amongst other things) and you are free to use your preferred framework in conjunction with mvc.js.
 
-Due to this single focus, mvc.js is extremely light-weight weighing in at under **1kb when minified and gzipped**.
+Due to this single focus, mvc.js is extremely light-weight at just over **1kb when minified and gzipped**.
 
 # Getting started
 

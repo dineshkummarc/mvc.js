@@ -26,8 +26,7 @@ var mvc = (function() {
     return {
         
 		/** Creates a new mvc application
-			@param {Function} context 	
-			Registered as a controller, therefore has all the standard functionality available to controllers. Used to define and wire together application objects.
+			@param context {Function} Registered as a controller, therefore has all the standard functionality available to controllers. Used to define and wire together application objects.
 		
 		*/
         create: function(context) {
