@@ -5,28 +5,32 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - mvc.dependencies</title>
+		<title>JsDoc Reference - mvc.models</title>
 
 		<style type="text/css">
 			/* default.css */
 body
 {
-	font: 14px georgia, serif;
+	font: 14px Helvetica, arial, sans-serif;
+	line-height: 1.5em;
 	width: 800px;
-	background-color: #ddd;
-	color: #333;
+	height: 100%;
+
+    background: #EDEBE8;
+        	
+	color: #2b2b2b;
 	text-shadow: 0px 1px 1px #ffffff;
     filter: dropshadow(color=#ffffff, offx=0, offy=1);
 }
 
 a {
-    color: #333;
+    color: #2b2b2b;
 }
 
 .header
 {
 	clear: both;
-	background-color: #ccc;
+	background-color: #fff;
 	padding: 8px;
 }
 
@@ -35,12 +39,11 @@ h1
 	font-size: 150%;
 	font-weight: bold;
 	padding: 0;
-	margin: 1em 0 0 .3em;
+	margin: 5px;
 }
 
 hr
 {
-	border: none 0;
 	border-bottom: 1px solid #fff;
 	border-top: 1px solid #999;
 }
@@ -58,7 +61,7 @@ pre.code
 	width: 240px;
 	position: fixed;
 	left: 8px;
-	background-color: #eee;
+	background-color: #f9f9f9;
 	padding: 16px 8px;
 	
 	-webkit-box-shadow: 0px 0px 3px #999;
@@ -73,24 +76,35 @@ pre.code
 }
 
 #index .controls a {
-    background-color: #666;
+    background-color: #2b2b2b;
+    background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#333), to(#2b2b2b));
+    /* Mozilla */
+    background-image: -moz-linear-gradient(top, #333, #2b2b2b);
+
+	-webkit-box-shadow: 0px 1px 1px #111;
+    -moz-box-shadow: 0px 1px 1px #111;
+    box-shadow: 0px 0px 1px #111;
+
     color: #eee;
-    padding: 5px;
+    padding: 2px 6px;
     text-decoration: none;
     margin: 0px 8px 16px 0;
     display: block;
     float: left;
+	font-size: 11px;
+	font-weight: bold;
     
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
     
-    -webkit-box-shadow: 0px 0px 3px #999;
-    -moz-box-shadow: 0px 0px 3px #999;
-    box-shadow: 0px 0px 3px #999;
-    
-    text-shadow: 0px -1px 1px #333;
+    text-shadow: 0px -1px 0px #333;
     filter: dropshadow(color=#333, offx=0, offy=-1);
+}
+
+#index hr {
+	border-bottom: 1px solid #fff;
+	border-top: 1px solid #ccc;
 }
 
 #content
@@ -104,7 +118,6 @@ pre.code
 	list-style-type: none;
 	padding: 0;
 	margin: 0 0 0 8px;
-	font-family: georgia, serif;
 	font-size: 1em;
 	overflow: auto;
 }
@@ -158,8 +171,9 @@ td.attributes, .fixedFont
 }
 
 .fixedFont {
-    background-color: #eee;
+    background-color: #fff;
     border-left: 5px solid #ccc;
+	margin-bottom: 10px;
 }
 
 .summaryTable td.nameDescription
@@ -187,7 +201,7 @@ ul.inheritsList
 
 .detailList {
 	margin-left: 20px; 
-	line-height: 15px;
+	line-height: 1.5em;
 }
 .detailList dt { margin-left: 20px; }
 
@@ -200,7 +214,7 @@ ul.inheritsList
 
 .light, td.attributes, .light a:link, .light a:visited
 {
-	color: #999;
+	color: #666;
 	font-style: italic;
 }
 
@@ -222,7 +236,11 @@ ul.inheritsList
 <!-- ============================== classes index ============================ -->
 		<div id="index">
 			<!-- begin publish.classesIndex -->
-			<div class="controls"><a href="../index.html">Class Index</a><a href="../files.html">File Index</a></div>
+			
+<h1>mvc.js</h1>
+<hr />
+
+<div class="controls"><a href="../index.html">Class Index</a><a href="../files.html">File Index</a></div>
 <h2>Classes</h2>
 <ul class="classList">
 	
@@ -250,7 +268,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Namespace mvc.dependencies
+				Namespace mvc.models
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -267,7 +285,7 @@ ul.inheritsList
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class mvc.dependencies.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class mvc.models.">
 				<caption>Namespace Summary</caption>
 				<thead>
 					<tr>
@@ -280,7 +298,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/mvc.dependencies.html#constructor">mvc.dependencies</a></b>
+								<b><a href="../symbols/mvc.models.html#constructor">mvc.models</a></b>
 							</div>
 							<div class="description"></div>
 						</td>
@@ -291,17 +309,12 @@ ul.inheritsList
 
 <!-- ============================== properties summary ===================== -->
 			
-				
-				
-				
-				
-			
 
 <!-- ============================== methods summary ======================== -->
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class mvc.dependencies.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class mvc.models.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -314,18 +327,18 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">mvc.dependencies.<b><a href="../symbols/mvc.dependencies.html#.init">init</a></b>()
+								<div class="fixedFont">mvc.models.<b><a href="../symbols/mvc.models.html#.init">init</a></b>(_dispatch, _dependencies)
 								</div>
-								<div class="description"></div>
+								<div class="description">Sets up dispatch and dependencies variables</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">mvc.dependencies.<b><a href="../symbols/mvc.dependencies.html#.inject">inject</a></b>(inject_into, dependencies)
+								<div class="fixedFont">mvc.models.<b><a href="../symbols/mvc.models.html#.register">register</a></b>(name, model)
 								</div>
-								<div class="description"></div>
+								<div class="description">Register a model as a singleton and adds a reference to events.dispatch</div>
 							</td>
 						</tr>
 					
@@ -346,7 +359,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>mvc.dependencies</b>
+						<b>mvc.models</b>
 				</div>
 				
 				<div class="description">
@@ -381,36 +394,11 @@ ul.inheritsList
 					<div class="fixedFont">&lt;static&gt; 
 					
 					
-					<span class="light">mvc.dependencies.</span><b>init</b>()
+					<span class="light">mvc.models.</span><b>init</b>(_dispatch, _dependencies)
 					
 					</div>
 					<div class="description">
-						
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name=".inject"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					
-					<span class="light">mvc.dependencies.</span><b>inject</b>(inject_into, dependencies)
-					
-					</div>
-					<div class="description">
-						
+						Sets up dispatch and dependencies variables
 						
 						
 					</div>
@@ -422,16 +410,58 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>inject_into</b>
+									<b>_dispatch</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>{Function} Reference to events.dispatch</dd>
 							
 								<dt>
-									<b>dependencies</b>
+									<b>_dependencies</b>
 									
 								</dt>
-								<dd></dd>
+								<dd>{Object} Reference to dependencies</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".register"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">mvc.models.</span><b>register</b>(name, model)
+					
+					</div>
+					<div class="description">
+						Register a model as a singleton and adds a reference to events.dispatch
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>name</b>
+									
+								</dt>
+								<dd>{String} Identify that is used to later define the model as a dependency</dd>
+							
+								<dt>
+									<b>model</b>
+									
+								</dt>
+								<dd>{Object} Defines the API that is used to set and retrieve data. If init method exists it will be automatically called. All methods have access to event.dispatch via this.dispatch</dd>
 							
 							</dl>
 						
@@ -456,7 +486,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sun Oct 24 2010 21:59:39 GMT+0100 (BST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Oct 26 2010 11:26:01 GMT+0100 (BST)
 		</div>
 	</body>
 </html>
