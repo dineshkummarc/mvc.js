@@ -1,9 +1,8 @@
 
-task :tests do
-  system 'java -jar $JSTD_HOME/JsTestDriver-1.2.2.jar --port 3232'
-  system 'java -jar $JSTD_HOME/JsTestDriver-1.2.2.jar --tests all --reset'
+task :create_docs do
+  system 'java -jar $JSDOC_TOOLKIT/jsrun.jar $JSDOC_TOOLKIT/app/run.js -a -t=docs/template -d=docs/output src/mvc.js'
 end
 
-task :doc do
-  system 'java -jar $JSDOC_TOOLKIT/jsrun.jar $JSDOC_TOOLKIT/app/run.js -a -t=$JSDOC_TOOLKIT/templates/mvc src/mvc.js -d=docs'
+task :minify do
+  
 end
