@@ -12,14 +12,14 @@ task :minify do
   Rake::Task[:commit].invoke()
 end
 
-task :commit, :message do |t, args|
+task :commit do
   system 'git commit -am "' + commit_message + '"'
   system 'git push origin master'
   
-  Rake::Task[:create_gh_page].invoke(args[:message])
+  Rake::Task[:create_gh_page].invoke()
 end
 
-task :create_gh_page, :message do |t, args|
+task :create_gh_page do
   system 'git checkout gh-pages'
   system 'git checkout master docs/output'
   system 'git commit -am "' + commit_message + '"'
@@ -27,7 +27,7 @@ task :create_gh_page, :message do |t, args|
   system 'git checkout master'
 end
 
-task :build, :message do |t, args|
+task :deploy, :message do |t, args|
   commit_message = args[:message]
   
   Rake::Task[:create_docs].invoke()
