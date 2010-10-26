@@ -8,8 +8,8 @@ Due to this single focus, mvc.js is extremely light-weight at just over **1kb wh
 
 This is a brief guide on how to use the framework. For more information on framework internals take a look at the [API reference](http://rlayte.github.com/mvc/) or the example applications:
 
-+ [Hello world](#)
-+ [Shopping cart](#)
++ [Hello world](http://rlayte.github.com/mvc/examples/hello_world/)
++ [Shopping cart](http://rlayte.github.com/mvc/examples/shopping_cart/)
 + Twitter client (coming soon)
 + Carousel (coming soon)
 + Video player (coming soon)
