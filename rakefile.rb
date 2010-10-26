@@ -7,24 +7,23 @@ task :minify do
   system 'java -jar $YUI_COMPRESSOR/build/yuicompressor-2.4.2.jar -o src/mvc.min.js src/mvc.js'
 end
 
-task :commit do |message|
-  puts message
-  
-  system 'git commit -am "testing rake build commit"'
+task :commit, :message do |t, args|
+  system 'git commit -am "' + args[:message] + '"'
   system 'git push origin master'
+  
+  Rake::Task[:create_gh_page].invoke(args[:message])
 end
 
-task :create_gh_page do |message|
-  puts message
+task :create_gh_page, :message do |t, args|
+  puts args[:message]
   
   system 'git checkout gh-pages'
-  system 'git checkout master docs/output examples'
-  system 'git commit -am "testing rake build commit"'
+  system 'git checkout master docs/output'
+  system 'git commit -am "' + args[:message] + '"'
   system 'git push origin gh-pages'
   system 'git checkout master'
 end
 
-task :build, :commit_message do |t, args|
-  Rake::Task[:commit].invoke(args[:commit_message])
-  Rake::Task[:create_gh_page].invoke(args[:commit_message])
+task :build, :message do |t, args|
+  Rake::Task[:commit].invoke(args[:message])
 end
