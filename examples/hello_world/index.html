@@ -3,23 +3,24 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>MVC - Hello World</title>
+		<link href='http://fonts.googleapis.com/css?family=Inconsolata&subset=latin' rel='stylesheet' type='text/css'>
+		<link href='master.css' rel='stylesheet' type='text/css'>
 		
 	</head>
 	<body>
-	
-		<input type="button" name="some_name" value="Add" id="add" />
 		
-		<div class="count"></div>
-		<div class="count"></div>
-		<div class="count"></div>
-		<div class="count"></div>
-		<div class="count"></div>
-		<div class="count"></div>
-		<div class="count"></div>
+		<div class="wrapper">
+			<div class="controls">
+				<input type="button" name="some_name" value="Add" id="add" />
+				<input type="button" name="some_name" value="Subtract" id="subtract" />
+			</div>
+			
+			<div class="count"></div>
+		</div>
 		
-		<script src="http://github.com/rlayte/mvc/raw/master/libs/underscore.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../libs/underscore.js" type="text/javascript" charset="utf-8"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="http://github.com/rlayte/mvc/raw/master/src/mvc.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../src/mvc.js" type="text/javascript" charset="utf-8"></script>
 		
 		<script type="text/javascript" charset="utf-8">
 		
@@ -37,7 +38,13 @@
 						add: function() {
 							current_count++;
 							
-							this.dispatch('number_added', [current_count]);
+							this.dispatch('number_changed', [current_count]);
+						},
+						
+						subtract: function() {
+							current_count--;
+							
+							this.dispatch('number_changed', [current_count]);
 						}
 					}
 					
@@ -47,10 +54,10 @@
 					
 					return {
 						init: function() {
-							$(this.element).html('No numbers have been entered.');
+							$(this.element).html('0');
 						},
 						
-						number_added: function(number) {
+						number_changed: function(number) {
 							$(this.element).html(number);
 						}
 					}
@@ -75,13 +82,23 @@
 					
 				})());
 				
-				this.map.controller('debug', function(msg, value) {
-					console.log(msg, value);
-				});
-				
-				this.map.controller('number_added', function() {
-					this.dispatch('debug', ['Count model: ', this.count]);
-				}, ['count']);
+				this.map.view($('#subtract'), (function() {
+					
+					var that;
+					
+					return {
+						dependencies: ['count'],
+						
+						init: function() {
+							that = this;
+							
+							$(this.element).click(function() {
+								that.count.subtract();
+							});
+						}
+					}
+					
+				})());
 				
 			});
 		</script>
