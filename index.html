@@ -48,48 +48,48 @@
 			<p>Here's a simple example:</p>
 
 			<pre>
-			mvc.create(function() {
+mvc.create(function() {
 
-			    map.model('cart', (function() {
+    map.model('cart', (function() {
 
-			        var current_products;
+        var current_products;
 
-			        return {
+        return {
 
-			            init: function() {
-			                // set up initial state
-			            },
+            init: function() {
+                // set up initial state
+            },
 
-			            add_product: function(product) {
-			                // add product to current_products
-			            }
+            add_product: function(product) {
+                // add product to current_products
+            }
 
-			        }
+        }
 
-			    }));
+    }));
 
-			    map.view($('.items'), {
+    map.view($('.items'), {
 
-			        init: function() {
-			            // set up initial view state
-			        },
+        init: function() {
+            // set up initial view state
+        },
 
-			        disable: function() {
-			            // disable items
-			        }
+        disable: function() {
+            // disable items
+        }
 
-			    });
+    });
 
-			    map.controller('add_product', function(product) {
-			        // manipulate data and add it to the cart model
-			    });
+    map.controller('add_product', function(product) {
+        // manipulate data and add it to the cart model
+    });
 
-			    this.dispatch('add_initial_products');
+    this.dispatch('add_initial_products');
 
-			});
+});
 			</pre>
 			
-			<p><em>Note: you can also map arbitrary values and objects using map.instance and map.singleton. These can be used to map common values (e.g. animation duration) and objects (e.g. product data object).</em></p>
+			<p><em><strong>Note</strong>: you can also map arbitrary values and objects using map.instance and map.singleton. These can be used to map common values (e.g. animation duration) and objects (e.g. product data object).</em></p>
 
 			<h3>Models</h3>
 
