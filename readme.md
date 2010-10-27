@@ -140,9 +140,87 @@ This example dispatches a `product_added` event when the product data is updated
 
 Views are representations of the current state held by the application models. The most common representation will be an HTML element (or group of elements), but could also be the url bar, console, etc.
 
+To register a view in mvc.js you call `map.view` and pass in the target element and a view object that defines an API for manipulating the element.
+
+	this.map.view($('.product_list), (function() {
+		
+		return {
+			display_products: function() {
+				$(this.element).show();
+			}
+		}
+	});
+	
+*Note: if an array of view elements is passed in as the first parameter (e.g. using a jQuery selector that selects all elements with a certain class) then a new view object will be created for each element.*
+
 ** Init method **
 
+As with models you'll often need to define the initial state of views. This can be achieved in the same way by assigning an `init` method on your view object.
+
+	this.map.view($('.product_list), (function() {
+	
+		return {
+			init: function() {
+				$(this.element).hide();
+			},
+			
+			display_products: function() {
+				$(this.element).show();
+			}
+		}
+	});
+
 ** Handling events **
+
+Views are less portable than the model layer because they have to react to specific events. To do this they must be able to register event listener, which can be achieved in to ways.
+
+First, you can manually define event listeners by using the `events.listen` method, which requires an event type and callback as parameters. For example: 
+	
+	this.map.view($('.product_list), (function() {
+		
+		var handler = function() {
+			
+		}
+	
+		return {
+			init: function() {
+				$(this.element).hide();
+				
+				this.events.listen('product_added', handler);
+			}
+		}
+	});
+	
+Alternatively, you can automatically create listeners by defining public methods on you view object. All methods (apart from init) will be registered as listeners using their name as the event type. For example the following view will react to `product_added` when dispatched.
+
+	this.map.view($('.product_list), (function() {
+		
+		return {
+			
+			init: function() {
+				$(this.element).hide();
+			},
+			
+			product_added: function() {
+				
+			}
+		}
+	});
+
+** Dispatching events **
+
+Views can also dispatch events, generally to call required controllers. This is done by calling `events.dispatch` with a required event type and optionally any parameters to be used by the callback functions.
+
+	this.map.view($('.product_list), (function() {
+	
+		return {
+			
+			init: function() {
+				this.dispatch('view_created');
+			}
+			
+		}
+	});
 
 ** Defining dependencies **
 
