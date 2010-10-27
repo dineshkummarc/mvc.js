@@ -7,8 +7,8 @@
 		<link href='http://fonts.googleapis.com/css?family=Lobster&subset=latin' rel='stylesheet' type='text/css'>
 		
 		<style type="text/css" media="screen">
-			h1 {
-				font-family: 'Lobster', arial, serif;
+			body {
+				font-family: Helvetica, Arial, sans-serif;
 			}
 			
 			.wrapper {
@@ -34,7 +34,37 @@
 			.cart {
 				position: fixed;
 				top: 10px;
-				right: 200px;
+				right: 100px;
+				width: 260px;
+				padding: 16px;
+				
+				box-shadow: 0 0px 6px rgba(0, 0, 0, 0.3); /* TODO - add fallbacks here */
+			    /* Mozilla */
+			    -moz-box-shadow: 0 0px 6px rgba(0, 0, 0, 0.3);
+			    /* Webkit */
+			    -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+			}
+			
+			.cart h2 {
+				border-bottom: 1px solid #999;
+				padding-bottom: 0.5em;
+			}
+			
+			.cart li {
+				list-style-type: none;
+				font-size: 0.8em;
+				display: block;
+				margin: 0.5em;
+			}
+			
+			.cart ul {
+				padding: 0;
+				margin: 0;
+			}
+			
+			.cart .total_cost {
+				border-top: 1px solid #999;
+				padding-top: 0.5em;
 			}
 		</style>
 		
@@ -43,46 +73,46 @@
 	<body>
 		
 		<div class="wrapper">
-			<h1>MVC Music Store</h1>
+			<h1>Music Store</h1>
 			
 			<ul class="items">
-				<li><a href="#"><img src="images/loveless.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/before_and_after_science.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/saving_grace.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/pink_flag.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/james_blake.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/madvillain.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/person_pitch.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/sinister.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/fever_ray.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/low.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/richard_hell.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/suicide.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/talking_heads.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/velvets.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/outkast.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/faust.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/palce.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/pauls.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/replacements.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/patti.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/candy.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/black_flag.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/burial.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/clipse.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/pavement.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/bug.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/pet_sounds.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/zomby.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/bruce.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/anco.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/atlas.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/vincent.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/deerhunter.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/rumours.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/clouddead.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/minutemen.jpg" alt="image" title="image title" /></a></li>
-				<li><a href="#"><img src="images/xray.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/loveless.jpg" alt="My Bloody Valentine - Loveless" title="image title" /></a></li>
+				<li><a href="#"><img src="images/before_and_after_science.jpg" alt="Brian Eno - Before and After Science" title="image title" /></a></li>
+				<li><a href="#"><img src="images/saving_grace.jpg" alt="The Fall - This Nation's Saving Grace" title="image title" /></a></li>
+				<li><a href="#"><img src="images/pink_flag.jpg" alt="Wire - Pink Flag" title="image title" /></a></li>
+				<li><a href="#"><img src="images/james_blake.jpg" alt="James Blake - Klavierwerke EP" title="image title" /></a></li>
+				<li><a href="#"><img src="images/madvillain.jpg" alt="Madvillain - Madvillainy" title="image title" /></a></li>
+				<li><a href="#"><img src="images/person_pitch.jpg" alt="Panda Bear - Person Pitch" title="image title" /></a></li>
+				<li><a href="#"><img src="images/sinister.jpg" alt="Belle &amp; Sebastian - If You're Feeling Sinister" title="image title" /></a></li>
+				<li><a href="#"><img src="images/fever_ray.jpg" alt="Fever Ray - Fever Ray" title="image title" /></a></li>
+				<li><a href="#"><img src="images/low.jpg" alt="David Bowie - Low" title="image title" /></a></li>
+				<li><a href="#"><img src="images/richard_hell.jpg" alt="Richard Hell - Blank Generation" title="image title" /></a></li>
+				<li><a href="#"><img src="images/suicide.jpg" alt="Suicide - Suicide" title="image title" /></a></li>
+				<li><a href="#"><img src="images/talking_heads.jpg" alt="Talking Heads - Remain in Light" title="image title" /></a></li>
+				<li><a href="#"><img src="images/velvets.jpg" alt="The Velvet Underground &amp; Nico - Self titled" title="image title" /></a></li>
+				<li><a href="#"><img src="images/outkast.jpg" alt="Outkast - Aquemini" title="image title" /></a></li>
+				<li><a href="#"><img src="images/faust.jpg" alt="Faust - IV" title="image title" /></a></li>
+				<li><a href="#"><img src="images/palce.jpg" alt="Palace Brothers - Viva Last Blues" title="image title" /></a></li>
+				<li><a href="#"><img src="images/pauls.jpg" alt="Beastie Boys - Paul's Boutique" title="image title" /></a></li>
+				<li><a href="#"><img src="images/replacements.jpg" alt="The Replacements - Let it be" title="image title" /></a></li>
+				<li><a href="#"><img src="images/patti.jpg" alt="Patti Smith - Horses" title="image title" /></a></li>
+				<li><a href="#"><img src="images/candy.jpg" alt="The Jesus and mary Chain - Pyschocandy" title="image title" /></a></li>
+				<li><a href="#"><img src="images/black_flag.jpg" alt="Black Flag - Damaged" title="image title" /></a></li>
+				<li><a href="#"><img src="images/burial.jpg" alt="Burial - Untrue" title="image title" /></a></li>
+				<li><a href="#"><img src="images/clipse.jpg" alt="Clipse - Hell Hath no Fury" title="image title" /></a></li>
+				<li><a href="#"><img src="images/pavement.jpg" alt="Pavement - Slanted and Enchanted" title="image title" /></a></li>
+				<li><a href="#"><img src="images/bug.jpg" alt="The Bug - London Zoo" title="image title" /></a></li>
+				<li><a href="#"><img src="images/pet_sounds.jpg" alt="The Beach Boys - Pet Sounds" title="image title" /></a></li>
+				<li><a href="#"><img src="images/zomby.jpg" alt="Zomby - Where were you in '92" title="image title" /></a></li>
+				<li><a href="#"><img src="images/bruce.jpg" alt="Bruce Springsteen - Darkness on the Edge of Town" title="image title" /></a></li>
+				<li><a href="#"><img src="images/anco.jpg" alt="Animal Collective - Sung Tongs" title="image title" /></a></li>
+				<li><a href="#"><img src="images/atlas.jpg" alt="Atlas Sound - Let the Blind Lead Those Who Can Feel But Cannot See" title="image title" /></a></li>
+				<li><a href="#"><img src="images/vincent.jpg" alt="St. Vincent - Actor" title="image title" /></a></li>
+				<li><a href="#"><img src="images/deerhunter.jpg" alt="Deerhuner - Cryptograms" title="image title" /></a></li>
+				<li><a href="#"><img src="images/rumours.jpg" alt="Fleetwood Mac - Rumours" title="image title" /></a></li>
+				<li><a href="#"><img src="images/clouddead.jpg" alt="CloudDead - CloudDead" title="image title" /></a></li>
+				<li><a href="#"><img src="images/minutemen.jpg" alt="Minutemen - 42 Nickels on the Dime" title="image title" /></a></li>
+				<li><a href="#"><img src="images/xray.jpg" alt="Xray Spex - Germ-free Adolescents" title="image title" /></a></li>
 			</ul>
 		</div>
 		
@@ -90,9 +120,10 @@
 			<h2>Shopping cart</h2>
 			
 			<ul>
+				<li>No items have been added to your basket</li>
 			</ul>
 			
-			<p class="total_cost"></p>
+			<p class="total_cost">Total: £ <span class="price">0.00</span></p>
 		</div>
 		
 		<script src="http://github.com/rlayte/mvc/raw/master/libs/underscore.js" type="text/javascript" charset="utf-8"></script>

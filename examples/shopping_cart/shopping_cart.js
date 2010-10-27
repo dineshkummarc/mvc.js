@@ -260,17 +260,6 @@ var modulr = (function(global) {
 })(this);
 
 (function(require, module) {require.define({
-'model/vo/product': function(require, exports, module) {
-exports.product = (function() {
-    
-    return {
-        name: 'No name defined',
-        price: 0,
-        quantity: 0
-    }
-    
-})();
-}, 
 'model/cart': function(require, exports, module) {
 exports.cart_model = (function() {
     
@@ -284,14 +273,22 @@ exports.cart_model = (function() {
         },
         
         add_item: function(item) {
-            if(items[item.name]) {
-                items[item.name].quantity++;
-            }
-            else {
-                items[item.name] = item;
-            }
+			if(!items[item.title]) {
+				items[item.title] = item;
+			}
+			else{ 
+				items[item.title].quantity += 1;
+			}
             
             this.dispatch('item_added', [item]);
+        },
+        
+        get_current_items: function() {
+            var titles = _.map(items, function(item) {
+                return [item.artist, item.title, item.quantity];
+            });
+            
+            return titles;
         },
         
         get_total_price: function() {
@@ -303,7 +300,7 @@ exports.cart_model = (function() {
             
             price += this.shipping;
             
-            return '£' + price.toString();
+            return price.toFixed(2).toString();
         }
     }
     
@@ -335,18 +332,28 @@ exports.items_view = (function() {
 'view/cart': function(require, exports, module) {
 exports.cart_view = (function() {
     
-    var that;
+    var that,
+        $product_list;
     
     return {
-        dependencies: ['cart', 'highlight_colour'],
+        dependencies: ['cart'],
         
         init: function() {
             that = this;
+            $product_list = $(that.element).find('ul');
+            $price = $(this.element).find('.total_cost .price');
         },
         
-        item_added: function(item) {
-            $(this.element).find('ul').append('<li>' + item.name + '</li>').end()
-                .find('.total_cost').html(this.cart.get_total_price()).css({color: this.highlight_colour});
+        item_added: function() {
+            $product_list.empty();
+            
+            _.each(this.cart.get_current_items(), function(item) {
+                var quantity = item[2] > 1 ? ' x ' + item[2] : '';
+                
+                $product_list.append('<li><strong>' + item[0] + '</strong> ' + item[1] + quantity + '</li>');
+            });
+            
+            $price.html(this.cart.get_total_price());
         }
     }
     
@@ -354,24 +361,25 @@ exports.cart_view = (function() {
 }, 
 'controller/additem': function(require, exports, module) {
 exports.add_item = function(item) {
+	
+	var album_info = $(item).find('img').attr('alt').split(' - ');
+	
+	var album = {
+        title: album_info[1],
+		artist: album_info[0],
+        price: 9.99,
+		quantity: 1
+    }
     
-    this.product.name = $(item).html();
-    this.product.price = 12.99;
-    this.product.quantity = 1;
-    
-    this.cart.add_item(this.product);
+    this.cart.add_item(album);
 }
 }
 });
-require.ensure(['model/vo/product', 'model/cart', 'controller/startup', 'controller/additem'], function() {
+require.ensure(['model/cart', 'controller/startup', 'controller/additem'], function() {
 var shopping_cart = mvc.create(function() {
     
     // Map values
     this.map.singleton('shipping', 5);
-    this.map.singleton('highlight_colour', '#ff0000');
-    
-    // Map instances
-    this.map.instance('product', require('model/vo/product').product);
     
     // Map models
     this.map.model('cart', require('model/cart').cart_model);
@@ -380,7 +388,7 @@ var shopping_cart = mvc.create(function() {
     this.map.controller('map_views', require('controller/startup').map_views);
     
     // Map controllers
-    this.map.controller('add_item', require('controller/additem').add_item, ['cart', 'product']);
+    this.map.controller('add_item', require('controller/additem').add_item, ['cart']);
     
     this.dispatch('map_views');
     

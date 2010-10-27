@@ -1,8 +1,13 @@
 exports.add_item = function(item) {
+	
+	var album_info = $(item).find('img').attr('alt').split(' - ');
+	
+	var album = {
+        title: album_info[1],
+		artist: album_info[0],
+        price: 9.99,
+		quantity: 1
+    }
     
-    this.product.name = $(item).html();
-    this.product.price = 12.99;
-    this.product.quantity = 1;
-    
-    this.cart.add_item(this.product);
+    this.cart.add_item(album);
 }

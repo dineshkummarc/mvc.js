@@ -10,14 +10,22 @@ exports.cart_model = (function() {
         },
         
         add_item: function(item) {
-            if(items[item.name]) {
-                items[item.name].quantity++;
-            }
-            else {
-                items[item.name] = item;
-            }
+			if(!items[item.title]) {
+				items[item.title] = item;
+			}
+			else{ 
+				items[item.title].quantity += 1;
+			}
             
             this.dispatch('item_added', [item]);
+        },
+        
+        get_current_items: function() {
+            var titles = _.map(items, function(item) {
+                return [item.artist, item.title, item.quantity];
+            });
+            
+            return titles;
         },
         
         get_total_price: function() {
@@ -29,7 +37,7 @@ exports.cart_model = (function() {
             
             price += this.shipping;
             
-            return '£' + price.toString();
+            return price.toFixed(2).toString();
         }
     }
     
