@@ -4,26 +4,86 @@
 		<meta charset="utf-8" />
 		<title>MVC - Shopping cart</title>
 		
+		<link href='http://fonts.googleapis.com/css?family=Lobster&subset=latin' rel='stylesheet' type='text/css'>
+		
+		<style type="text/css" media="screen">
+			h1 {
+				font-family: 'Lobster', arial, serif;
+			}
+			
+			.wrapper {
+				width: 600px;
+				margin: 10px auto;
+			}
+			
+			.wrapper .items li {
+				list-style-type: none;
+				display: inline;
+			}
+			
+			.wrapper .items  {
+				padding: 0;
+				margin: 0;
+			}
+			
+			.wrapper .items img {
+				width: 100px;
+				height: 100px;
+			}
+			
+			.cart {
+				position: fixed;
+				top: 10px;
+				right: 200px;
+			}
+		</style>
+		
 	</head>
 	
 	<body>
 		
-		<ul class="items">
-			<li>Socks</li>
-			<li>Shoes</li>
-			<li>Jumper</li>
-			<li>Jacket</li>
-			<li>Jeans</li>
-			<li>Trousers</li>
-		</ul>
-		
-		<div class="cart">
-			<h2>Shopping cart</h2>
+		<div class="wrapper">
+			<h1>MVC Music Store</h1>
 			
-			<ul>
+			<ul class="items">
+				<li><a href="#"><img src="images/loveless.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/before_and_after_science.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/saving_grace.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/pink_flag.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/james_blake.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/madvillain.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/person_pitch.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/sinister.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/fever_ray.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/low.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/richard_hell.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/suicide.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/talking_heads.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/velvets.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/outkast.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/faust.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/palce.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/pauls.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/replacements.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/patti.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/candy.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/black_flag.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/burial.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/clipse.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/pavement.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/bug.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/pet_sounds.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/zomby.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/bruce.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/anco.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/atlas.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/vincent.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/deerhunter.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/rumours.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/clouddead.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/minutemen.jpg" alt="image" title="image title" /></a></li>
+				<li><a href="#"><img src="images/xray.jpg" alt="image" title="image title" /></a></li>
 			</ul>
-			
-			<p class="total_cost"></p>
 		</div>
 		
 		<div class="cart">
@@ -38,7 +98,6 @@
 		<script src="http://github.com/rlayte/mvc/raw/master/libs/underscore.js" type="text/javascript" charset="utf-8"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="http://github.com/rlayte/mvc/raw/master/src/mvc.js" type="text/javascript" charset="utf-8"></script>
-		
 		<script src="shopping_cart.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 </html>
