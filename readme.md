@@ -89,7 +89,52 @@ This example registers a `cart` model and defines an API for setting and retriev
 
 ** Init method **
 
+You'll often need to set up initial state when models are registered. To do this you can define an `init` method on your model object which will be called immediately.
+
+This example sets the same example as before, but adds a default product to the data store on creation.
+
+	this.map.model('cart', (function() {
+	
+		var products = [];
+	
+		return {
+		
+			init: function() {
+				products.push('Default item');
+			},
+		
+			add_item: function(item) {
+				products.push(item);
+			},
+		
+			get_item: function(index) {
+				return products[index];
+			}
+		}
+	
+	}));
+
 ** Dispatching events **
+
+To maintain portability models should know as little about the surrounding system as possible. To achieve this models send events using `this.dispatch` when data is updated that other objects can react to.
+
+This example dispatches a `product_added` event when the product data is updated. Note that the latest item is sent through as a parameter that can then be used by any listening functions.
+
+	this.map.model('cart', (function() {
+	
+		var products = [];
+	
+		return {
+		
+			add_item: function(item) {
+				products.push(item);
+				
+				this.dispatch('product_added', [item]);
+			}
+			
+		}
+	
+	}));
 
 ## Views
 
