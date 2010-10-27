@@ -22,7 +22,7 @@ Here's a simple example:
 
 	mvc.create(function() {
 		
-		map.model('cart', (function() {
+		this.map.model('cart', (function() {
 			
 			var current_products;
 			
@@ -40,7 +40,7 @@ Here's a simple example:
 			
 		}));
 		
-		map.view($('.items'), {
+		this.map.view($('.items'), {
 			
 			init: function() {
 				// set up initial view state
@@ -52,7 +52,7 @@ Here's a simple example:
 			
 		});
 		
-		map.controller('add_product', function(product) {
+		this.map.controller('add_product', function(product) {
 			// manipulate data and add it to the cart model
 		});
 		
@@ -65,6 +65,27 @@ Here's a simple example:
 ## Models
 
 Models are used to store data, process business logic, and maintain state.
+
+To create a model in mvc.js you use the `map.model` method and pass it three parameters: `name`, `model`, and optionally `dependencies` (more on this below). The `name` parameter is a unique string id used to pull back references to the model. The second argument `model` is the actual object that is used to represent data.
+
+This example registers a `cart` model and defines an API for setting and retrieving it's data.
+
+	this.map.model('cart', (function() {
+		
+		var products = [];
+		
+		return {
+			
+			add_item: function(item) {
+				products.push(item);
+			},
+			
+			get_item: function(index) {
+				return products[index];
+			}
+		}
+		
+	}));
 
 ** Init method **
 
