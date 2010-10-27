@@ -253,9 +253,32 @@ In this example a model is registered which a view then defines as a dependency 
 
 ## Controllers
 
-Controllers are used to pass information between the views and models.
+Controllers are used to pass information between the model and view layers of you applications.
 
-** Mapping system objects **
+Controllers are defined in mvc.js by simply registering event listeners.
+
+	this.map.controller('example', function(item) {
+		// logic here
+	});
+
+** Mapping framework objects **
+
+The context function that sets up applications is actually a controller and all controllers have access to the same API (i.e. map.model, map.view, dispatch, etc.). This means that controllers allow you to split up complex startup logic into manageable chunks and define new framework objects at run-time.
+
+For example, this controller will register a new view when called:
+
+	this.map.controller('add_item', function(item) {
+		this.map.view(item, {
+			check_stock: function() {}
+		});
+	});
 
 ** Defining dependencies **
+
+In addition to this standard API you can also define additional dependencies by passing in an array of string IDs as a third parameter.
+
+	this.map.controller('add_item', function(item) {
+		this.cart.add_item(item);
+	}, ['cart']);
+
 
