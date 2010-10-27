@@ -224,9 +224,36 @@ Views can also dispatch events, generally to call required controllers. This is 
 
 ** Defining dependencies **
 
+mvc.js uses a form of dependency injection to define requirements between objects. This is done in views by creating a `dependencies` property on the view object, which contains an array of string references to registered objects. Each of these dependencies is then added on to the object so the view can interact with it as needed.
+
+In this example a model is registered which a view then defines as a dependency and directly interacts with.
+
+	this.map.model('cart', (function() {
+	
+		var products = [];
+	
+		return {
+			add_item: function(item) {
+				products.push(item);
+			}
+		}
+	
+	}));
+	
+	this.map.view($('.products'), (function() {
+		
+		return {
+			dependencies: ['cart'],
+			
+			init: function() {
+				this.cart.add_item('something');
+			}
+		}
+	}));
+
 ## Controllers
 
-Controllers are used to pass information between the views and models
+Controllers are used to pass information between the views and models.
 
 ** Mapping system objects **
 
