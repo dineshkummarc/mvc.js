@@ -334,14 +334,7 @@ TestCase("controllers", {
     setUp: function(){
         xray_specs.mock(mvc, 'events', {
             dispatch: {},
-            listen: {}
-        });
-        
-        xray_specs.mock(mvc, 'views', {
-            register: {}
-        });
-        
-        xray_specs.mock(mvc, 'events', {
+            listen: {},
             register: {}
         });
         
@@ -376,34 +369,13 @@ TestCase("controllers", {
         assertTrue(mvc.dependencies.verify());
     },
     
-    "test that dispatch is available to the context function": function(){
-        var dispatch;
+    "test that expected api is available to controllers": function(){ 
+        mvc.events.expects('listen')
+          .with_args.including("type::object");
         
-        mvc.create(function() {
-            dispatch = this.dispatch;
-        });
+        mvc.controllers.register('item_added');
         
-        assertEquals(mvc.events.dispatch, dispatch);
-    },
-    
-    "test that map.event is available to context": function(){
-        var map_event;
-        
-        mvc.create(function() {
-            map_event = this.map.event;
-        });
-        
-        assertEquals(mvc.controllers.register, map_event);
-    },
-    
-    "test that map.singleton is available to context": function(){
-        var map_singleton;
-        
-        mvc.create(function() {
-            map_singleton = this.map.singleton;
-        });
-        
-        assertEquals(mvc.models.register, map_singleton);
+        assertTrue(mvc.events.verify());
     }
 });
 
@@ -431,7 +403,7 @@ TestCase("dependencies", {
             }
         }
         
-        mvc.dependencies.map.instance('data_object', data);
+        mvc.dependencies.register.instance('data_object', data);
         
         var target = {};
         mvc.dependencies.inject(target, ['data_object']);
@@ -447,7 +419,7 @@ TestCase("dependencies", {
             method: false
         }
         
-        mvc.dependencies.map.singleton('data_model', data);
+        mvc.dependencies.register.singleton('data_model', data);
         
         var target = {};
         mvc.dependencies.inject(target, ['data_model']);
