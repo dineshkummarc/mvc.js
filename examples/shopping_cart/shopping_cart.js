@@ -283,11 +283,18 @@ exports.cart_model = (function() {
             this.dispatch('item_added', [item]);
         },
         
+        get_current_items: function() {
+            var titles = _.map(items, function(item) {
+                return [item.artist, item.title, item.quantity];
+            });
+            
+            return titles;
+        },
+        
         get_total_price: function() {
             var price = 0;
 
             _.each(items, function(item) {
-				console.log(item.quantity);
                 price += (item.price * item.quantity);
             });
             
@@ -325,18 +332,28 @@ exports.items_view = (function() {
 'view/cart': function(require, exports, module) {
 exports.cart_view = (function() {
     
-    var that;
+    var that,
+        $product_list;
     
     return {
         dependencies: ['cart'],
         
         init: function() {
             that = this;
+            $product_list = $(that.element).find('ul');
+            $price = $(this.element).find('.total_cost .price');
         },
         
-        item_added: function(item) {
-            $(this.element).find('ul').append('<li><strong>' + item.artist + '</strong> ' + item.title + '</li>').end()
-                .find('.total_cost .price').html(this.cart.get_total_price());
+        item_added: function() {
+            $product_list.empty();
+            
+            _.each(this.cart.get_current_items(), function(item) {
+                var quantity = item[2] > 1 ? ' x ' + item[2] : '';
+                
+                $product_list.append('<li><strong>' + item[0] + '</strong> ' + item[1] + quantity + '</li>');
+            });
+            
+            $price.html(this.cart.get_total_price());
         }
     }
     

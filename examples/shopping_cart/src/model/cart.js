@@ -20,11 +20,18 @@ exports.cart_model = (function() {
             this.dispatch('item_added', [item]);
         },
         
+        get_current_items: function() {
+            var titles = _.map(items, function(item) {
+                return [item.artist, item.title, item.quantity];
+            });
+            
+            return titles;
+        },
+        
         get_total_price: function() {
             var price = 0;
 
             _.each(items, function(item) {
-				console.log(item.quantity);
                 price += (item.price * item.quantity);
             });
             
