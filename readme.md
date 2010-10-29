@@ -258,7 +258,7 @@ In this example a model is registered which a view then defines as a dependency 
 ## Controllers
 
 Controllers are used to pass information between the model and view layers of you applications.
-
+m 
 Controllers are defined in mvc.js by simply registering event listeners.
 
 	this.map.controller('example', function(item) {
