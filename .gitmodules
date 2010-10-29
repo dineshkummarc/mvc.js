@@ -1,3 +1,9 @@
 [submodule "vendor/underscore"]
 	path = vendor/underscore
 	url = http://github.com/documentcloud/underscore.git
+[submodule "vendor/xray_specs"]
+	path = vendor/xray_specs
+	url = git@github.com:rlayte/xray-specs.git
+[submodule "vendor/jquery"]
+	path = vendor/jquery
+	url = http://github.com/jquery/jquery.git
