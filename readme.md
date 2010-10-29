@@ -287,8 +287,6 @@ In addition to this standard API you can also define additional dependencies by 
 
 # License
 
-License
-
 (The MIT License)
 
 Copyright (c) 2010 Richard Layte
