@@ -7,3 +7,6 @@
 [submodule "vendor/jquery"]
 	path = vendor/jquery
 	url = http://github.com/jquery/jquery.git
+[submodule "vendor/yui-compressor"]
+	path = vendor/yui-compressor
+	url = http://github.com/yui/yuicompressor.git
