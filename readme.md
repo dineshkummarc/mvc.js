@@ -4,6 +4,10 @@ The sole purpose of mvc.js is to provide a way for you to write modular applicat
 
 Due to this single focus, mvc.js is extremely light-weight at just over **1kb when minified and gzipped**.
 
+** Dependencies **
+
+mvc.js depends on [underscore.js](http://documentcloud.github.com/underscore/), which is an extremely small library (2kb when gzipped) that offers a set of helper methods such as `each`, `map/reduce`, `clone`, etc.
+
 # Getting started
 
 This is a brief guide on how to use the framework. For more information on framework internals take a look at the [API reference](http://rlayte.github.com/mvc/) or the example applications:
