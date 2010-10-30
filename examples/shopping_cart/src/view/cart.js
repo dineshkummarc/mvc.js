@@ -11,7 +11,7 @@ exports.cart_view = (function() {
             $product_list = $(that.element).find('ul');
             $price = $(this.element).find('.total_cost .price');
         },
-        
+
         item_added: function() {
             $product_list.empty();
             
