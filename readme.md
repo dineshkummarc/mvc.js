@@ -10,10 +10,10 @@ mvc.js depends on [underscore.js](http://documentcloud.github.com/underscore/), 
 
 # Getting started
 
-This is a brief guide on how to use the framework. For more information on framework internals take a look at the [API reference](http://rlayte.github.com/mvc/) or the example applications:
+This is a brief guide on how to use the framework. For more information on framework internals take a look at the [API reference](http://rlayte.github.com/mvc.js/docs/output/) or the example applications:
 
-+ [Hello world](http://rlayte.github.com/mvc/examples/hello_world/)
-+ [Shopping cart](http://rlayte.github.com/mvc/examples/shopping_cart/)
++ [Hello world](http://rlayte.github.com/mvc.js/examples/hello_world/)
++ [Shopping cart](http://rlayte.github.com/mvc.js/examples/shopping_cart/)
 + Twitter client (coming soon)
 + Carousel (coming soon)
 + Video player (coming soon)
