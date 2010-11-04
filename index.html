@@ -58,7 +58,7 @@
 			<pre>
 mvc.create(function() {
 
-    map.model('cart', (function() {
+    this.map.model('cart', (function() {
 
         var current_products;
 
@@ -76,7 +76,7 @@ mvc.create(function() {
 
     }));
 
-    map.view($('.items'), {
+    this.map.view($('.items'), {
 
         init: function() {
             // set up initial view state
@@ -88,7 +88,7 @@ mvc.create(function() {
 
     });
 
-    map.controller('add_product', function(product) {
+    this.map.controller('add_product', function(product) {
         // manipulate data and add it to the cart model
     });
 
