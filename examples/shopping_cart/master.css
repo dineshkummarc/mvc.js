@@ -22,24 +22,6 @@ body {
 	height: 100px;
 }
 
-<<<<<<< HEAD
-.sidebar {
-	position: fixed;
-	top: 10px;
-	right: 100px;
-}
-
-.cart {
-	width: 260px;
-	padding: 16px;
-	margin-bottom: 10px;
-	
-	box-shadow: 0 0px 6px rgba(0, 0, 0, 0.3); /* TODO - add fallbacks here */
-    	/* Mozilla */
-    	-moz-box-shadow: 0 0px 6px rgba(0, 0, 0, 0.3);
-    	/* Webkit */
-    	-webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
-=======
 .cart {
 	position: fixed;
 	top: 10px;
@@ -52,7 +34,6 @@ body {
     -moz-box-shadow: 0 0px 6px rgba(0, 0, 0, 0.3);
     /* Webkit */
     -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
->>>>>>> b401e4a1cb0e293f688aa7b0dcf44a8eb3d5dcd1
 }
 
 .cart h2 {
@@ -75,8 +56,4 @@ body {
 .cart .total_cost {
 	border-top: 1px solid #999;
 	padding-top: 0.5em;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> b401e4a1cb0e293f688aa7b0dcf44a8eb3d5dcd1
