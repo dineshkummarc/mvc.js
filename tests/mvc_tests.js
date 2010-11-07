@@ -87,7 +87,6 @@ TestCase("init", {
           
         assertTrue(mvc.controllers.verify());
     }
-    
 });
 
 TestCase("events", {
