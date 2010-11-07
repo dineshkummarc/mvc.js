@@ -20,10 +20,12 @@
 		
 		<script src="http://github.com/documentcloud/underscore/raw/master/underscore.js" type="text/javascript" charset="utf-8"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-		<script src="http://github.com/rlayte/mvc.js/raw/master/src/mvc.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../src/mvc.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 		
-			var my_app = mvc.create(function() {
+			var my_app = mvc.create(function(exports) {
+
+                var that = this;
 				
 				this.map.model('count', (function() {
 					
@@ -98,8 +100,19 @@
 					}
 					
 				})());
-				
-			});
+
+                this.map.controller('add', function() {
+                    this.count.add();
+                }, ['count']);
+
+                exports.add = function() {
+                    that.dispatch('add');
+                }
+
+            });
+
+            my_app.add();
+
 		</script>
 	</body>
 </html>
