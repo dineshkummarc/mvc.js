@@ -58,7 +58,7 @@
 			<pre>
 mvc.create(function() {
 
-    map.model('cart', (function() {
+    this.map.model('cart', (function() {
 
         var current_products;
 
@@ -76,7 +76,7 @@ mvc.create(function() {
 
     }));
 
-    map.view($('.items'), {
+    this.map.view($('.items'), {
 
         init: function() {
             // set up initial view state
@@ -88,7 +88,7 @@ mvc.create(function() {
 
     });
 
-    map.controller('add_product', function(product) {
+    this.map.controller('add_product', function(product) {
         // manipulate data and add it to the cart model
     });
 
@@ -350,8 +350,8 @@ this.map.controller('add_item', function(item) {
 			<ul>
 				<li><a href="http://rlayte.github.com/mvc.js/examples/hello_world">Hello world</a></li>
 				<li><a href="http://rlayte.github.com/mvc.js/examples/shopping_cart">Shopping cart</a></li>
+				<li><a href="http://rlayte.github.com/mvc.js/examples/carousel">Carousel</a></li>
 				<li>Twitter client <em>(coming soon)</em></li>
-				<li>Carousel <em>(coming soon)</em></li>
 				<li>Video player <em>(coming soon)</em></li>
 			</ul>
 			
