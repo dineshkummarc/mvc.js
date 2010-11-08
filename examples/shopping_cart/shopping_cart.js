@@ -305,6 +305,7 @@ exports.cart_model = (function() {
     }
     
 })();
+
 }, 
 'controller/startup': function(require, exports, module) {
 exports.map_views = function() {
@@ -343,7 +344,7 @@ exports.cart_view = (function() {
             $product_list = $(that.element).find('ul');
             $price = $(this.element).find('.total_cost .price');
         },
-        
+
         item_added: function() {
             $product_list.empty();
             
@@ -393,5 +394,6 @@ var shopping_cart = mvc.create(function() {
     this.dispatch('map_views');
     
 });
+
 });
 })(modulr.require, modulr.require.main);
