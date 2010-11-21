@@ -272,8 +272,6 @@ ul.inheritsList
 	
 	<li><a href="../symbols/mvc.dependencies.html">mvc.dependencies</a></li>
 	
-	<li><a href="../symbols/mvc.dependencies.register.html">mvc.dependencies.register</a></li>
-	
 	<li><a href="../symbols/mvc.events.html">mvc.events</a></li>
 	
 	<li><a href="../symbols/mvc.models.html">mvc.models</a></li>
@@ -288,7 +286,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Namespace mvc.controllers
+				Function Namespace mvc.controllers
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -306,7 +304,7 @@ ul.inheritsList
 <!-- ============================== constructor summary ==================== -->			
 			
 			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class mvc.controllers.">
-				<caption>Namespace Summary</caption>
+				<caption>Function Namespace Summary</caption>
 				<thead>
 					<tr>
 						<th scope="col">Constructor Attributes</th>
@@ -318,7 +316,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/mvc.controllers.html#constructor">mvc.controllers</a></b>
+								<b><a href="../symbols/mvc.controllers.html#constructor">mvc.controllers</a></b>(controllers, events, dependencies)
 							</div>
 							<div class="description"></div>
 						</td>
@@ -332,42 +330,6 @@ ul.inheritsList
 
 <!-- ============================== methods summary ======================== -->
 			
-				
-				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class mvc.controllers.">
-					<caption>Method Summary</caption>
-					<thead>
-						<tr>
-							<th scope="col">Method Attributes</th>
-							<th scope="col">Method Name and Description</th>
-						</tr>
-					</thead>
-					<tbody>
-					
-						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">mvc.controllers.<b><a href="../symbols/mvc.controllers.html#.init">init</a></b>(_events, _views, _models, _dependencies)
-								</div>
-								<div class="description">Sets up events, views, models, and dependencies</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">mvc.controllers.<b><a href="../symbols/mvc.controllers.html#.register">register</a></b>(event, callback, depends_on)
-								</div>
-								<div class="description">Allows you to register seperate functions to react to defined event strings</div>
-							</td>
-						</tr>
-					
-					</tbody>
-				</table>
-				
-				
-				
-			
 <!-- ============================== events summary ======================== -->
 			
 
@@ -375,11 +337,11 @@ ul.inheritsList
 			
 			<div class="details"><a name="constructor"> </a>
 				<div class="sectionTitle">
-					Namespace Detail
+					Function Namespace Detail
 				</div>
 				
 				<div class="fixedFont">
-						<b>mvc.controllers</b>
+						<b>mvc.controllers</b>(controllers, events, dependencies)
 				</div>
 				
 				<div class="description">
@@ -390,6 +352,29 @@ ul.inheritsList
 				
 				
 				
+					
+						<dl class="detailList">
+						<dt class="heading">Parameters:</dt>
+						
+							<dt>
+								 <b>controllers</b>
+								
+							</dt>
+								<dd>{Object} Collection of functions which are mapped to defined events.</dd>
+						
+							<dt>
+								 <b>events</b>
+								
+							</dt>
+								<dd>{Object} Reference to the the object.</dd>
+						
+							<dt>
+								 <b>dependencies</b>
+								
+							</dt>
+								<dd>{Object} Reference to the dependencies object</dd>
+						
+						</dl>
 					
 					
 					
@@ -406,113 +391,6 @@ ul.inheritsList
 
 <!-- ============================== method details ========================= -->		
 			
-				<div class="sectionTitle">
-					Method Detail
-				</div>
-				
-					<a name=".init"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					
-					<span class="light">mvc.controllers.</span><b>init</b>(_events, _views, _models, _dependencies)
-					
-					</div>
-					<div class="description">
-						Sets up events, views, models, and dependencies
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<b>_events</b>
-									
-								</dt>
-								<dd>{Object}</dd>
-							
-								<dt>
-									<b>_views</b>
-									
-								</dt>
-								<dd>{Object}</dd>
-							
-								<dt>
-									<b>_models</b>
-									
-								</dt>
-								<dd>{Obejct}</dd>
-							
-								<dt>
-									<b>_dependencies</b>
-									
-								</dt>
-								<dd>{Obejct}</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name=".register"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					
-					<span class="light">mvc.controllers.</span><b>register</b>(event, callback, depends_on)
-					
-					</div>
-					<div class="description">
-						Allows you to register seperate functions to react to defined event strings
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<b>event</b>
-									
-								</dt>
-								<dd>{Object} Triggers the command</dd>
-							
-								<dt>
-									<b>callback</b>
-									
-								</dt>
-								<dd>{Object} Triggered when event is event is dispatched</dd>
-							
-								<dt>
-									<b>depends_on</b>
-									
-								</dt>
-								<dd>{Object} Adds any additional registered dependencies</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					
-				
-			
 			
 <!-- ============================== event details ========================= -->		
 			
@@ -524,7 +402,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Oct 27 2010 14:52:38 GMT+0100 (BST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sun Nov 21 2010 20:00:34 GMT-0000 (GMT)
 		</div>
 	</body>
 </html>

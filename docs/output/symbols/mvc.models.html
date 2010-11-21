@@ -272,8 +272,6 @@ ul.inheritsList
 	
 	<li><a href="../symbols/mvc.dependencies.html">mvc.dependencies</a></li>
 	
-	<li><a href="../symbols/mvc.dependencies.register.html">mvc.dependencies.register</a></li>
-	
 	<li><a href="../symbols/mvc.events.html">mvc.events</a></li>
 	
 	<li><a href="../symbols/mvc.models.html">mvc.models</a></li>
@@ -288,7 +286,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Namespace mvc.models
+				Function Namespace mvc.models
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -306,7 +304,7 @@ ul.inheritsList
 <!-- ============================== constructor summary ==================== -->			
 			
 			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class mvc.models.">
-				<caption>Namespace Summary</caption>
+				<caption>Function Namespace Summary</caption>
 				<thead>
 					<tr>
 						<th scope="col">Constructor Attributes</th>
@@ -318,7 +316,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/mvc.models.html#constructor">mvc.models</a></b>
+								<b><a href="../symbols/mvc.models.html#constructor">mvc.models</a></b>(models, events, dependencies)
 							</div>
 							<div class="description"></div>
 						</td>
@@ -332,42 +330,6 @@ ul.inheritsList
 
 <!-- ============================== methods summary ======================== -->
 			
-				
-				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class mvc.models.">
-					<caption>Method Summary</caption>
-					<thead>
-						<tr>
-							<th scope="col">Method Attributes</th>
-							<th scope="col">Method Name and Description</th>
-						</tr>
-					</thead>
-					<tbody>
-					
-						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">mvc.models.<b><a href="../symbols/mvc.models.html#.init">init</a></b>(_dispatch, _dependencies)
-								</div>
-								<div class="description">Sets up dispatch and dependencies variables</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">mvc.models.<b><a href="../symbols/mvc.models.html#.register">register</a></b>(name, model)
-								</div>
-								<div class="description">Register a model as a singleton and adds a reference to events.dispatch</div>
-							</td>
-						</tr>
-					
-					</tbody>
-				</table>
-				
-				
-				
-			
 <!-- ============================== events summary ======================== -->
 			
 
@@ -375,11 +337,11 @@ ul.inheritsList
 			
 			<div class="details"><a name="constructor"> </a>
 				<div class="sectionTitle">
-					Namespace Detail
+					Function Namespace Detail
 				</div>
 				
 				<div class="fixedFont">
-						<b>mvc.models</b>
+						<b>mvc.models</b>(models, events, dependencies)
 				</div>
 				
 				<div class="description">
@@ -390,6 +352,29 @@ ul.inheritsList
 				
 				
 				
+					
+						<dl class="detailList">
+						<dt class="heading">Parameters:</dt>
+						
+							<dt>
+								 <b>models</b>
+								
+							</dt>
+								<dd>{Object} Collection of model objects. Each must define a proxy object, which is given a reference to events.dispatch and is registered as a dependency object.</dd>
+						
+							<dt>
+								 <b>events</b>
+								
+							</dt>
+								<dd>{Object} Reference to the events object.</dd>
+						
+							<dt>
+								 <b>dependencies</b>
+								
+							</dt>
+								<dd>{Object} Reference to the dependencies object</dd>
+						
+						</dl>
 					
 					
 					
@@ -406,95 +391,6 @@ ul.inheritsList
 
 <!-- ============================== method details ========================= -->		
 			
-				<div class="sectionTitle">
-					Method Detail
-				</div>
-				
-					<a name=".init"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					
-					<span class="light">mvc.models.</span><b>init</b>(_dispatch, _dependencies)
-					
-					</div>
-					<div class="description">
-						Sets up dispatch and dependencies variables
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<b>_dispatch</b>
-									
-								</dt>
-								<dd>{Function} Reference to events.dispatch</dd>
-							
-								<dt>
-									<b>_dependencies</b>
-									
-								</dt>
-								<dd>{Object} Reference to dependencies</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name=".register"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					
-					<span class="light">mvc.models.</span><b>register</b>(name, model)
-					
-					</div>
-					<div class="description">
-						Register a model as a singleton and adds a reference to events.dispatch
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<b>name</b>
-									
-								</dt>
-								<dd>{String} Identify that is used to later define the model as a dependency</dd>
-							
-								<dt>
-									<b>model</b>
-									
-								</dt>
-								<dd>{Object} Defines the API that is used to set and retrieve data. If init method exists it will be automatically called. All methods have access to event.dispatch via this.dispatch</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					
-				
-			
 			
 <!-- ============================== event details ========================= -->		
 			
@@ -506,7 +402,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Oct 27 2010 14:52:38 GMT+0100 (BST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sun Nov 21 2010 20:00:35 GMT-0000 (GMT)
 		</div>
 	</body>
 </html>
