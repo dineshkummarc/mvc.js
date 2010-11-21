@@ -272,8 +272,6 @@ ul.inheritsList
 	
 	<li><a href="../symbols/mvc.dependencies.html">mvc.dependencies</a></li>
 	
-	<li><a href="../symbols/mvc.dependencies.register.html">mvc.dependencies.register</a></li>
-	
 	<li><a href="../symbols/mvc.events.html">mvc.events</a></li>
 	
 	<li><a href="../symbols/mvc.models.html">mvc.models</a></li>
@@ -288,7 +286,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Namespace mvc.dependencies
+				Function Namespace mvc.dependencies
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -306,7 +304,7 @@ ul.inheritsList
 <!-- ============================== constructor summary ==================== -->			
 			
 			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class mvc.dependencies.">
-				<caption>Namespace Summary</caption>
+				<caption>Function Namespace Summary</caption>
 				<thead>
 					<tr>
 						<th scope="col">Constructor Attributes</th>
@@ -318,7 +316,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/mvc.dependencies.html#constructor">mvc.dependencies</a></b>
+								<b><a href="../symbols/mvc.dependencies.html#constructor">mvc.dependencies</a></b>()
 							</div>
 							<div class="description"></div>
 						</td>
@@ -328,11 +326,6 @@ ul.inheritsList
 			
 
 <!-- ============================== properties summary ===================== -->
-			
-				
-				
-				
-				
 			
 
 <!-- ============================== methods summary ======================== -->
@@ -352,18 +345,18 @@ ul.inheritsList
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">mvc.dependencies.<b><a href="../symbols/mvc.dependencies.html#.init">init</a></b>()
+								<div class="fixedFont">mvc.dependencies.<b><a href="../symbols/mvc.dependencies.html#.inject">inject</a></b>(target, requires)
 								</div>
-								<div class="description">Sets up internal instances and singletons objects.</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont">mvc.dependencies.<b><a href="../symbols/mvc.dependencies.html#.inject">inject</a></b>(inject_into, dependencies)
+								<div class="fixedFont">mvc.dependencies.<b><a href="../symbols/mvc.dependencies.html#.register">register</a></b>(name, dependency)
 								</div>
-								<div class="description">Looks up all required dependencies and injects them as public properties of the supplied object</div>
+								<div class="description"></div>
 							</td>
 						</tr>
 					
@@ -380,11 +373,11 @@ ul.inheritsList
 			
 			<div class="details"><a name="constructor"> </a>
 				<div class="sectionTitle">
-					Namespace Detail
+					Function Namespace Detail
 				</div>
 				
 				<div class="fixedFont">
-						<b>mvc.dependencies</b>
+						<b>mvc.dependencies</b>()
 				</div>
 				
 				<div class="description">
@@ -415,40 +408,15 @@ ul.inheritsList
 					Method Detail
 				</div>
 				
-					<a name=".init"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					
-					<span class="light">mvc.dependencies.</span><b>init</b>()
-					
-					</div>
-					<div class="description">
-						Sets up internal instances and singletons objects.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
 					<a name=".inject"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
 					
-					<span class="light">mvc.dependencies.</span><b>inject</b>(inject_into, dependencies)
+					<span class="light">mvc.dependencies.</span><b>inject</b>(target, requires)
 					
 					</div>
 					<div class="description">
-						Looks up all required dependencies and injects them as public properties of the supplied object
+						
 						
 						
 					</div>
@@ -460,16 +428,58 @@ ul.inheritsList
 							<dt class="heading">Parameters:</dt>
 							
 								<dt>
-									<b>inject_into</b>
+									<b>target</b>
 									
 								</dt>
 								<dd>{Object} Target object that dependencies are inject into</dd>
 							
 								<dt>
-									<b>dependencies</b>
+									<b>requires</b>
 									
 								</dt>
-								<dd>{Array} list of strings to identify what the target object depends upon</dd>
+								<dd>{Array} List of strings to identify what the target object depends upon</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name=".register"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">mvc.dependencies.</span><b>register</b>(name, dependency)
+					
+					</div>
+					<div class="description">
+						
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>name</b>
+									
+								</dt>
+								<dd>{String} Used to pull back the object as a dependency</dd>
+							
+								<dt>
+									<b>dependency</b>
+									
+								</dt>
+								<dd>{Object} Any predefined dependencies will be injected if found</dd>
 							
 							</dl>
 						
@@ -494,7 +504,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Oct 27 2010 14:52:38 GMT+0100 (BST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sun Nov 21 2010 20:00:35 GMT-0000 (GMT)
 		</div>
 	</body>
 </html>
