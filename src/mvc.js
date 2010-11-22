@@ -2,12 +2,12 @@
  * Simple MVC framework for client-side javascript applications.
  * @fileOverview Simple MVC framework for client-side javascript applications.
  * @author Richard Layte
- * @version 0.0.1
+ * @version 0.0.3
  */
 
 /** @namespace
  *  
- *  @param config {Object}
+ *  @param config {Object} Central object that defines the application models, views, controllers. The external API can also be defined by setting a property of exports.
  *
  */
 var mvc = function(config) {
@@ -28,6 +28,9 @@ var mvc = function(config) {
 
     if(config.controllers)
       mvc.controllers(config.controllers, events, dependencies);
+
+    if(config.exports)
+      return mvc.exports(config.exports, events);
 }
 
 /** @namespace 
@@ -126,6 +129,34 @@ mvc.controllers = function(controllers, events, dependencies) {
     });
 }
 
+/** @namespace
+ *  
+ *  @param api {Object} External API for controlling the application
+ *  @param events {Object} Reference to the events object
+ *
+ */
+mvc.exports = function(api, events) {
+
+    var exports, context;
+
+    export = {},
+        
+    context = {
+        dispatch: events.dispatch,
+        listen: events.listen
+    }
+
+    _.each(api, function(method, key) {
+        
+        export[key] = function() {
+            method.apply(context, arguments);
+        }
+
+    });
+
+    return export;
+}
+
 /** @namespace */
 mvc.events = function() {
 
@@ -167,8 +198,8 @@ mvc.events = function() {
 
         /** @scope mvc.events
          *
-         *  @param event {String}
-         *  @param param {Array}
+         *  @param event {String} Unique identifier that triggers all registered callbacks
+         *  @param param {Array} Optional arguments to pass to the callback functions
          *
          */
         dispatch: function(event, params) {
@@ -186,7 +217,7 @@ mvc.events = function() {
 
         /**
          *
-         * @param event {String} Unique identifier that triggers all registered callbacks when dispatched
+         * @param event {String} Unique identifier that selects the callbacks to be triggered
          * @param callback {Function} Called when event string is dispatched
          * @param context {Object} Context in whcih the callback is applied. By default the context is the event object
          *

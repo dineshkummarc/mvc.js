@@ -6,12 +6,15 @@ TestCase('initialisation', {
         controllers = mvc.controllers;
         events = mvc.events;
         dependencies = mvc.dependencies;
+        exports = mvc.exports;
 
         mvc.models = xray_specs.stub();
         mvc.views = xray_specs.stub();
         mvc.controllers = xray_specs.stub();
         mvc.dependencies = xray_specs.stub();
         mvc.events = xray_specs.stub();
+        mvc.exports = xray_specs.stub();
+        mvc.exports.returns({});
     },
 
     tearDown: function() {
@@ -20,6 +23,7 @@ TestCase('initialisation', {
         mvc.controllers = controllers;
         mvc.dependencies = dependencies;
         mvc.events = events;
+        mvc.exports = exports;
     },
 
     'test that mvc is a function': function() {
@@ -99,6 +103,31 @@ TestCase('initialisation', {
         });
 
         assertFalse(mvc.controllers.called());
+    },
+
+    'test that mvc returns an object if exports is defined': function() {
+        var app = mvc({
+            exports: {}
+        });
+
+        assertEquals(mvc.exports(), app);
+    },
+
+    'test that exports is called with defined object': function() {
+        var exported = {};
+
+        var app = mvc({
+            exports: exported
+        });
+
+        assertTrue(mvc.exports.called_with(exported));
+    },
+
+    'test that exports is not called if none are defined': function() {
+        var app = mvc({});
+
+        assertFalse(mvc.exports.called());
+        assertUndefined(app);
     }
 
 });

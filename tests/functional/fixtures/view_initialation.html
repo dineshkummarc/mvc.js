@@ -23,6 +23,8 @@
         <input type="text" name="second_view" id="field" class="text_field" />
         <input type="text" name="third_view" id="field" class="text_field" />
     </div>
+    
+    <input type="button" id="external_button" name="external_button" value="click me" />
 
     <script src="../../../vendor/underscore/underscore.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
@@ -203,13 +205,29 @@
                         
                         init: function() {
                             $(this.element).attr('value', 'Updated');
+                        },
+
+                        update: function(message) {
+                            $(this.element).attr('value', message);
                         }
 
                     }
                 }
 
+            },
+
+            exports: {
+
+                'update_text': function(message) {
+                    this.dispatch('update', [message]);
+                }
+
             }
 
+        });
+
+        $('#external_button').click(function() {
+            multiple_views.update_text('External update');
         });
         
     </script>   

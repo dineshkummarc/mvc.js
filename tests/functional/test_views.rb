@@ -28,4 +28,8 @@ puts browser.text_field(:name, 'second_status_field').verify_contains 'controlle
 # Controllers can define and interact with dependencies
 puts browser.text_field(:name, 'second_field').verify_contains 'controller'
 
+# External api can be used to interact with app
+browser.button(:name, 'external_button').click
+puts browser.text_field(:name, 'first_view').verify_contains 'External update'
+
 browser.close()
