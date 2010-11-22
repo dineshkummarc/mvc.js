@@ -1,3 +1,5 @@
+// mvc.js example
+
 var shopping_cart = mvc({
    
     models: {
