@@ -18,6 +18,12 @@
         <input type="button" id="button" name="second_button" value="click me" />
     </div>
 
+    <div class="multiple_views">
+        <input type="text" name="first_view" id="field" class="text_field" />
+        <input type="text" name="second_view" id="field" class="text_field" />
+        <input type="text" name="third_view" id="field" class="text_field" />
+    </div>
+
     <script src="../../../vendor/underscore/underscore.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="../../../src/mvc.js" type="text/javascript" charset="utf-8"></script>
@@ -183,6 +189,25 @@
                         this.text.update_field('controller');
                     }
                 }
+            }
+
+        });
+
+        var multiple_views = mvc({
+            
+            views: {
+                
+                'text_field': {
+                    element: $('.multiple_views input'),
+                    mediator: {
+                        
+                        init: function() {
+                            $(this.element).attr('value', 'Updated');
+                        }
+
+                    }
+                }
+
             }
 
         });

@@ -17,6 +17,11 @@ puts browser.text_field(:name, 'first_field').verify_contains 'I was clicked'
 # Views can define requirements to registered models
 puts browser.text_field(:name, 'status_field').verify_contains 'new text'
 
+# A view mediator should be created for each element found
+puts browser.text_field(:name, 'first_view').verify_contains 'Updated'
+puts browser.text_field(:name, 'second_view').verify_contains 'Updated'
+puts browser.text_field(:name, 'third_view').verify_contains 'Updated'
+
 # Controllers are registered as listeners and can dispatch events
 puts browser.text_field(:name, 'second_status_field').verify_contains 'controller updated'
 
