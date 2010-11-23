@@ -272,8 +272,6 @@ ul.inheritsList
 	
 	<li><a href="../symbols/mvc.dependencies.html">mvc.dependencies</a></li>
 	
-	<li><a href="../symbols/mvc.dependencies.register.html">mvc.dependencies.register</a></li>
-	
 	<li><a href="../symbols/mvc.events.html">mvc.events</a></li>
 	
 	<li><a href="../symbols/mvc.models.html">mvc.models</a></li>
@@ -288,7 +286,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Namespace mvc.views
+				Function Namespace mvc.views
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -306,7 +304,7 @@ ul.inheritsList
 <!-- ============================== constructor summary ==================== -->			
 			
 			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class mvc.views.">
-				<caption>Namespace Summary</caption>
+				<caption>Function Namespace Summary</caption>
 				<thead>
 					<tr>
 						<th scope="col">Constructor Attributes</th>
@@ -318,7 +316,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/mvc.views.html#constructor">mvc.views</a></b>
+								<b><a href="../symbols/mvc.views.html#constructor">mvc.views</a></b>(views, events, dependencies)
 							</div>
 							<div class="description"></div>
 						</td>
@@ -332,42 +330,6 @@ ul.inheritsList
 
 <!-- ============================== methods summary ======================== -->
 			
-				
-				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class mvc.views.">
-					<caption>Method Summary</caption>
-					<thead>
-						<tr>
-							<th scope="col">Method Attributes</th>
-							<th scope="col">Method Name and Description</th>
-						</tr>
-					</thead>
-					<tbody>
-					
-						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">mvc.views.<b><a href="../symbols/mvc.views.html#.init">init</a></b>(_events, _dependencies)
-								</div>
-								<div class="description">Sets up events and dependencies variables</div>
-							</td>
-						</tr>
-					
-						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">mvc.views.<b><a href="../symbols/mvc.views.html#.register">register</a></b>(element, view)
-								</div>
-								<div class="description">Registers a view object to handle a specified element.</div>
-							</td>
-						</tr>
-					
-					</tbody>
-				</table>
-				
-				
-				
-			
 <!-- ============================== events summary ======================== -->
 			
 
@@ -375,11 +337,11 @@ ul.inheritsList
 			
 			<div class="details"><a name="constructor"> </a>
 				<div class="sectionTitle">
-					Namespace Detail
+					Function Namespace Detail
 				</div>
 				
 				<div class="fixedFont">
-						<b>mvc.views</b>
+						<b>mvc.views</b>(views, events, dependencies)
 				</div>
 				
 				<div class="description">
@@ -390,6 +352,29 @@ ul.inheritsList
 				
 				
 				
+					
+						<dl class="detailList">
+						<dt class="heading">Parameters:</dt>
+						
+							<dt>
+								 <b>views</b>
+								
+							</dt>
+								<dd>{Object} Collection of views. Each must define a mediator object, which is given a reference to events.dispatch. If an init method is found it will be automatically called, any other methods are registered as event listeners. Optionally a view element and external dependencies can be defined.</dd>
+						
+							<dt>
+								 <b>events</b>
+								
+							</dt>
+								<dd>{Object} Reference to the the object.</dd>
+						
+							<dt>
+								 <b>dependencies</b>
+								
+							</dt>
+								<dd>{Object} Reference to the dependencies object</dd>
+						
+						</dl>
 					
 					
 					
@@ -406,95 +391,6 @@ ul.inheritsList
 
 <!-- ============================== method details ========================= -->		
 			
-				<div class="sectionTitle">
-					Method Detail
-				</div>
-				
-					<a name=".init"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					
-					<span class="light">mvc.views.</span><b>init</b>(_events, _dependencies)
-					
-					</div>
-					<div class="description">
-						Sets up events and dependencies variables
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<b>_events</b>
-									
-								</dt>
-								<dd>{Function} Reference to events</dd>
-							
-								<dt>
-									<b>_dependencies</b>
-									
-								</dt>
-								<dd>{Object} Reference to dependencies</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					<hr />
-				
-					<a name=".register"> </a>
-					<div class="fixedFont">&lt;static&gt; 
-					
-					
-					<span class="light">mvc.views.</span><b>register</b>(element, view)
-					
-					</div>
-					<div class="description">
-						Registers a view object to handle a specified element. If multiple elements are passed a new view object is created for each one.
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<b>element</b>
-									
-								</dt>
-								<dd>{Object} The element that the view manipulates, usually an HTML node, but could also be the address bar, console, etc.</dd>
-							
-								<dt>
-									<b>view</b>
-									
-								</dt>
-								<dd>{Object} The object that mediates interaction between the view and framework. If an init function is found it will be called immediately to allow initial state to be defined. The view element is provided as a property on the object, i.e. this.element. The events object is fully accessible as this.events. All other functions are automatically assigned as event listeners based on their names. Additional dependencies can be defined by setting an array of strings as a propert on the view object.</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-						
-						
-
-					
-				
-			
 			
 <!-- ============================== event details ========================= -->		
 			
@@ -506,7 +402,7 @@ ul.inheritsList
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Oct 27 2010 14:52:38 GMT+0100 (BST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sun Nov 21 2010 21:24:16 GMT-0000 (GMT)
 		</div>
 	</body>
 </html>

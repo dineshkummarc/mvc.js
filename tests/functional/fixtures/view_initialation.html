@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title></title>
+</head>
+<body>
+
+    <div class="main_app">
+        <input type="text" name="first_field" id="field" class="text_field" />
+        <input type="text" name="status_field" id="status_field" class="text_field" />
+        <input type="button" id="button" name="first_button" value="click me" />
+    </div>
+    
+    <div class="second_app">
+        <input type="text" name="second_field" id="field" class="text_field" />
+        <input type="text" name="second_status_field" id="status_field" class="text_field" />
+        <input type="button" id="button" name="second_button" value="click me" />
+    </div>
+
+    <div class="multiple_views">
+        <input type="text" name="first_view" id="field" class="text_field" />
+        <input type="text" name="second_view" id="field" class="text_field" />
+        <input type="text" name="third_view" id="field" class="text_field" />
+    </div>
+    
+    <input type="button" id="external_button" name="external_button" value="click me" />
+
+    <script src="../../../vendor/underscore/underscore.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../src/mvc.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        var main_app = mvc({
+
+            models: {
+                
+                text: {
+                    proxy: {
+                        init: function() {
+                            var that = this;
+                            setTimeout(function() {
+                                that.dispatch('update_status', ['Updated status']);
+                            }, 10);
+                        },
+
+                        'update': function(message) {
+                            this.dispatch('update_status', ['new text']);
+                        }
+                    }
+                }
+
+            },
+
+            views: {
+
+                text_field: {
+                    element: $('.main_app #field'),
+                    requires: ['text'],
+                    mediator: {
+
+                        init: function() {
+                            $(this.element).attr('value', 'View initialised');
+                        },
+
+                        button_clicked: function(message) {
+                            $(this.element).attr('value', message);
+                            this.text.update('text updated');
+                        },
+
+                        controller_update: function(message) {
+                            $(this.element).attr('value', message);
+                        }
+
+                    }
+                },
+
+                status_field: {
+                    element: $('.main_app #status_field'),
+                    mediator: {
+
+                        update_status: function(status) {
+                            $(this.element).attr('value', status);
+
+                            this.dispatch('update_field');
+                        }
+
+                    }
+                },
+
+                button: {
+                    element: $('.main_app #button'),
+                    mediator: {
+                        init: function() {
+                            var that = this;      
+                                  
+                            $(this.element).click(function(event) {
+                                event.preventDefault();
+                                that.dispatch('button_clicked', ['I was clicked']);
+                            });
+                        },
+
+                    }
+                }
+            }
+
+
+        });
+
+        var second_app = mvc({
+
+            models: {
+                
+                text: {
+                    proxy: {
+                        init: function() {
+                            var that = this;
+                            setTimeout(function() {
+                                that.dispatch('update_status', ['Updated status']);
+                            }, 10);
+                        },
+
+                        'update': function(message) {
+                            this.dispatch('update_status', ['new text']);
+                        },
+
+                        'update_field': function(message) {
+                            this.dispatch('button_clicked', [message]);
+                        }
+                    }
+                }
+
+            },
+
+            views: {
+
+                text_field: {
+                    element: $('.second_app #field'),
+                    requires: ['text'],
+                    mediator: {
+
+                        init: function() {
+                            $(this.element).attr('value', 'View initialised');
+                        },
+
+                        button_clicked: function(message) {
+                            $(this.element).attr('value', message);
+                        }
+
+                    }
+                },
+
+                status_field: {
+                    element: $('.second_app #status_field'),
+                    mediator: {
+
+                        update_status: function(status) {
+                            $(this.element).attr('value', status);
+
+                            this.dispatch('update_field');
+                        },
+
+                        controller_update: function(message) {
+                            $(this.element).attr('value', message);
+                        }
+
+                    }
+                },
+
+                button: {
+                    element: $('.second_app #button'),
+                    mediator: {
+                        init: function() {
+                            var that = this;      
+                                  
+                            $(this.element).click(function(event) {
+                                event.preventDefault();
+                                that.dispatch('button_clicked', ['I was clicked']);
+                            });
+                        },
+
+                    }
+                }
+            },
+
+            controllers: {
+                'update_field': {
+                    requires: ['text'],
+                    command: function() {
+                        this.dispatch('controller_update', ['controller updated']);
+                        this.text.update_field('controller');
+                    }
+                }
+            }
+
+        });
+
+        var multiple_views = mvc({
+            
+            views: {
+                
+                'text_field': {
+                    element: $('.multiple_views input'),
+                    mediator: {
+                        
+                        init: function() {
+                            $(this.element).attr('value', 'Updated');
+                        },
+
+                        update: function(message) {
+                            $(this.element).attr('value', message);
+                        }
+
+                    }
+                }
+
+            },
+
+            exports: {
+
+                'update_text': function(message) {
+                    this.dispatch('update', [message]);
+                }
+
+            }
+
+        });
+
+        $('#external_button').click(function() {
+            multiple_views.update_text('External update');
+        });
+        
+    </script>   
+</body>
+</html>

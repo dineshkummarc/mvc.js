@@ -22,106 +22,80 @@
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../src/mvc.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
+
+            var hello_world = {
+                models: {
+                    'count': {
+                        'proxy': (function() {
+                            var current_count;
+
+                            return {
+                                init: function() {
+                                    current_count = 0;
+                                },
+                                
+                                add: function() {
+                                    current_count++;
+                                    
+                                    this.dispatch('number_changed', [current_count]);
+                                },
+                                
+                                subtract: function() {
+                                    current_count--;
+                                    
+                                    this.dispatch('number_changed', [current_count]);
+                                }
+                            }
+                        })()
+                    }
+                },
+
+                views: {
+                    'display': {
+                        element: $('.wrapper .count'),
+                        mediator: {
+                            init: function() {
+                                $(this.element).html('0');
+                            },
+                            
+                            number_changed: function(number) {
+                                $(this.element).html(number);
+                            }
+                        }
+                    },
+                    
+                    'add': {
+                        element: $('.wrapper #add'),
+                        requires: ['count'],
+                        mediator: {
+                            init: function() {
+                                var that = this;
+                                
+                                $(this.element).click(function() {
+                                    that.count.add();
+                                });
+                            }
+                        }
+                    },
+                    
+                    'subtract': {
+                        element: $('.wrapper #subtract'),
+                        requires: ['count'],
+                        mediator: {
+                            init: function() {
+                                var that = this;
+                                
+                                $(this.element).click(function() {
+                                    that.count.subtract();
+                                });
+                            }
+                        }
+                    }
+                }
+            }
 		
-			var my_app = mvc.create(function(exports) {
-
-                var that = this;
+            var my_app = mvc(hello_world);
 				
-				this.map.model('count', (function() {
-					
-					var current_count;
-					
-					return {
-						init: function() {
-							current_count = 0;
-						},
-						
-						add: function() {
-							current_count++;
-							
-							this.dispatch('number_changed', [current_count]);
-						},
-						
-						subtract: function() {
-							current_count--;
-							
-							this.dispatch('number_changed', [current_count]);
-						}
-					}
-					
-				})());
-				
-				this.map.view($('.count'), (function() {
-					
-					return {
-						init: function() {
-							$(this.element).html('0');
-						},
-						
-						number_changed: function(number) {
-							$(this.element).html(number);
-						}
-					}
-					
-				})());
-				
-				this.map.view($('#add'), (function() {
-					
-					var that;
-					
-					return {
-						dependencies: ['count'],
-						
-						init: function() {
-							that = this;
-							
-							$(this.element).click(function() {
-								that.count.add();
-							});
-						}
-					}
-					
-				})());
-				
-				this.map.view($('#subtract'), (function() {
-					
-					var that;
-					
-					return {
-						dependencies: ['count'],
-						
-						init: function() {
-							that = this;
-							
-							$(this.element).click(function() {
-								that.count.subtract();
-							});
-						}
-					}
-					
-				})());
-
-                this.map.controller('add', function() {
-                    this.count.add();
-                }, ['count']);
-
-                exports.add = function() {
-                    that.dispatch('add');
-                }
-
-                exports.on_add = function(callback) {
-                    console.log(that);
-                    that.map.controller('add', callback);
-                }
-
-            });
-
-            my_app.add();
-            
-            my_app.on_add(function() {
-                console.log('number increased');
-            });
-
 		</script>
 	</body>
 </html>
