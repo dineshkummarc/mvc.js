@@ -109,9 +109,18 @@
                     that.dispatch('add');
                 }
 
+                exports.on_add = function(callback) {
+                    console.log(that);
+                    that.map.controller('add', callback);
+                }
+
             });
 
             my_app.add();
+            
+            my_app.on_add(function() {
+                console.log('number increased');
+            });
 
 		</script>
 	</body>

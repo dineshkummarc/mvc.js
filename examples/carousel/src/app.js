@@ -1,5 +1,7 @@
-var carousel = mvc.create(function() {
+window.carousel = mvc.create(function(exports) {
 	
+    var that = this;
+
 	// map models
 	this.map.model('items', require('model/items').items_model);
 
@@ -12,5 +14,10 @@ var carousel = mvc.create(function() {
 
 	// dispatch events to initialise
 	this.dispatch('auto_select', [5000]);
+
+    exports.next = function() {
+        that.dispatch('select_next');
+    }
 });
 
+carousel.next();
