@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - mvc.models</title>
+		<title>JsDoc Reference - mvc.exports</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -288,7 +288,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Function Namespace mvc.models
+				Function Namespace mvc.exports
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -305,7 +305,7 @@ ul.inheritsList
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class mvc.models.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class mvc.exports.">
 				<caption>Function Namespace Summary</caption>
 				<thead>
 					<tr>
@@ -318,7 +318,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/mvc.models.html#constructor">mvc.models</a></b>(models, events, dependencies)
+								<b><a href="../symbols/mvc.exports.html#constructor">mvc.exports</a></b>(api, events)
 							</div>
 							<div class="description"></div>
 						</td>
@@ -343,7 +343,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>mvc.models</b>(models, events, dependencies)
+						<b>mvc.exports</b>(api, events)
 				</div>
 				
 				<div class="description">
@@ -359,22 +359,16 @@ ul.inheritsList
 						<dt class="heading">Parameters:</dt>
 						
 							<dt>
-								 <b>models</b>
+								 <b>api</b>
 								
 							</dt>
-								<dd>{Object} Collection of model objects. Each must define a facade, which is given a reference to events.dispatch and is registered as a dependency object.</dd>
+								<dd>{Object} External API for controlling the application</dd>
 						
 							<dt>
 								 <b>events</b>
 								
 							</dt>
-								<dd>{Object} Reference to the events object.</dd>
-						
-							<dt>
-								 <b>dependencies</b>
-								
-							</dt>
-								<dd>{Object} Reference to the dependencies object</dd>
+								<dd>{Object} Reference to the events object</dd>
 						
 						</dl>
 					

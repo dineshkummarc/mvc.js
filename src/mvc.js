@@ -35,7 +35,7 @@ var mvc = function(config) {
 
 /** @namespace 
  *  
- *  @param models {Object} Collection of model objects. Each must define a proxy object, which is given a reference to events.dispatch and is registered as a dependency object.
+ *  @param models {Object} Collection of model objects. Each must define a facade, which is given a reference to events.dispatch and is registered as a dependency object.
  *  @param events {Object} Reference to the events object.
  *  @param dependencies {Object} Reference to the dependencies object
  *
@@ -47,10 +47,10 @@ mvc.models = function(models, events, dependencies) {
     _.each(models, function(model, key) {
         dependencies.register(key, model.proxy);
 
-        model.proxy.dispatch = events.dispatch;
+        model.facade.dispatch = events.dispatch;
 
-        if(model.proxy.init)
-          model.proxy.init()
+        if(model.facade.init)
+          model.facade.init()
     });
 }
 
@@ -139,7 +139,7 @@ mvc.exports = function(api, events) {
 
     var exports, context;
 
-    export = {},
+    exports = {},
         
     context = {
         dispatch: events.dispatch,
@@ -148,13 +148,13 @@ mvc.exports = function(api, events) {
 
     _.each(api, function(method, key) {
         
-        export[key] = function() {
+        exports[key] = function() {
             method.apply(context, arguments);
         }
 
     });
 
-    return export;
+    return exports;
 }
 
 /** @namespace */
