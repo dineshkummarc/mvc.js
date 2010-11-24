@@ -57,7 +57,7 @@ mvc.create({
     models: {
 
         cart: {
-            proxy: {
+            facade: {
                 init: function() {
                     // set up initial state
                 },
@@ -108,7 +108,7 @@ mvc.create({
 
                 <p>Models are used to store data, process business logic, and maintain state.</p>
 
-                <p>To create models in mvc.js you define a collection of models in the config object passed to the create function. Each model is registered as a dependency based on it's key and should have define a proxy object, which defines a public API.</p>
+                <p>To create models in mvc.js you define a collection of models in the config object passed to the create function. Each model is registered as a dependency based on it's key and should have define a facade, which defines a public API.</p>
 
                 <p>This example registers a cart model and defines an API for setting and retrieving it's data.</p>
 
@@ -118,7 +118,7 @@ mvc({
     models: {
 
         cart: {
-            proxy: (function(){
+            facade: (function(){
 
                 var products = [];
 
@@ -154,7 +154,7 @@ mvc({
     models: {
 
         cart: {
-            proxy: (function(){
+            facade: (function(){
 
                 var products = [];
 
@@ -194,7 +194,7 @@ mvc({
     models: {
 
         cart: {
-            proxy: (function(){
+            facade: (function(){
 
                 var products = [];
 
@@ -375,7 +375,7 @@ mvc({
     models: {
 
         cart: {
-            proxy: {
+            facade: {
                 add_item: function() {}
             }
         }

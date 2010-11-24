@@ -2,7 +2,7 @@ var carousel = mvc({
     
     models: {
         items: {
-            proxy: (function() {
+            facade: (function() {
 
                 var items,
                     selected;
