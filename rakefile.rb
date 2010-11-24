@@ -20,7 +20,7 @@ task :commit, :message do |t, args|
   system 'git push origin master'
 end
 
-task :create_ghpage, :message do |t, args|
+task :create_ghpages, :message do |t, args|
   puts 'transfering code to gh-pages'
   system 'git checkout gh-pages'
   system 'git checkout master docs/output'
