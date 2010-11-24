@@ -407,6 +407,93 @@ You can additionally define dependencies by passing in an array of string IDs as
 
     });
 
+## Exports
+
+At times it may be neccesary for other applications or arbitrary scripts to interact with your application. This is acheived by defining an `exports` object which returns a public API to the calling object. For example
+
+    var store = mvc({
+
+        ...
+
+        exports: {
+        
+            add_product: function() {}
+            remove_product: function() {}
+
+        }
+
+    });
+
+    store.add_product('t shirt');
+
+To keep your application encapsulated the external functions cannot directly access models or views, but are able to dispatch and listen for events. To make a change within the system you can dispatch an event which will trigger an internal listener to carry out the required task.
+
+    var store = mvc({
+
+        models {
+
+            cart: {
+                facade: {
+                    add_item: function() {}
+                }
+            }
+
+        },
+
+        controllers: {
+
+            add_product: {
+                requires: ['cart'],
+                command: function(product) {
+                    this.cart.add_item(product);
+                }
+            }
+
+        }, 
+
+        exports: {
+        
+            add_product: function() {
+                this.dispatch('add_product');
+            }
+
+        }
+
+    });
+
+    store.add_product('t shirt');
+
+Export functions also have access to events.listen and can therefore define external event listeners. For example, if you want to update something outside of the application everytime a product is successfully added to the cart you could do the following:
+    
+    var store = mvc({
+
+        models {
+
+            cart: {
+                facade: {
+                    add_item: function() {
+                        this.dispatch('product_added');
+                    }
+                }
+            }
+
+        },
+
+        exports: {
+        
+            on_product_added: function(callback) {
+                this.listen('product_added', callback);
+            }
+
+        }
+
+    });
+
+    store.on_product_added(function() {
+        $('.something').show();
+    });
+    
+
 # License
 
 (The MIT License)
