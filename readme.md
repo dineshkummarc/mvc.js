@@ -30,7 +30,7 @@ Here's a simple example:
 
 			cart: {
                 
-                proxy: {
+                facade: {
                     init: function() {
                         // set up initial state
                     },
@@ -80,7 +80,7 @@ Here's a simple example:
 
 Models are used to store data, process business logic, and maintain state.
 
-To create models in mvc.js you define a collection of models in the config object passed to the create function. Each model is registered as a dependency based on it's key and should have define a proxy object, which defines a public API.
+To create models in mvc.js you define a collection of models in the config object passed to the create function. Each model is registered as a dependency based on it's key and should have define a facade object, which defines a public API.
 
 This example registers a `cart` model and defines an API for setting and retrieving it's data.
 
@@ -89,7 +89,7 @@ This example registers a `cart` model and defines an API for setting and retriev
         models: {
 
             cart: {
-                proxy: (function(){
+                facade: (function(){
 
                     var products = [];
 
@@ -114,7 +114,7 @@ This example registers a `cart` model and defines an API for setting and retriev
 
 ** Init method **
 
-You'll often need to set up initial state when models are registered. To do this you can define an `init` method on your model object which will be called immediately.
+You'll often need to set up initial state when models are registered. To do this you can define an `init` method on your model's facade, which will be called immediately.
 
 This example sets the same example as before, but adds a default product to the data store on creation.
 
@@ -123,7 +123,7 @@ This example sets the same example as before, but adds a default product to the 
         models: {
 
             cart: {
-                proxy: (function(){
+                facade: (function(){
 
                     var products = [];
 
@@ -161,7 +161,7 @@ This example dispatches a `product_added` event when the product data is updated
         models: {
 
             cart: {
-                proxy: (function(){
+                facade: (function(){
 
                     var products = [];
 
@@ -339,7 +339,7 @@ In this example a model is registered which a view then defines as a dependency 
         models: {
 
             cart: {
-                proxy: {
+                facade: {
 
                     add_item: function() {}
 

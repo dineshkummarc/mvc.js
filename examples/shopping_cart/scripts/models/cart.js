@@ -1,7 +1,7 @@
 define(function() {
 
     return {
-        proxy: (function() {
+        facade: (function() {
 
             var items,
                 shipping = 0;
