@@ -19,6 +19,9 @@ var mvc = function(config) {
 
     if(!config)
       throw new Error('No config object found');
+
+    if(config.import)
+      mvc.import(config.import, mvc, dependencies);
     
     if(config.models)
       mvc.models(config.models, events, dependencies);
@@ -157,6 +160,28 @@ mvc.exports = function(api, events) {
     return exports;
 }
 
+/** @namespace
+ *  
+ *  @param requires {Object} Applications that the parent application relies upon.
+ *  @param init {Object} Reference to the main mvc function
+ *
+ */
+mvc.import = function(modules, init, dependencies) {
+
+    if(!_.isFunction(init))
+      throw new Error('no init function found');
+
+    if(!dependencies)
+      throw new Error('no dependency object found');
+
+    _.each(modules, function(module, name) {
+        var instance = init(module);
+
+        dependencies.register(name, instance);
+    });
+
+}
+
 /** @namespace */
 mvc.events = function() {
 
@@ -248,9 +273,9 @@ mvc.dependencies = function() {
     }
 
     /** @private */
-    check_dependency = function(dependency) {
+    check_dependency = function(dependency, name) {
         if(!dependency)
-          throw new Error('No dependency object found');
+          throw new Error('No dependency object found for ' + name);
     }
 
     /** @private */
@@ -289,7 +314,7 @@ mvc.dependencies = function() {
          *
          */
         register: function(name, dependency) {
-            check_dependency(dependency);
+            check_dependency(dependency, name);
             check_registered(name);
 
             registered[name] = dependency;
