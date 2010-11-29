@@ -45,7 +45,7 @@ mvc.models = function(models, events, dependencies) {
       throw new Error('No models found');
     
     _.each(models, function(model, key) {
-        dependencies.register(key, model.proxy);
+        dependencies.register(key, model.facade);
 
         model.facade.dispatch = events.dispatch;
 

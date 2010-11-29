@@ -16,12 +16,12 @@ TestCase('models', {
         assertFunction(mvc.models);
     },
 
-    'test that the init is called on the models proxy': function() {
+    'test that the init is called on the models facade': function() {
         var stub = xray_specs.stub();
 
         mvc.models({
             'test': {
-                proxy: {
+                facade: {
                     init: stub
                 }
             }
@@ -35,13 +35,13 @@ TestCase('models', {
 
         mvc.models({
             'test': {
-                proxy: {
+                facade: {
                     init: stub
                 }
             },
             
             'another_test': {
-                proxy: {
+                facade: {
                     init: stub
                 }
             }
@@ -60,27 +60,27 @@ TestCase('models', {
         assertNoException(function() {
             mvc.models({
                 'test': {
-                    proxy: {}
+                    facade: {}
                 }
             }, events, dependencies);
         });
     },
 
     'test that model proxies are given a reference to events.dispatch': function() {
-        var proxy = {};
+        var facade = {};
 
         mvc.models({
             'test': {
-                proxy: proxy
+                facade: facade
             }
         }, events, dependencies);
 
-        assertEquals(events.dispatch, proxy.dispatch);
+        assertEquals(events.dispatch, facade.dispatch);
     },
 
     'test that models are defined as dependencies': function() {
         var model = {
-            proxy: {}
+            facade: {}
         }
 
         mvc.models({
@@ -88,7 +88,7 @@ TestCase('models', {
         }, events, dependencies);
 
         assertTrue(dependencies.register.called());
-        assertTrue(dependencies.register.called_with_exactly('test', model.proxy));
+        assertTrue(dependencies.register.called_with_exactly('test', model.facade));
     }
 
 });

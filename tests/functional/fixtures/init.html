@@ -33,11 +33,11 @@
     <script type="text/javascript" charset="utf-8">
         var main_app = mvc({
 
-            models: {
+            'models': {
                 
-                text: {
-                    proxy: {
-                        init: function() {
+                'text': {
+                    'facade': {
+                        'init': function() {
                             var that = this;
                             setTimeout(function() {
                                 that.dispatch('update_status', ['Updated status']);
@@ -52,23 +52,23 @@
 
             },
 
-            views: {
+            'views': {
 
-                text_field: {
-                    element: $('.main_app #field'),
-                    requires: ['text'],
-                    mediator: {
+                'text_field': {
+                    'element': $('.main_app #field'),
+                    'requires': ['text'],
+                    'mediator': {
 
-                        init: function() {
+                        'init': function() {
                             $(this.element).attr('value', 'View initialised');
                         },
 
-                        button_clicked: function(message) {
+                        'button_clicked': function(message) {
                             $(this.element).attr('value', message);
                             this.text.update('text updated');
                         },
 
-                        controller_update: function(message) {
+                        'controller_update': function(message) {
                             $(this.element).attr('value', message);
                         }
 
@@ -112,7 +112,7 @@
             models: {
                 
                 text: {
-                    proxy: {
+                    facade: {
                         init: function() {
                             var that = this;
                             setTimeout(function() {
