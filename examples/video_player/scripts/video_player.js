@@ -4,6 +4,27 @@ var video_player = mvc({
         carousel: carousel
     },
 
+    /*
+
+    values: {
+        weekDays: ['Mon', 'Tue', 'Wed'...],
+        shipping: 5.50,
+        currency: '£'
+    },
+
+    urls: {
+        '/': 'start_up',
+        '/new': 'add_new_item',
+        '#some_item': ['select', 'some_item']
+    },
+
+    plugins: {
+        urls: '../plugins/url_mapper.js',
+        state_machine: '../plugins/state_machine.js'
+    },
+
+    */
+
     models: {
 
         state: {
