@@ -162,8 +162,9 @@ mvc.exports = function(api, events) {
 
 /** @namespace
  *  
- *  @param requires {Object} Applications that the parent application relies upon.
+ *  @param modules {Object} Applications that the parent application relies upon.
  *  @param init {Object} Reference to the main mvc function
+ *  @param dependencies {Object} Reference to the dependencies object
  *
  */
 mvc.imports = function(modules, init, dependencies) {
