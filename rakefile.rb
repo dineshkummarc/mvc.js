@@ -5,7 +5,7 @@ end
 
 task :minify do
   puts 'minifying javascript'
-  system 'java -jar /Library/YUI_Compressor/yuicompressor-2.4.2.jar -o src/mvc.min.js src/mvc.js'
+  system 'java -jar $YUI_COMPRESSOR/build/yuicompressor-2.4.2.jar -o src/mvc.min.js src/mvc.js'
 end
 
 task :jstest do
