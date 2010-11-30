@@ -122,7 +122,11 @@ var carousel = {
     
     exports: {
         next: function() {
-            console.log('carousel.next called');
+            this.dispatch('select_next');
+        },
+
+        on_select: function(callback) {
+            this.listen('item_selected', callback);
         }
     }
 

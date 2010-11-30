@@ -18,6 +18,10 @@ var video_player = mvc({
             requires: ['carousel'],
             mediator: {
                 init: function() {
+                    this.carousel.on_select(function() {
+                        console.log('new item was selected in the carousel');
+                    });
+
                     this.carousel.next();
                 }
             }
