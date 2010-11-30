@@ -23,7 +23,9 @@ end
 task :create_ghpages, :message do |t, args|
   puts 'transfering code to gh-pages'
   system 'git checkout gh-pages'
+  system 'git checkout master src/'
   system 'git checkout master docs/output'
+  system 'git checkout master examples/'
   system 'git commit -am "' + args.message + '"'
   system 'git push origin gh-pages'
   system 'git checkout master'
