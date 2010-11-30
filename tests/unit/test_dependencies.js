@@ -47,6 +47,21 @@ TestCase('dependencies', {
         });
     },
 
+    'test that dependencies are immutable': function() {
+        var target_1 = {},
+            target_2 = {};
+
+        dependencies.register('shipping', 5);
+
+        dependencies.inject(target_1, ['shipping']);
+        dependencies.inject(target_2, ['shipping']);
+
+        target_1.shipping = 10;
+
+        assertEquals(10, target_1.shipping);
+        assertEquals(5, target_2.shipping);
+    },
+
     'test that an eception is thrown if a target object is not sent to inject': function() {
         assertException(function() {
             dependencies.inject();

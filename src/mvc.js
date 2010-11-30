@@ -22,6 +22,9 @@ var mvc = function(config) {
 
     if(config.imports)
       mvc.imports(config.imports, mvc, dependencies);
+
+    if(config.values)
+      mvc.values(config.values, dependencies);
     
     if(config.models)
       mvc.models(config.models, events, dependencies);
@@ -34,6 +37,7 @@ var mvc = function(config) {
 
     if(config.exports)
       return mvc.exports(config.exports, events);
+
 }
 
 /** @namespace 
@@ -44,6 +48,7 @@ var mvc = function(config) {
  *
  */
 mvc.models = function(models, events, dependencies) {
+
     if(!models)
       throw new Error('No models found');
     
@@ -55,6 +60,7 @@ mvc.models = function(models, events, dependencies) {
         if(model.facade.init)
           model.facade.init()
     });
+
 }
 
 /** @namespace 
@@ -64,6 +70,7 @@ mvc.models = function(models, events, dependencies) {
  *  @param dependencies {Object} Reference to the dependencies object
  */
 mvc.views = function(views, events, dependencies) {
+
     var setup_mediator, register_listeners, check_views;
 
     /** @private */
@@ -74,6 +81,7 @@ mvc.views = function(views, events, dependencies) {
 
     /** @private */
     setup_mediator = function(view) {
+
         if(!view.mediator)
           throw new Error('A mediator must be defined on view objects');
 
@@ -87,14 +95,17 @@ mvc.views = function(views, events, dependencies) {
 
         if(view.mediator.init)
           view.mediator.init();
+
     }
 
     /** @private */
     register_listeners = function(view) {
+
         _.each(_.functions(view.mediator), function(method) {
             if(method !== 'init' && method !== 'dispatch')
               events.listen(method, view.mediator[method], view.mediator);
         });
+
     }
 
     check_views(views);
@@ -103,6 +114,7 @@ mvc.views = function(views, events, dependencies) {
         register_listeners(view);
         setup_mediator(view);
     });
+
 }
 
 /** @namespace
@@ -114,11 +126,11 @@ mvc.views = function(views, events, dependencies) {
  */
 mvc.controllers = function(controllers, events, dependencies) {
     
+    var context = {
+        dispatch: events.dispatch
+    }
+    
     _.each(controllers, function(controller, event) {
-        var context = {
-            dispatch: events.dispatch
-        }
-
         if(!_.isFunction(controller.command))
           throw new Error('No command function found');
 
@@ -130,6 +142,24 @@ mvc.controllers = function(controllers, events, dependencies) {
 
         events.listen(event, controller.command, context);
     });
+
+}
+
+/** @namespace
+ *  
+ *  @param api {Object} External API for controlling the application
+ *  @param events {Object} Reference to the events object
+ *
+ */
+mvc.values = function(values, dependencies) {
+
+    if(!values)
+      throw new Error('No values defined');
+
+    _.each(values, function(value, key) {
+        dependencies.register(key, value);
+    });
+
 }
 
 /** @namespace
@@ -158,6 +188,7 @@ mvc.exports = function(api, events) {
     });
 
     return exports;
+
 }
 
 /** @namespace

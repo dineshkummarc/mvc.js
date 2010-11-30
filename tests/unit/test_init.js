@@ -8,6 +8,7 @@ TestCase('initialisation', {
         dependencies = mvc.dependencies;
         exports = mvc.exports;
         imports = mvc.imports;
+        values = mvc.values;
 
         mvc.models = xray_specs.stub();
         mvc.views = xray_specs.stub();
@@ -19,6 +20,7 @@ TestCase('initialisation', {
         mvc.imports = xray_specs.stub();
         mvc.exports = xray_specs.stub();
         mvc.exports.returns({});
+        mvc.values = xray_specs.stub();
     },
 
     tearDown: function() {
@@ -29,6 +31,7 @@ TestCase('initialisation', {
         mvc.events = events;
         mvc.exports = exports;
         mvc.imports = imports;
+        mvc.values = values;
     },
 
     'test that mvc is a function': function() {
@@ -246,6 +249,38 @@ TestCase('initialisation', {
         });
 
         assertTrue(mvc.imports.called_with(mvc.dependencies()));
+    },
+
+    /*
+     * Values
+     *
+     */
+
+    'test that values is called if defined': function() {
+        var values = {};
+
+        var app = mvc({
+            values: values
+        });
+
+        assertTrue(mvc.values.called());
+        assertTrue(mvc.values.called_with(values));
+    },
+
+    'test that values is not called if defined': function() {
+        var app = mvc({});
+
+        assertFalse(mvc.values.called());
+    },
+
+    'test that values is called with dependencies': function() {
+        var values = {};
+
+        var app = mvc({
+            values: values
+        });
+
+        assertTrue(mvc.values.called_with(mvc.dependencies()));
     }
 
 });
