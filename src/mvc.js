@@ -2,12 +2,12 @@
  * Simple MVC framework for client-side javascript applications.
  * @fileOverview Simple MVC framework for client-side javascript applications.
  * @author Richard Layte
- * @version 0.0.1
+ * @version 0.0.3
  */
 
 /** @namespace
  *  
- *  @param config {Object}
+ *  @param config {Object} Central object that defines the application models, views, controllers. The external API can also be defined by setting a property of exports.
  *
  */
 var mvc = function(config) {
@@ -19,6 +19,9 @@ var mvc = function(config) {
 
     if(!config)
       throw new Error('No config object found');
+
+    if(config.imports)
+      mvc.imports(config.imports, mvc, dependencies);
     
     if(config.models)
       mvc.models(config.models, events, dependencies);
@@ -28,11 +31,14 @@ var mvc = function(config) {
 
     if(config.controllers)
       mvc.controllers(config.controllers, events, dependencies);
+
+    if(config.exports)
+      return mvc.exports(config.exports, events);
 }
 
 /** @namespace 
  *  
- *  @param models {Object} Collection of model objects. Each must define a proxy object, which is given a reference to events.dispatch and is registered as a dependency object.
+ *  @param models {Object} Collection of model objects. Each must define a facade, which is given a reference to events.dispatch and is registered as a dependency object.
  *  @param events {Object} Reference to the events object.
  *  @param dependencies {Object} Reference to the dependencies object
  *
@@ -42,12 +48,12 @@ mvc.models = function(models, events, dependencies) {
       throw new Error('No models found');
     
     _.each(models, function(model, key) {
-        dependencies.register(key, model.proxy);
+        dependencies.register(key, model.facade);
 
-        model.proxy.dispatch = events.dispatch;
+        model.facade.dispatch = events.dispatch;
 
-        if(model.proxy.init)
-          model.proxy.init()
+        if(model.facade.init)
+          model.facade.init()
     });
 }
 
@@ -126,6 +132,57 @@ mvc.controllers = function(controllers, events, dependencies) {
     });
 }
 
+/** @namespace
+ *  
+ *  @param api {Object} External API for controlling the application
+ *  @param events {Object} Reference to the events object
+ *
+ */
+mvc.exports = function(api, events) {
+
+    var exports, context;
+
+    exports = {},
+        
+    context = {
+        dispatch: events.dispatch,
+        listen: events.listen
+    }
+
+    _.each(api, function(method, key) {
+        
+        exports[key] = function() {
+            method.apply(context, arguments);
+        }
+
+    });
+
+    return exports;
+}
+
+/** @namespace
+ *  
+ *  @param modules {Object} Applications that the parent application relies upon.
+ *  @param init {Object} Reference to the main mvc function
+ *  @param dependencies {Object} Reference to the dependencies object
+ *
+ */
+mvc.imports = function(modules, init, dependencies) {
+
+    if(!_.isFunction(init))
+      throw new Error('no init function found');
+
+    if(!dependencies)
+      throw new Error('no dependency object found');
+
+    _.each(modules, function(module, name) {
+        var instance = init(module);
+
+        dependencies.register(name, instance);
+    });
+
+}
+
 /** @namespace */
 mvc.events = function() {
 
@@ -167,8 +224,8 @@ mvc.events = function() {
 
         /** @scope mvc.events
          *
-         *  @param event {String}
-         *  @param param {Array}
+         *  @param event {String} Unique identifier that triggers all registered callbacks
+         *  @param param {Array} Optional arguments to pass to the callback functions
          *
          */
         dispatch: function(event, params) {
@@ -186,7 +243,7 @@ mvc.events = function() {
 
         /**
          *
-         * @param event {String} Unique identifier that triggers all registered callbacks when dispatched
+         * @param event {String} Unique identifier that selects the callbacks to be triggered
          * @param callback {Function} Called when event string is dispatched
          * @param context {Object} Context in whcih the callback is applied. By default the context is the event object
          *
@@ -217,9 +274,9 @@ mvc.dependencies = function() {
     }
 
     /** @private */
-    check_dependency = function(dependency) {
+    check_dependency = function(dependency, name) {
         if(!dependency)
-          throw new Error('No dependency object found');
+          throw new Error('No dependency object found for ' + name);
     }
 
     /** @private */
@@ -258,7 +315,7 @@ mvc.dependencies = function() {
          *
          */
         register: function(name, dependency) {
-            check_dependency(dependency);
+            check_dependency(dependency, name);
             check_registered(name);
 
             registered[name] = dependency;
