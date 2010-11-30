@@ -2,7 +2,7 @@
  * Simple MVC framework for client-side javascript applications.
  * @fileOverview Simple MVC framework for client-side javascript applications.
  * @author Richard Layte
- * @version 0.0.3
+ * @version 0.0.4
  */
 
 /** @namespace
