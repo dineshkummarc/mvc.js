@@ -7,7 +7,11 @@ var video_player = mvc({
     models: {
 
         state: {
-            facade: {}
+            facade: {
+                select: function(state) {
+                    console.log(state);
+                }
+            }
         }
 
     },
@@ -15,11 +19,14 @@ var video_player = mvc({
     views: {
 
         end_frame: {
-            requires: ['carousel'],
+            requires: ['carousel', 'state'],
             mediator: {
                 init: function() {
+                    var that = this;
+
                     this.carousel.on_select(function() {
                         console.log('new item was selected in the carousel');
+                        that.state.select('carousel');
                     });
 
                     this.carousel.next();
