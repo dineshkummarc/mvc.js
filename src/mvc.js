@@ -21,7 +21,7 @@ var mvc = function(config) {
       throw new Error('No config object found');
 
     if(config.imports)
-      mvc.imports(config.import, mvc, dependencies);
+      mvc.imports(config.imports, mvc, dependencies);
     
     if(config.models)
       mvc.models(config.models, events, dependencies);
