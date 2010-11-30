@@ -20,8 +20,8 @@ var mvc = function(config) {
     if(!config)
       throw new Error('No config object found');
 
-    if(config.import)
-      mvc.import(config.import, mvc, dependencies);
+    if(config.imports)
+      mvc.imports(config.imports, mvc, dependencies);
     
     if(config.models)
       mvc.models(config.models, events, dependencies);
@@ -162,11 +162,12 @@ mvc.exports = function(api, events) {
 
 /** @namespace
  *  
- *  @param requires {Object} Applications that the parent application relies upon.
+ *  @param modules {Object} Applications that the parent application relies upon.
  *  @param init {Object} Reference to the main mvc function
+ *  @param dependencies {Object} Reference to the dependencies object
  *
  */
-mvc.import = function(modules, init, dependencies) {
+mvc.imports = function(modules, init, dependencies) {
 
     if(!_.isFunction(init))
       throw new Error('no init function found');

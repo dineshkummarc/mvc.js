@@ -467,7 +467,7 @@ Export functions also have access to events.listen and can therefore define exte
     
     var store = mvc({
 
-        models {
+        models: {
 
             cart: {
                 facade: {
@@ -493,6 +493,102 @@ Export functions also have access to events.listen and can therefore define exte
         $('.something').show();
     });
     
+## Imports - creating modular applications
+
+It is also possible to import applications into other applications by defining an `imports` object when the mvc function is called. This allows you to build modular, fully-formed apps that can then be plugged together as required. For example, in the above shopping cart code could be broken down into a `cart` app and an `item_list` app, which are then pulled together by a `store` app. The advantage of this is that as long as the API remains consistent the `cart` application could be replaced or reused somewhere else without out affecting any other parts of the sytem. It also allows for these parts of a larger application to be developed completely idependently - as long as an API is agreed upon the modules can be plugged together without a problem.
+
+Consider this example:
+
+    var cart = mvc({
+        
+        models: {
+            ...
+        },
+
+        views: {
+            ...
+        },
+
+        controllers: {
+            ...
+        },
+
+        exports: {
+            add_item: function(item) {
+                this.dispatch('add', [item]);
+            },
+
+            remove_item: function(item) {
+                this.dispatch('remove', [item]);
+            }
+        }
+    });
+
+This is a full application, but instead of using it by itself we are going to implemented it as a component of a larger app. See above for examples on how the models, views, and controllers for this example could be implemented. 
+
+The important point is the exports API because that defines how other applications can interact with it. The `cart` application defines two methods that can add and remove products from the cart's model.
+
+    var item_list = mvc({
+        
+        models: {
+            ...
+        },
+
+        views: {
+            ...
+        },
+
+        controllers: {
+            ...
+        },
+
+        exports: {
+            on_select: function(callback) {
+                this.listen('item_selected', callback);
+            }
+        }
+    });
+
+Again this is a full application. The exported API for `item_list` defines a method that acts as an event listener for products being added. For example, when a product image is clicked an event will be dispatched which will then call this method.
+
+    var store = mvc({
+
+        imports: {
+            'cart': cart',
+            'items': item_list
+        },
+        
+        models: {
+            ...
+        },
+
+        views: {
+
+            products: {
+                requires: ['items', 'cart'],
+                mediator: {
+                    init: function() {
+                        var that = this;
+
+                        this.items.on_select(function(item) {
+                            that.cart.add_item(item);
+                        });
+                    }
+                }
+            }
+
+        },
+
+        controllers: {
+            ...
+        }
+
+    });
+
+This final applications brings the previous two together and links selections made in `item_list` to the `add_item` method of `cart`.
+
+In this trivial example it may not be clear why you would want to break applications down into speperate modules. However, as projects grow having the ability to work on different areas seperately allows for better workflow between developers, an easier mechanism for replacing components, and more realistic code reuse.
+
 
 # License
 

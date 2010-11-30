@@ -1,145 +1,36 @@
-var carousel = {
-    
-    models: {
-        items: {
-            facade: (function() {
-
-                var items,
-                    selected;
-
-                return {
-
-                    init: function() {
-                        items = [];
-                    },
-
-                    add_item: function(item) {
-                        items.push(item);
-                    },
-
-                    select: function(index) {
-                        if(index > items.length - 1) {
-                            index = 0;
-                        }
-                        else if(index < 0) {
-                            index = items.length - 1;
-                        }
-                        
-                        selected = index;
-                        this.dispatch('item_selected', [selected]);
-                    },
-
-                    get_selected_index: function() {
-                        return selected;
-                    },
-
-                    next: function() {
-                        this.select(selected + 1);
-                    },
-
-                    prev: function() {
-                        this.select(selected - 1);
-                    }
-                }
-
-            })()
-        }
-    },
-    
-    views: {
-        panels: {
-            element: $('.simple.carousel .panels'),
-            requires: ['items'],
-            mediator: (function() {
-
-                return {
-
-                    init: function() {
-                        var that = this,
-                            panels = $(this.element).children();
-                        
-                        panels.each(function() {
-                            $(this).hide();
-                            that.items.add_item(this);
-                        });
-
-                        this.items.select(0);
-                    },
-
-                    item_selected: function(index) {
-                        var panels = $(this.element).children();
-
-                        panels.each(function() {
-                            $(this).hide();
-                        });
-                        
-                        $(panels[index]).show();
-                    }   
-
-                }
-            })()
-        },
-
-        controls: {
-            element: $('.simple.carousel .controls'),
-            requires: ['items'],
-            mediator: (function() {
-
-                return {
-
-                    init: function() {
-                        var that = this;
-
-                        $(this.element).find('a').click(function() {
-                            var action = $(this).attr('href').substr(1);
-                            that.items[action]();
-                        });
-                    }
-
-                }
-
-            })()
-        }
-    },
-
-    controllers: {
-        select_next: {
-            requires: ['items'],
-            command: function() {
-                console.log('next');
-                var index = this.items.get_selected_index() + 1;
-                this.items.select(index);
-            }
-        },
-
-        select_prev: {
-            requires: ['items'],
-            command: function() {
-                var index = this.items.get_selected_index() - 1;
-                this.items.select(index);
-            }
-        }
-    },
-
-    exports: {
-        next: function() {
-            this.dispatch('select_next');
-        }
-    }
-
-};
-
 var video_player = mvc({
 
-    import: {
+    imports: {
         carousel: carousel
     },
+
+    /*
+
+    values: {
+        weekDays: ['Mon', 'Tue', 'Wed'...],
+        shipping: 5.50,
+        currency: '£'
+    },
+
+    urls: {
+        '/': 'start_up',
+        '/new': 'add_new_item',
+        '#some_item': ['select', 'some_item']
+    },
+
+    plugins: {
+        urls: '../plugins/url_mapper.js',
+        state_machine: '../plugins/state_machine.js'
+    },
+
+    */
 
     models: {
 
         state: {
             facade: {
-                init: function() {
+                select: function(state) {
+                    console.log(state);
                 }
             }
         }
@@ -147,18 +38,23 @@ var video_player = mvc({
     },
 
     views: {
+
         end_frame: {
-            requires: ['carousel'],
-            mediator: (function() {
+            requires: ['carousel', 'state'],
+            mediator: {
+                init: function() {
+                    var that = this;
 
-                return {
-                    init: function() {
-                        this.carousel.next();
-                    }
-                };
+                    this.carousel.on_select(function() {
+                        console.log('new item was selected in the carousel');
+                        that.state.select('carousel');
+                    });
 
-            })()
+                    this.carousel.next();
+                }
+            }
         }
+
     }
 
 });
