@@ -38,6 +38,6 @@ task :create_ghpages, :message do |t, args|
   sh 'git checkout master'
 end
 
-task :deploy, :message, :needs => [:create_docs, :minify, :commit, :create_ghpages] do |t, args|
+task :deploy, :message, :needs => [:unit_tests, :create_docs, :minify, :commit, :create_ghpages] do |t, args|
   puts 'deployed'
 end
