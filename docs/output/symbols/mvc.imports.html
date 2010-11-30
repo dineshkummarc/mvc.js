@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - mvc</title>
+		<title>JsDoc Reference - mvc.imports</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -290,7 +290,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Function Namespace mvc
+				Function Namespace mvc.imports
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -307,7 +307,7 @@ ul.inheritsList
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class mvc.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class mvc.imports.">
 				<caption>Function Namespace Summary</caption>
 				<thead>
 					<tr>
@@ -320,7 +320,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/mvc.html#constructor">mvc</a></b>(config)
+								<b><a href="../symbols/mvc.imports.html#constructor">mvc.imports</a></b>(modules, init, dependencies)
 							</div>
 							<div class="description"></div>
 						</td>
@@ -334,11 +334,6 @@ ul.inheritsList
 
 <!-- ============================== methods summary ======================== -->
 			
-				
-				
-				
-				
-			
 <!-- ============================== events summary ======================== -->
 			
 
@@ -350,7 +345,7 @@ ul.inheritsList
 				</div>
 				
 				<div class="fixedFont">
-						<b>mvc</b>(config)
+						<b>mvc.imports</b>(modules, init, dependencies)
 				</div>
 				
 				<div class="description">
@@ -366,10 +361,22 @@ ul.inheritsList
 						<dt class="heading">Parameters:</dt>
 						
 							<dt>
-								 <b>config</b>
+								 <b>modules</b>
 								
 							</dt>
-								<dd>{Object} Central object that defines the application models, views, controllers. The external API can also be defined by setting a property of exports.</dd>
+								<dd>{Object} Applications that the parent application relies upon.</dd>
+						
+							<dt>
+								 <b>init</b>
+								
+							</dt>
+								<dd>{Object} Reference to the main mvc function</dd>
+						
+							<dt>
+								 <b>dependencies</b>
+								
+							</dt>
+								<dd>{Object} Reference to the dependencies object</dd>
 						
 						</dl>
 					
