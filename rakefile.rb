@@ -8,11 +8,17 @@ task :minify do
   sh 'java -jar $YUI_COMPRESSOR/build/yuicompressor-2.4.2.jar -o src/mvc.min.js src/mvc.js'
 end
 
-task :jstest do
+task :unit_tests do
   puts 'running unit tests'
-  sh 'java -jar ~/Library/JsTestDriver/JsTestDriver-1.2.2.jar --port 3232' do |ok, res|
-    sh 'java -jar ~/Library/JsTestDriver/JsTestDriver-1.2.2.jar --tests all --reset'
+  sh 'java -jar ~/Library/JsTestDriver/JsTestDriver-1.2.2.jar --port 3232 --browser $FIREFOX --tests all --reset' do |ok, res|
+    if not ok
+      return false
+    end
   end
+end
+
+task :func_tests do
+  puts 'running functional tests'
 end
 
 task :commit, :message do |t, args|

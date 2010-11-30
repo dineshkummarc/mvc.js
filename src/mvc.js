@@ -147,8 +147,8 @@ mvc.controllers = function(controllers, events, dependencies) {
 
 /** @namespace
  *  
- *  @param api {Object} External API for controlling the application
- *  @param events {Object} Reference to the events object
+ *  @param values {Object} Object of values to register as available dependencies
+ *  @param events {Object} Reference to the dependencies object
  *
  */
 mvc.values = function(values, dependencies) {
