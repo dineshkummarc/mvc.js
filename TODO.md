@@ -5,14 +5,15 @@
 + Implement simple value dependencies
 + Start using Cucumber or some other less hacky way to run functional tests
 + Improve inline docs
-+ Assess how templating will work, define parent containers?
++ Add changelog
 
 ## 0.0.6
 
 + URL mapping
++ Assess how templating will work, define parent containers?
 + Look into possible value inheritence/conflicts between modules. Consider a way to define certain variables as protected.
-+ Better automation of ghpages (getting started, examples, etc.)
 + TDD example (video player, todo list?)
++ Better automation of ghpages (getting started, examples, etc.)
 
 ## 0.0.7
 
