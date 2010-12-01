@@ -8,11 +8,18 @@ task :minify do
   sh 'java -jar $YUI_COMPRESSOR/build/yuicompressor-2.4.2.jar -o src/mvc.min.js src/mvc.js'
 end
 
-task :jstest do
+task :unit_tests do
   puts 'running unit tests'
-  sh 'java -jar ~/Library/JsTestDriver/JsTestDriver-1.2.2.jar --port 3232' do |ok, res|
-    sh 'java -jar ~/Library/JsTestDriver/JsTestDriver-1.2.2.jar --tests all --reset'
+  sh 'java -jar ~/Library/JsTestDriver/JsTestDriver-1.2.2.jar --port 3232 --browser $FIREFOX --tests all --reset' do |ok, res|
+    if not ok
+      return false
+    end
   end
+end
+
+task :func_tests do
+  puts 'running functional tests'
+  sh 'ruby tests/functional/tests.rb'
 end
 
 task :commit, :message do |t, args|
@@ -25,13 +32,13 @@ task :create_ghpages, :message do |t, args|
   puts 'transfering code to gh-pages'
   sh 'git checkout gh-pages'
   sh 'git checkout master src/'
-  sh 'git checkout master docs/output'
+  sh 'git checkout master docs/'
   sh 'git checkout master examples/'
   sh 'git commit -am "' + args.message + '"'
   sh 'git push origin gh-pages'
   sh 'git checkout master'
 end
 
-task :deploy, :message, :needs => [:create_docs, :minify, :commit, :create_ghpages] do |t, args|
+task :deploy, :message, :needs => [:func_tests, :unit_tests, :create_docs, :minify, :commit, :create_ghpages] do |t, args|
   puts 'deployed'
 end

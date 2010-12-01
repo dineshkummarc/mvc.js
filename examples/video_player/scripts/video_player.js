@@ -58,5 +58,3 @@ var video_player = mvc({
     }
 
 });
-
-
