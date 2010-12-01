@@ -7,7 +7,7 @@ var video_player = mvc({
     /*
 
     values: {
-        weekDays: ['Mon', 'Tue', 'Wed'...],
+        week_days: ['Mon', 'Tue', 'Wed'...],
         shipping: 5.50,
         currency: '£'
     },
