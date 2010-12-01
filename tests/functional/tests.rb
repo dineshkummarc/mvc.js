@@ -1,7 +1,7 @@
+# TODO: implement less hacky functional tests
+
 require 'rubygems'
 require 'safariwatir'
-
-@result = true
 
 browser = Watir::Safari.new
 browser.goto('http://dev.mvc/tests/functional/fixtures/init.html')
