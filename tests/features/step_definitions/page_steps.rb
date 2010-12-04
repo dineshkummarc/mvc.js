@@ -3,5 +3,6 @@ Given 'I am on the hello world page' do
 end
 
 Then 'I should see 0 on the display' do
-    @browser.div(:class, 'count').text
+    count = @browser.div(:class, 'count')
+    count.text.should == '0'
 end
