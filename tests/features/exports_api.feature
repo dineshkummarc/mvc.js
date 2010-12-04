@@ -6,4 +6,4 @@ Feature: Exports API
     Scenario: application exports an api
         Given I am on the carousel page
         When I click the next button
-        Then I should see deerhunter
+        Then After two seconds I should see deerhunter

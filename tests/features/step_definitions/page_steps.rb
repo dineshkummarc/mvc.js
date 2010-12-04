@@ -6,6 +6,10 @@ Given 'I am on the carousel page' do
     @browser.goto 'http://dev.mvc/examples/carousel/'
 end
 
+Given 'I am on the video page' do 
+    @browser.goto 'http://dev.mvc/examples/video_player/'
+end
+
 When 'I click the add button' do 
     @browser.button(:name, 'add').click
 end
@@ -42,7 +46,7 @@ Then 'I should see reset on the events display' do
     count.text.should == 'reset'
 end
 
-Then 'I should see deerhunter' do
+Then 'After two seconds I should see deerhunter' do
     deerhunter = @browser.div(:class, 'panels').divs[2]
     deerhunter.visible?
 end
