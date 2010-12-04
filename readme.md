@@ -407,6 +407,39 @@ You can additionally define dependencies by passing in an array of string IDs as
 
     });
 
+## Values
+
+You can also map simple values as dependencies, which can be used to alter the behaviour of models, views, and controllers. For example, if a shipping charge needs to be added to orders you could define it in the following way.
+
+    mvc({
+
+        values: {
+            shipping: 5
+        },
+
+        models: {
+            cart: {
+                requires: ['shipping'],
+                facade: (function(){
+
+                    var total = 0,
+                        sub_total = 0;
+
+                    return {
+                        add_item: function(item) {
+                            sub_total += item.price;
+                            total = sub_total + this.shipping;
+                        }
+                    };
+
+                })
+            }
+        }
+
+    });
+
+The advantage of this is that it provides a simple way to configure applications without making changes to the internal code.
+
 ## Exports
 
 At times it may be neccesary for other applications or arbitrary scripts to interact with your application. This is acheived by defining an `exports` object which returns a public API to the calling object. For example
