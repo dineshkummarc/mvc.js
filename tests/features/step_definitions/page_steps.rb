@@ -2,6 +2,10 @@ Given 'I am on the hello world page' do
     @browser.goto 'http://dev.mvc/examples/hello_world/'
 end
 
+Given 'I am on the carousel page' do 
+    @browser.goto 'http://dev.mvc/examples/carousel/'
+end
+
 When 'I click the add button' do 
     @browser.button(:name, 'add').click
 end
@@ -12,6 +16,10 @@ end
 
 When 'I click the reset button' do 
     @browser.button(:name, 'reset').click
+end
+
+When 'I click the next button' do 
+    @browser.link(:class, 'next').click
 end
 
 Then 'I should see 0 on the display' do
@@ -32,4 +40,9 @@ end
 Then 'I should see reset on the events display' do
     count = @browser.div(:class, 'events')
     count.text.should == 'reset'
+end
+
+Then 'I should see deerhunter' do
+    deerhunter = @browser.div(:class, 'panels').divs[2]
+    deerhunter.visible?
 end
