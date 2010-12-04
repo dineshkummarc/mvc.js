@@ -12,10 +12,11 @@
 		<div class="wrapper">
 			<div class="controls">
 				<input type="button" name="add" value="Add" id="add" />
-				<input type="button" name="add" value="Subtract" id="subtract" />
+				<input type="button" name="subtract" value="Subtract" id="subtract" />
 			</div>
 			
 			<div class="count"></div>
+			<div class="actions"></div>
 		</div>
 		
 		<script src="http://github.com/documentcloud/underscore/raw/master/underscore.js" type="text/javascript" charset="utf-8"></script>
@@ -63,6 +64,15 @@
                             }
                         }
                     },
+
+                    'actions': {
+                        element: $('.wrapper .actions'),
+                        mediator: {
+                            update_action: function(action) {
+                                $(this.element).html(action);
+                            }
+                        }
+                    },
                     
                     'add': {
                         element: $('.wrapper #add'),
@@ -87,11 +97,13 @@
                                 
                                 $(this.element).click(function() {
                                     that.count.subtract();
+                                    that.dispatch('update_action', ['subtract']);
                                 });
                             }
                         }
                     }
                 }
+
             }
 		
             var my_app = mvc(hello_world);
