@@ -432,6 +432,41 @@ mvc({
     }
 });	
 </pre>
+                        
+                        <h3>Values</h3>
+
+                        <p>You can also map simple values as dependencies, which can be used to alter the behaviour of models, views, and controllers. For example, if a shipping charge needs to be added to orders you could define it in the following way.</p>
+
+<pre>
+mvc({
+
+    values: {
+        shipping: 5
+    },
+
+    models: {
+        cart: {
+            requires: ['shipping'],
+            facade: (function(){
+
+                var total = 0,
+                    sub_total = 0;
+
+                return {
+                    add_item: function(item) {
+                        sub_total += item.price;
+                        total = sub_total + this.shipping;
+                    }
+                };
+
+            })
+        }
+    }
+
+});
+</pre>
+
+                        <p>The advantage of this is that it provides a simple way to configure applications without making changes to the internal code.</p>
 
                         <h3>Exports</h3>
 
