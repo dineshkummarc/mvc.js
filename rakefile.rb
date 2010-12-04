@@ -19,7 +19,11 @@ end
 
 task :func_tests do
   puts 'running functional tests'
-  sh 'ruby tests/functional/tests.rb'
+  sh 'cucumber tests/features/' do |ok, res|
+    if not ok
+      return false
+    end
+  end
 end
 
 task :commit, :message do |t, args|
