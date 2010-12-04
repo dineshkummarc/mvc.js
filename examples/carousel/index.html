@@ -57,11 +57,27 @@
             </div>
         </div>
 
+        <div>
+            <p>You can interact with the application externally by clicking on <a href="#" class="next">next</a> or <a href="#" class="prev">prev</a></p>
+        </div>
+
+
+
     </div>
 
 	<script src="http://github.com/documentcloud/underscore/raw/master/underscore.js" type="text/javascript" charset="utf-8"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="../../src/mvc.js" type="text/javascript" charset="utf-8"></script>
     <script src="carousel.js" type="text/javascript" charset="utf-8"></script>
+
+    <script type="text/javascript" charset="utf-8">
+        $('.next').click(function() {
+            carousel.next();
+        });
+
+        $('.prev').click(function() {
+            carousel.prev();
+        });
+    </script>
 </body>
-</html>
+</html> 
