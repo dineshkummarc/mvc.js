@@ -174,6 +174,13 @@ mvc.values = function(values, dependencies) {
 
 /** @namespace
  *
+ */
+mvc.plugins = function() {
+
+}
+
+/** @namespace
+ *
  *  Defines that object that will be returned when the mvc function is called. Each function has access to listen and dispatch.
  *  
  *  @param api {Object} Collection of functions that will be externally available.
