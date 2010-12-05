@@ -30,7 +30,7 @@ TestCase('plugibs', {
         var url_mapper = xray_specs.stub(),
             urls = {
                 '/': 'start_up'
-            }
+            };
 
 
         plugins.register({
