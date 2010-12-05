@@ -14,10 +14,11 @@
  */
 var mvc = function(config) {
     
-    var events, dependencies, models, controllers;
+    var events, dependencies, models, controllers, values;
 
     events = mvc.events();
     dependencies = mvc.dependencies();
+    values = mvc.values(dependencies);
     models = mvc.models(events, dependencies);
     controllers = mvc.controllers(events, dependencies);
 
@@ -28,7 +29,7 @@ var mvc = function(config) {
       mvc.imports(config.imports, mvc, dependencies);
 
     if(config.values)
-      mvc.values(config.values, dependencies);
+      values(config.values);
     
     if(config.models)
       models(config.models);
@@ -175,14 +176,20 @@ mvc.controllers = function(events, dependencies) {
  *  @param events {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.values = function(values, dependencies) {
+mvc.values = function(dependencies) {
 
-    if(!values)
-      throw new Error('No values defined');
+    var register;
 
-    _.each(values, function(value, key) {
-        dependencies.register(key, value);
-    });
+    register = function(values) {
+        if(!values)
+          throw new Error('No values defined');
+
+        _.each(values, function(value, key) {
+            dependencies.register(key, value);
+        });
+    }
+
+    return register;
 
 }
 

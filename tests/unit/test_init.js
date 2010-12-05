@@ -32,6 +32,8 @@ TestCase('initialisation', {
         mvc.exports.returns({});
 
         mvc.values = xray_specs.stub();
+        register_values = xray_specs.stub();
+        mvc.values.returns(register_values);
     },
 
     tearDown: function() {
@@ -274,14 +276,14 @@ TestCase('initialisation', {
             values: values
         });
 
-        assertTrue(mvc.values.called());
-        assertTrue(mvc.values.called_with(values));
+        assertTrue(register_values.called());
+        assertTrue(register_values.called_with(values));
     },
 
     'test that values is not called if defined': function() {
         var app = mvc({});
 
-        assertFalse(mvc.values.called());
+        assertFalse(register_values.called());
     },
 
     'test that values is called with dependencies': function() {
