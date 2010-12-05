@@ -28,7 +28,7 @@ TestCase('plugibs', {
 
     'test that plugins can be registered': function() {
         var url_mapper = xray_specs.stub(),
-            urls = {
+            url_config = {
                 '/': 'start_up'
             };
 
@@ -38,11 +38,11 @@ TestCase('plugibs', {
         });
 
         plugins.apply({
-            urls: urls
+            urls: url_config
         });
 
         assertTrue(url_mapper.called());
-        assertTrue(url_mapper.called_with(urls);
+        assertTrue(url_mapper.called_with(url_config));
     }
 
 });

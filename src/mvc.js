@@ -213,7 +213,6 @@ mvc.plugins = function(plugins) {
 
         apply: function(config) {
             _.each(config, function(item, key) {
-                jstestdriver.console.log(registered[key]);
                 if(registered[key])
                   registered[key](item);
             });
