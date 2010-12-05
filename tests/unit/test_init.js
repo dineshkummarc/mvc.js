@@ -29,6 +29,8 @@ TestCase('initialisation', {
         mvc.events.returns({});
 
         mvc.imports = xray_specs.stub();
+        register_imports = xray_specs.stub();
+        mvc.imports.returns(register_imports);
 
         mvc.exports = xray_specs.stub();
         register_exports = xray_specs.stub();
@@ -250,7 +252,7 @@ TestCase('initialisation', {
     'test that imports is not called if an imports object is defined': function() {
         var app = mvc({});
 
-        assertFalse(mvc.imports.called());
+        assertFalse(register_imports.called());
     },
 
     'test that imports is called with the mvc function': function() {

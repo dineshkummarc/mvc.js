@@ -23,6 +23,7 @@ var mvc = function(config) {
     views = mvc.views(events, dependencies);
     controllers = mvc.controllers(events, dependencies);
     exports = mvc.exports(events);
+    imports = mvc.imports(mvc, dependencies);
 
     if(!config)
       throw new Error('No config object found');
@@ -248,7 +249,9 @@ mvc.exports = function(events) {
  *  @param dependencies {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.imports = function(modules, init, dependencies) {
+mvc.imports = function(init, dependencies) {
+
+    var register;
 
     if(!_.isFunction(init))
       throw new Error('no init function found');
@@ -256,11 +259,15 @@ mvc.imports = function(modules, init, dependencies) {
     if(!dependencies)
       throw new Error('no dependency object found');
 
-    _.each(modules, function(module, name) {
-        var instance = init(module);
+    register = function(modules) {
+        _.each(modules, function(module, name) {
+            var instance = init(module);
 
-        dependencies.register(name, instance);
-    });
+            dependencies.register(name, instance);
+        });
+    }
+
+    return register;
 
 }
 
