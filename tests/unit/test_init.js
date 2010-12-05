@@ -11,6 +11,9 @@ TestCase('initialisation', {
         values = mvc.values;
 
         mvc.models = xray_specs.stub();
+        register_models = xray_specs.stub();
+        mvc.models.returns(register_models);
+
         mvc.views = xray_specs.stub();
 
         mvc.controllers = xray_specs.stub();
@@ -76,7 +79,7 @@ TestCase('initialisation', {
             models: models
         });
 
-        assertTrue(mvc.models.called_with(models));
+        assertTrue(register_models.called_with(models));
     },
     
     'test that models is not called if none are defined': function() {
@@ -85,7 +88,7 @@ TestCase('initialisation', {
             controllers: {}
         });
 
-        assertFalse(mvc.models.called());
+        assertFalse(register_models.called());
     },
     
     'test that models is called with events': function() {

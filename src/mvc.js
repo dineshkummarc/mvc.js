@@ -14,10 +14,11 @@
  */
 var mvc = function(config) {
     
-    var events, dependencies, controllers;
+    var events, dependencies, models, controllers;
 
     events = mvc.events();
     dependencies = mvc.dependencies();
+    models = mvc.models(events, dependencies);
     controllers = mvc.controllers(events, dependencies);
 
     if(!config)
@@ -30,7 +31,7 @@ var mvc = function(config) {
       mvc.values(config.values, dependencies);
     
     if(config.models)
-      mvc.models(config.models, events, dependencies);
+      models(config.models);
 
     if(config.views)
       mvc.views(config.views, events, dependencies);
@@ -52,19 +53,25 @@ var mvc = function(config) {
  *  @param dependencies {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.models = function(models, events, dependencies) {
+mvc.models = function(events, dependencies) {
+
+    var register;
 
     if(!models)
       throw new Error('No models found');
     
-    _.each(models, function(model, key) {
-        dependencies.register(key, model.facade);
+    register = function(models) {
+        _.each(models, function(model, key) {
+            dependencies.register(key, model.facade);
 
-        model.facade.dispatch = events.dispatch;
+            model.facade.dispatch = events.dispatch;
 
-        if(model.facade.init)
-          model.facade.init()
-    });
+            if(model.facade.init)
+              model.facade.init()
+        });
+    }
+
+    return register;
 
 }
 
