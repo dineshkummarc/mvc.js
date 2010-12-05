@@ -199,11 +199,16 @@ mvc.values = function(dependencies) {
 /** @namespace
  *
  */
-mvc.plugins = function(plugins) {
+mvc.plugins = function(events) {
 
-    var registered;
+    var registered, context;
 
-    registered = {};
+    registered = {}
+
+    context = {
+        dispatch: events.dispatch,
+        listen: events.listen
+    }
 
     return {
 
@@ -214,7 +219,7 @@ mvc.plugins = function(plugins) {
         apply: function(config) {
             _.each(config, function(item, key) {
                 if(registered[key])
-                  registered[key](item);
+                  registered[key].call(context, item);
             });
         }
 

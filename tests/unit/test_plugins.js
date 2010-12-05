@@ -1,4 +1,4 @@
-TestCase('plugibs', {
+TestCase('plugins', {
 
     setUp: function() {
         events = {
@@ -43,6 +43,44 @@ TestCase('plugibs', {
 
         assertTrue(url_mapper.called());
         assertTrue(url_mapper.called_with(url_config));
+    },
+
+    'test that plugins can dispatch events': function() {
+        var url_mapper;
+
+        url_mapper = function() {
+            this.dispatch('start_up');
+        }
+
+        plugins.register({
+            'urls': url_mapper
+        });
+
+        plugins.apply({
+            urls: {}
+        });
+
+        assertTrue(events.dispatch.called());
+        assertTrue(events.dispatch.called_with('start_up'));
+    },
+
+    'test that plugins can listen for events': function() {
+        var url_mapper;
+
+        url_mapper = function() {
+            this.listen('start_up', function() {});
+        }
+
+        plugins.register({
+            'urls': url_mapper
+        });
+
+        plugins.apply({
+            urls: {}
+        });
+
+        assertTrue(events.listen.called());
+        assertTrue(events.listen.called_with('start_up'));
     }
 
 });
