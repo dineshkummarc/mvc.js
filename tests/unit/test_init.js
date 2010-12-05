@@ -12,14 +12,22 @@ TestCase('initialisation', {
 
         mvc.models = xray_specs.stub();
         mvc.views = xray_specs.stub();
+
         mvc.controllers = xray_specs.stub();
+        register_controllers = xray_specs.stub();
+        mvc.controllers.returns(register_controllers);
+
         mvc.dependencies = xray_specs.stub();
         mvc.dependencies.returns({});
+
         mvc.events = xray_specs.stub();
         mvc.events.returns({});
+
         mvc.imports = xray_specs.stub();
+
         mvc.exports = xray_specs.stub();
         mvc.exports.returns({});
+
         mvc.values = xray_specs.stub();
     },
 
@@ -148,7 +156,7 @@ TestCase('initialisation', {
             controllers: controllers
         });
 
-        assertTrue(mvc.controllers.called_with(controllers));
+        assertTrue(register_controllers.called_with(controllers));
     },
     
     'test that controllers is not called if no controllers are defined': function() {
@@ -157,7 +165,7 @@ TestCase('initialisation', {
             models: {}
         });
 
-        assertFalse(mvc.controllers.called());
+        assertFalse(register_controllers.called());
     },
     
     'test that controllers is called with events': function() {

@@ -14,10 +14,11 @@
  */
 var mvc = function(config) {
     
-    var events, dependencies;
+    var events, dependencies, controllers;
 
     events = mvc.events();
     dependencies = mvc.dependencies();
+    controllers = mvc.controllers(events, dependencies);
 
     if(!config)
       throw new Error('No config object found');
@@ -35,7 +36,7 @@ var mvc = function(config) {
       mvc.views(config.views, events, dependencies);
 
     if(config.controllers)
-      mvc.controllers(config.controllers, events, dependencies);
+      controllers(config.controllers);
 
     if(config.exports)
       return mvc.exports(config.exports, events);
@@ -132,24 +133,30 @@ mvc.views = function(views, events, dependencies) {
  *  @param dependencies {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.controllers = function(controllers, events, dependencies) {
+mvc.controllers = function(events, dependencies) {
+
+    var context, register;
     
-    var context = {
+    context = {
         dispatch: events.dispatch
     }
-    
-    _.each(controllers, function(controller, event) {
-        if(!_.isFunction(controller.command))
-          throw new Error('No command function found');
 
-        if(controller.requires && !_.isArray(controller.requires))
-          throw new Error('Requirements must be an array');
+    register = function(controllers) {
+        _.each(controllers, function(controller, event) {
+            if(!_.isFunction(controller.command))
+              throw new Error('No command function found');
 
-        if(controller.requires)
-          dependencies.inject(context, controller.requires);
+            if(controller.requires && !_.isArray(controller.requires))
+              throw new Error('Requirements must be an array');
 
-        events.listen(event, controller.command, context);
-    });
+            if(controller.requires)
+              dependencies.inject(context, controller.requires);
+
+            events.listen(event, controller.command, context);
+        });
+    }
+
+    return register;
 
 }
 
@@ -175,7 +182,7 @@ mvc.values = function(values, dependencies) {
 /** @namespace
  *
  */
-mvc.plugins = function() {
+mvc.plugins = function(plugins) {
 
 }
 
