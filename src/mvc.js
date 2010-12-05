@@ -56,11 +56,11 @@ var mvc = function(config) {
 mvc.models = function(events, dependencies) {
 
     var register;
-
-    if(!models)
-      throw new Error('No models found');
     
     register = function(models) {
+        if(!models)
+          throw new Error('No models found');
+
         _.each(models, function(model, key) {
             dependencies.register(key, model.facade);
 
