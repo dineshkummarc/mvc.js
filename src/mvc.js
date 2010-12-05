@@ -29,7 +29,7 @@ var mvc = function(config) {
       throw new Error('No config object found');
 
     if(config.imports)
-      mvc.imports(config.imports, mvc, dependencies);
+      imports(config.imports);
 
     if(config.values)
       values(config.values);
