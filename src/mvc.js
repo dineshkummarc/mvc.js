@@ -199,7 +199,7 @@ mvc.values = function(dependencies) {
 /** @namespace
  *
  */
-mvc.plugins = function(events) {
+mvc.plugins = function(events, dependencies, models) {
 
     var registered, context;
 
@@ -207,7 +207,9 @@ mvc.plugins = function(events) {
 
     context = {
         dispatch: events.dispatch,
-        listen: events.listen
+        listen: events.listen,
+        dependencies: dependencies,
+        models: models
     }
 
     return {

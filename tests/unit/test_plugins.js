@@ -11,7 +11,9 @@ TestCase('plugins', {
             register: xray_specs.stub()
         }
 
-        plugins = mvc.plugins(events, dependencies);
+        models = xray_specs.stub();
+
+        plugins = mvc.plugins(events, dependencies, models);
     },
 
     'test that mvc.plugins is a function': function() {
@@ -81,6 +83,68 @@ TestCase('plugins', {
 
         assertTrue(events.listen.called());
         assertTrue(events.listen.called_with('start_up'));
+    },
+
+    'test that plugins can register dependencies': function() {
+        var url_mapper,
+            dependency = {};
+
+        url_mapper = function() {
+            this.dependencies.register('start_up', dependency);
+        }
+
+        plugins.register({
+            'urls': url_mapper
+        });
+
+        plugins.apply({
+            urls: {}
+        });
+
+        assertTrue(dependencies.register.called());
+        assertTrue(dependencies.register.called_with('start_up', dependency));
+    },
+
+    'test that plugins can inject dependencies': function() {
+        var url_mapper,
+            dependency = {};
+
+        url_mapper = function() {
+            this.dependencies.inject('start_up', dependency);
+        }
+
+        plugins.register({
+            'urls': url_mapper
+        });
+
+        plugins.apply({
+            urls: {}
+        });
+
+        assertTrue(dependencies.inject.called());
+        assertTrue(dependencies.inject.called_with('start_up', dependency));
+    },
+
+    'test that models can be registered': function() {
+        var url_mapper,
+            _models = {
+                'start_up': {}
+            };
+
+        url_mapper = function() {
+            this.models(_models);
+        }
+
+        plugins.register({
+            'urls': url_mapper
+        });
+
+        plugins.apply({
+            urls: {}
+        });
+        
+        assertTrue(models.called());
+        assertTrue(models.called_with(_models));
     }
 
 });
