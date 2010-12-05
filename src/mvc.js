@@ -14,7 +14,7 @@
  */
 var mvc = function(config) {
     
-    var events, dependencies, models, views, controllers, values;
+    var events, dependencies, models, views, controllers, values, imports, exports;
 
     events = mvc.events();
     dependencies = mvc.dependencies();
@@ -118,6 +118,7 @@ mvc.views = function(events, dependencies) {
 
     }
 
+    /** @private */
     register = function(views) {
         if(!views)
           throw new Error('A view object must be passed');
