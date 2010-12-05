@@ -31,7 +31,10 @@ TestCase('initialisation', {
         mvc.imports = xray_specs.stub();
 
         mvc.exports = xray_specs.stub();
-        mvc.exports.returns({});
+        register_exports = xray_specs.stub();
+        exports = {};
+        register_exports.returns(exports);
+        mvc.exports.returns(register_exports);
 
         mvc.values = xray_specs.stub();
         register_values = xray_specs.stub();
@@ -201,7 +204,7 @@ TestCase('initialisation', {
             exports: {}
         });
 
-        assertEquals(mvc.exports(), app);
+        assertEquals(exports, app);
     },
     
     'test that exports is called with events': function() {
@@ -219,13 +222,13 @@ TestCase('initialisation', {
             exports: exported
         });
 
-        assertTrue(mvc.exports.called_with(exported));
+        assertTrue(register_exports.called_with(exported));
     },
 
     'test that exports is not called if none are defined': function() {
         var app = mvc({});
 
-        assertFalse(mvc.exports.called());
+        assertFalse(register_exports.called());
         assertUndefined(app);
     },
 

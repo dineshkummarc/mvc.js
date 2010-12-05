@@ -22,6 +22,7 @@ var mvc = function(config) {
     models = mvc.models(events, dependencies);
     views = mvc.views(events, dependencies);
     controllers = mvc.controllers(events, dependencies);
+    exports = mvc.exports(events);
 
     if(!config)
       throw new Error('No config object found');
@@ -42,7 +43,7 @@ var mvc = function(config) {
       controllers(config.controllers);
 
     if(config.exports)
-      return mvc.exports(config.exports, events);
+      return exports(config.exports);
 
 }
 
@@ -209,9 +210,9 @@ mvc.plugins = function(plugins) {
  *  @param events {Object} Reference to the events objec for the current application.
  *
  */
-mvc.exports = function(api, events) {
+mvc.exports = function(events) {
 
-    var exports, context;
+    var exports, context, register;
 
     exports = {},
         
@@ -220,15 +221,21 @@ mvc.exports = function(api, events) {
         listen: events.listen
     }
 
-    _.each(api, function(method, key) {
-        
-        exports[key] = function() {
-            method.apply(context, arguments);
-        }
+    register = function(api) {
 
-    });
+        _.each(api, function(method, key) {
+            
+            exports[key] = function() {
+                method.apply(context, arguments);
+            }
 
-    return exports;
+        });
+
+        return exports;
+
+    }
+
+    return register;
 
 }
 
