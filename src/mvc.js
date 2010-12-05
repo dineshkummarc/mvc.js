@@ -201,6 +201,26 @@ mvc.values = function(dependencies) {
  */
 mvc.plugins = function(plugins) {
 
+    var registered;
+
+    registered = {};
+
+    return {
+
+        register: function(plugins) {
+            _.extend(registered, plugins);
+        },
+
+        apply: function(config) {
+            _.each(config, function(item, key) {
+                jstestdriver.console.log(registered[key]);
+                if(registered[key])
+                  registered[key](item);
+            });
+        }
+
+    }
+
 }
 
 /** @namespace

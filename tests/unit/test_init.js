@@ -245,8 +245,8 @@ TestCase('initialisation', {
             imports: imports
         });
 
-        assertTrue(mvc.imports.called());
-        assertTrue(mvc.imports.called_with(imports));
+        assertTrue(register_imports.called());
+        assertTrue(register_imports.called_with(imports));
     },
     
     'test that imports is not called if an imports object is defined': function() {
