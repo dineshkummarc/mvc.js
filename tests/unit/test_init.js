@@ -15,6 +15,8 @@ TestCase('initialisation', {
         mvc.models.returns(register_models);
 
         mvc.views = xray_specs.stub();
+        register_views = xray_specs.stub();
+        mvc.views.returns(register_views);
 
         mvc.controllers = xray_specs.stub();
         register_controllers = xray_specs.stub();
@@ -121,7 +123,7 @@ TestCase('initialisation', {
             views: views
         });
 
-        assertTrue(mvc.views.called_with(views));
+        assertTrue(register_views.called_with(views));
     },
 
     'test that views is not called if none are defined': function() {
@@ -130,7 +132,7 @@ TestCase('initialisation', {
             controllers: {}
         });
 
-        assertFalse(mvc.views.called());
+        assertFalse(register_views.called());
     },
     
     'test that views is called with events': function() {

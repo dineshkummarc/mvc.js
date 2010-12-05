@@ -14,12 +14,13 @@
  */
 var mvc = function(config) {
     
-    var events, dependencies, models, controllers, values;
+    var events, dependencies, models, views, controllers, values;
 
     events = mvc.events();
     dependencies = mvc.dependencies();
     values = mvc.values(dependencies);
     models = mvc.models(events, dependencies);
+    views = mvc.views(events, dependencies);
     controllers = mvc.controllers(events, dependencies);
 
     if(!config)
@@ -35,7 +36,7 @@ var mvc = function(config) {
       models(config.models);
 
     if(config.views)
-      mvc.views(config.views, events, dependencies);
+      views(config.views);
 
     if(config.controllers)
       controllers(config.controllers);
@@ -84,15 +85,9 @@ mvc.models = function(events, dependencies) {
  *  @param events {Object} Reference to the the events object for the current application.
  *  @param dependencies {Object} Reference to the dependencies object for the current application.
  */
-mvc.views = function(views, events, dependencies) {
+mvc.views = function(events, dependencies) {
 
-    var setup_mediator, register_listeners, check_views;
-
-    /** @private */
-    check_views = function(views) {
-        if(!views)
-          throw new Error('A view object must be passed');
-    }
+    var setup_mediator, register_listeners, register;
 
     /** @private */
     setup_mediator = function(view) {
@@ -123,12 +118,17 @@ mvc.views = function(views, events, dependencies) {
 
     }
 
-    check_views(views);
+    register = function(views) {
+        if(!views)
+          throw new Error('A view object must be passed');
 
-    _.each(views, function(view) {
-        register_listeners(view);
-        setup_mediator(view);
-    });
+        _.each(views, function(view) {
+            register_listeners(view);
+            setup_mediator(view);
+        });
+    }
+
+    return register;
 
 }
 
