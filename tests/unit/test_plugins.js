@@ -123,28 +123,6 @@ TestCase('plugins', {
 
         assertTrue(dependencies.inject.called());
         assertTrue(dependencies.inject.called_with('start_up', dependency));
-    },
-
-    'test that models can be registered': function() {
-        var url_mapper,
-            _models = {
-                'start_up': {}
-            };
-
-        url_mapper = function() {
-            this.models(_models);
-        }
-
-        plugins.register({
-            'urls': url_mapper
-        });
-
-        plugins.apply({
-            urls: {}
-        });
-        
-        assertTrue(models.called());
-        assertTrue(models.called_with(_models));
     }
 
 });
