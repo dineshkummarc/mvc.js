@@ -1,29 +1,32 @@
 var video_player = mvc({
 
+    plugins: {
+        urls: url_mapper.js,
+        states: state_machine
+    },
+
     imports: {
         carousel: carousel
     },
-
-    /*
 
     values: {
         week_days: ['Mon', 'Tue', 'Wed'...],
         shipping: 5.50,
         currency: '£'
     },
-
+    
     urls: {
         '/': 'start_up',
-        '/new': 'add_new_item',
-        '#some_item': ['select', 'some_item']
+        '/play': 'play',
+        '/pause': 'pasue',
+        '/stop': 'stop',
     },
 
-    plugins: {
-        urls: '../plugins/url_mapper.js',
-        state_machine: '../plugins/state_machine.js'
+    states: {
+        'play': ['pause', 'stop'],
+        'pause': ['play'],
+        'stop': ['play']
     },
-
-    */
 
     models: {
 
