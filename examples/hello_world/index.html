@@ -11,11 +11,13 @@
 		
 		<div class="wrapper">
 			<div class="controls">
-				<input type="button" name="some_name" value="Add" id="add" />
-				<input type="button" name="some_name" value="Subtract" id="subtract" />
+				<input type="button" name="add" value="Add" id="add" />
+				<input type="button" name="subtract" value="Subtract" id="subtract" />
+				<input type="button" name="reset" value="Reset" id="reset" />
 			</div>
 			
 			<div class="count"></div>
+			<div class="events"></div>
 		</div>
 		
 		<script src="http://github.com/documentcloud/underscore/raw/master/underscore.js" type="text/javascript" charset="utf-8"></script>
@@ -24,7 +26,9 @@
 		<script type="text/javascript" charset="utf-8">
 
             var hello_world = {
+
                 models: {
+
                     'count': {
                         'facade': (function() {
                             var current_count;
@@ -44,13 +48,21 @@
                                     current_count--;
                                     
                                     this.dispatch('number_changed', [current_count]);
+                                },
+
+                                reset: function() {
+                                   current_count = 0;
+
+                                   this.dispatch('number_changed', [current_count]);
                                 }
                             }
                         })()
                     }
+
                 },
 
                 views: {
+
                     'display': {
                         element: $('.wrapper .count'),
                         mediator: {
@@ -60,6 +72,15 @@
                             
                             number_changed: function(number) {
                                 $(this.element).html(number);
+                            }
+                        }
+                    },
+
+                    'events': {
+                        element: $('.wrapper .events'),
+                        mediator: {
+                            update_action: function(action) {
+                                $(this.element).html(action);
                             }
                         }
                     },
@@ -87,10 +108,37 @@
                                 
                                 $(this.element).click(function() {
                                     that.count.subtract();
+                                    that.dispatch('update_action', ['subtract']);
+                                });
+                            }
+                        }
+                    },
+
+                    'reset': {
+                        element: $('.wrapper #reset'),
+                        mediator: {
+                            init: function() {
+                                var that = this;
+                                
+                                $(this.element).click(function() {
+                                    that.dispatch('reset');
                                 });
                             }
                         }
                     }
+
+                },
+
+                controllers: {
+
+                    'reset': {
+                        requires: ['count'],
+                        command: function() {
+                            this.count.reset();
+                            this.dispatch('update_action', ['reset']);
+                        }
+                    }
+                
                 }
             }
 		

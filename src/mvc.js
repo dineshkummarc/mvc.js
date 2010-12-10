@@ -6,78 +6,90 @@
  */
 
 /** @namespace
- *  
- *  @param config {Object} Central object that defines the application models, views, controllers. The external API can also be defined by setting a property of exports.
  *
+ *  Used to create instances of mvc.js applications. It takes a config object that defines the application objects.
+ *  
+ *  @param config {Object} Used to define the application's models, views, and controllers as well as arbitrary values. It also provides the mechanism for importing ubmodules using the imports object and defining a return API by defining an exports object.
+ *  
  */
 var mvc = function(config) {
     
-    var events, dependencies;
+    var events, dependencies, models, views, controllers, values, imports, exports;
 
     events = mvc.events();
     dependencies = mvc.dependencies();
+    values = mvc.values(dependencies);
+    models = mvc.models(events, dependencies);
+    views = mvc.views(events, dependencies);
+    controllers = mvc.controllers(events, dependencies);
+    exports = mvc.exports(events);
+    imports = mvc.imports(mvc, dependencies);
 
     if(!config)
       throw new Error('No config object found');
 
     if(config.imports)
-      mvc.imports(config.imports, mvc, dependencies);
+      imports(config.imports);
 
     if(config.values)
-      mvc.values(config.values, dependencies);
+      values(config.values);
     
     if(config.models)
-      mvc.models(config.models, events, dependencies);
+      models(config.models);
 
     if(config.views)
-      mvc.views(config.views, events, dependencies);
+      views(config.views);
 
     if(config.controllers)
-      mvc.controllers(config.controllers, events, dependencies);
+      controllers(config.controllers);
 
     if(config.exports)
-      return mvc.exports(config.exports, events);
+      return exports(config.exports);
 
 }
 
 /** @namespace 
+ *
+ *  Takes a collection of models objects and defines each as a dependency using the object's key as the id. Each model is given a reference to the events.dispatch method to allow the system to be notified when updates are made.
  *  
- *  @param models {Object} Collection of model objects. Each must define a facade, which is given a reference to events.dispatch and is registered as a dependency object.
- *  @param events {Object} Reference to the events object.
- *  @param dependencies {Object} Reference to the dependencies object
+ *  @param models {Object} Collection of model objects. Each must contain a facade object which defines a public API. Optionally dependencies can be set by defining a requires property with an array of strings.
+ *  @param events {Object} Reference to the events object for the current application.
+ *  @param dependencies {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.models = function(models, events, dependencies) {
+mvc.models = function(events, dependencies) {
 
-    if(!models)
-      throw new Error('No models found');
+    var register;
     
-    _.each(models, function(model, key) {
-        dependencies.register(key, model.facade);
+    register = function(models) {
+        if(!models)
+          throw new Error('No models found');
 
-        model.facade.dispatch = events.dispatch;
+        _.each(models, function(model, key) {
+            dependencies.register(key, model.facade);
 
-        if(model.facade.init)
-          model.facade.init()
-    });
+            model.facade.dispatch = events.dispatch;
+
+            if(model.facade.init)
+              model.facade.init()
+        });
+    }
+
+    return register;
 
 }
 
 /** @namespace 
  *
- *  @param views {Object} Collection of views. Each must define a mediator object, which is given a reference to events.dispatch. If an init method is found it will be automatically called, any other methods are registered as event listeners. Optionally a view element and external dependencies can be defined.
- *  @param events {Object} Reference to the the object.
- *  @param dependencies {Object} Reference to the dependencies object
+ *  Takes a collection of views and assigns references to dispatch, listen, the view element, any required dependencies.
+ *
+ *  @param views {Object} Collection of views. Each must define a mediator object, which is given a reference to events.dispatch and events.listen. If an init method is found it will be automatically called, any other public methods are automatically registered as event listeners. Optionally a view element can be defined as well as any external dependencies by setting an array of strings on the requires property.
+ *  @param events {Object} Reference to the the events object for the current application.
+ *  @param dependencies {Object} Reference to the dependencies object for the current application.
  */
-mvc.views = function(views, events, dependencies) {
+mvc.views = function(events, dependencies) {
 
-    var setup_mediator, register_listeners, check_views;
-
-    /** @private */
-    check_views = function(views) {
-        if(!views)
-          throw new Error('A view object must be passed');
-    }
+    var setup_mediator, register_listeners, register;
 
     /** @private */
     setup_mediator = function(view) {
@@ -108,69 +120,125 @@ mvc.views = function(views, events, dependencies) {
 
     }
 
-    check_views(views);
+    /** @private */
+    register = function(views) {
+        if(!views)
+          throw new Error('A view object must be passed');
 
-    _.each(views, function(view) {
-        register_listeners(view);
-        setup_mediator(view);
-    });
+        _.each(views, function(view) {
+            register_listeners(view);
+            setup_mediator(view);
+        });
+    }
+
+    return register;
 
 }
 
 /** @namespace
+ *
+ *  Takes a collection of conntroller objects, which must define a command function. The command function is provided with references to dispatch, listen and any dependencies listed in the requires array.
  *
  *  @param controllers {Object} Collection of functions which are mapped to defined events.
- *  @param events {Object} Reference to the the object.
- *  @param dependencies {Object} Reference to the dependencies object
+ *  @param events {Object} Reference to the the events object for the current application.
+ *  @param dependencies {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.controllers = function(controllers, events, dependencies) {
+mvc.controllers = function(events, dependencies) {
+
+    var context, register;
     
-    var context = {
+    context = {
         dispatch: events.dispatch
     }
-    
-    _.each(controllers, function(controller, event) {
-        if(!_.isFunction(controller.command))
-          throw new Error('No command function found');
 
-        if(controller.requires && !_.isArray(controller.requires))
-          throw new Error('Requirements must be an array');
+    register = function(controllers) {
+        _.each(controllers, function(controller, event) {
+            if(!_.isFunction(controller.command))
+              throw new Error('No command function found');
 
-        if(controller.requires)
-          dependencies.inject(context, controller.requires);
+            if(controller.requires && !_.isArray(controller.requires))
+              throw new Error('Requirements must be an array');
 
-        events.listen(event, controller.command, context);
-    });
+            if(controller.requires)
+              dependencies.inject(context, controller.requires);
+
+            events.listen(event, controller.command, context);
+        });
+    }
+
+    return register;
 
 }
 
 /** @namespace
+ *
+ *  Maps a collection of arbitrary values as dependencies. Can be used to set application wide configuration properties.
  *  
  *  @param values {Object} Object of values to register as available dependencies
- *  @param events {Object} Reference to the dependencies object
+ *  @param events {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.values = function(values, dependencies) {
+mvc.values = function(dependencies) {
 
-    if(!values)
-      throw new Error('No values defined');
+    var register;
 
-    _.each(values, function(value, key) {
-        dependencies.register(key, value);
-    });
+    register = function(values) {
+        if(!values)
+          throw new Error('No values defined');
+
+        _.each(values, function(value, key) {
+            dependencies.register(key, value);
+        });
+    }
+
+    return register;
 
 }
 
 /** @namespace
- *  
- *  @param api {Object} External API for controlling the application
- *  @param events {Object} Reference to the events object
  *
  */
-mvc.exports = function(api, events) {
+mvc.plugins = function(events, dependencies) {
 
-    var exports, context;
+    var registered, context;
+
+    registered = {}
+
+    context = {
+        dispatch: events.dispatch,
+        listen: events.listen,
+        dependencies: dependencies
+    }
+
+    return {
+
+        register: function(plugins) {
+            _.extend(registered, plugins);
+        },
+
+        apply: function(config) {
+            _.each(config, function(item, key) {
+                if(registered[key])
+                  registered[key].call(context, item);
+            });
+        }
+
+    }
+
+}
+
+/** @namespace
+ *
+ *  Defines that object that will be returned when the mvc function is called. Each function has access to listen and dispatch.
+ *  
+ *  @param api {Object} Collection of functions that will be externally available.
+ *  @param events {Object} Reference to the events objec for the current application.
+ *
+ */
+mvc.exports = function(events) {
+
+    var exports, context, register;
 
     exports = {},
         
@@ -179,26 +247,36 @@ mvc.exports = function(api, events) {
         listen: events.listen
     }
 
-    _.each(api, function(method, key) {
-        
-        exports[key] = function() {
-            method.apply(context, arguments);
-        }
+    register = function(api) {
 
-    });
+        _.each(api, function(method, key) {
+            
+            exports[key] = function() {
+                method.apply(context, arguments);
+            }
 
-    return exports;
+        });
+
+        return exports;
+
+    }
+
+    return register;
 
 }
 
 /** @namespace
+ *
+ *  Takes a collection of application config objects and creates a new instance of each. The imported applications are then registered as dependencies on the current application using the key string as the id.
  *  
- *  @param modules {Object} Applications that the parent application relies upon.
- *  @param init {Object} Reference to the main mvc function
- *  @param dependencies {Object} Reference to the dependencies object
+ *  @param modules {Object} Applications that the parent application relies upon. Each object is automatically used to create an mvc application.
+ *  @param init {Object} Reference to the main mvc function for the current application.
+ *  @param dependencies {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.imports = function(modules, init, dependencies) {
+mvc.imports = function(init, dependencies) {
+
+    var register;
 
     if(!_.isFunction(init))
       throw new Error('no init function found');
@@ -206,15 +284,23 @@ mvc.imports = function(modules, init, dependencies) {
     if(!dependencies)
       throw new Error('no dependency object found');
 
-    _.each(modules, function(module, name) {
-        var instance = init(module);
+    register = function(modules) {
+        _.each(modules, function(module, name) {
+            var instance = init(module);
 
-        dependencies.register(name, instance);
-    });
+            dependencies.register(name, instance);
+        });
+    }
+
+    return register;
 
 }
 
-/** @namespace */
+/** @namespace
+ *
+ *  Implements the observer pattern by returning an object with dispatch and listen methods.
+ *
+ */
 mvc.events = function() {
 
     var registered, register_event, check_event, check_params, check_callback;
@@ -253,7 +339,9 @@ mvc.events = function() {
 
     return {
 
-        /** @scope mvc.events
+        /** 
+         *
+         *  Calls any functions listening for the event string.
          *
          *  @param event {String} Unique identifier that triggers all registered callbacks
          *  @param param {Array} Optional arguments to pass to the callback functions
@@ -274,9 +362,11 @@ mvc.events = function() {
 
         /**
          *
-         * @param event {String} Unique identifier that selects the callbacks to be triggered
-         * @param callback {Function} Called when event string is dispatched
-         * @param context {Object} Context in whcih the callback is applied. By default the context is the event object
+         *  Registers the callback function as a listener for the defined event string.
+         *
+         *  @param event {String} Unique identifier that selects the callbacks to be triggered
+         *  @param callback {Function} Called when event string is dispatched
+         *  @param context {Object} Context in whcih the callback is applied. By default the context is the event object
          *
          */
         listen: function(event, callback, context) {
@@ -287,7 +377,11 @@ mvc.events = function() {
     
 };
 
-/** @namespace */
+/** @namespace
+ *
+ *  Returns an object with inject and register methods.
+ *
+ * */
 mvc.dependencies = function() {
 
     var registered, check_registered, check_dependency, check_target, check_requires;
@@ -325,6 +419,8 @@ mvc.dependencies = function() {
     return {
 
         /**
+         *  
+         *  Appends the required dependencies as properties on the target object.
          *
          *  @param target {Object} Target object that dependencies are inject into
          *  @param requires {Array} List of strings to identify what the target object depends upon
@@ -340,6 +436,8 @@ mvc.dependencies = function() {
         },
 
         /**
+         *
+         *  Registers objects as dependencies that can be injected into other objects.
          *
          *  @param name {String} Used to pull back the object as a dependency
          *  @param dependency {Object} Any predefined dependencies will be injected if found

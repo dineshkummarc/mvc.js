@@ -19,7 +19,11 @@ end
 
 task :func_tests do
   puts 'running functional tests'
-  sh 'ruby tests/functional/tests.rb'
+  sh 'cucumber tests/features/' do |ok, res|
+    if not ok
+      return false
+    end
+  end
 end
 
 task :commit, :message do |t, args|
@@ -39,6 +43,6 @@ task :create_ghpages, :message do |t, args|
   sh 'git checkout master'
 end
 
-task :deploy, :message, :needs => [:func_tests, :unit_tests, :create_docs, :minify, :commit, :create_ghpages] do |t, args|
+task :deploy, :message, :needs => [:unit_tests, :create_docs, :minify, :commit, :create_ghpages] do |t, args|
   puts 'deployed'
 end

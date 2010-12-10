@@ -11,16 +11,36 @@ TestCase('initialisation', {
         values = mvc.values;
 
         mvc.models = xray_specs.stub();
+        register_models = xray_specs.stub();
+        mvc.models.returns(register_models);
+
         mvc.views = xray_specs.stub();
+        register_views = xray_specs.stub();
+        mvc.views.returns(register_views);
+
         mvc.controllers = xray_specs.stub();
+        register_controllers = xray_specs.stub();
+        mvc.controllers.returns(register_controllers);
+
         mvc.dependencies = xray_specs.stub();
         mvc.dependencies.returns({});
+
         mvc.events = xray_specs.stub();
         mvc.events.returns({});
+
         mvc.imports = xray_specs.stub();
+        register_imports = xray_specs.stub();
+        mvc.imports.returns(register_imports);
+
         mvc.exports = xray_specs.stub();
-        mvc.exports.returns({});
+        register_exports = xray_specs.stub();
+        exports = {};
+        register_exports.returns(exports);
+        mvc.exports.returns(register_exports);
+
         mvc.values = xray_specs.stub();
+        register_values = xray_specs.stub();
+        mvc.values.returns(register_values);
     },
 
     tearDown: function() {
@@ -68,7 +88,7 @@ TestCase('initialisation', {
             models: models
         });
 
-        assertTrue(mvc.models.called_with(models));
+        assertTrue(register_models.called_with(models));
     },
     
     'test that models is not called if none are defined': function() {
@@ -77,7 +97,7 @@ TestCase('initialisation', {
             controllers: {}
         });
 
-        assertFalse(mvc.models.called());
+        assertFalse(register_models.called());
     },
     
     'test that models is called with events': function() {
@@ -108,7 +128,7 @@ TestCase('initialisation', {
             views: views
         });
 
-        assertTrue(mvc.views.called_with(views));
+        assertTrue(register_views.called_with(views));
     },
 
     'test that views is not called if none are defined': function() {
@@ -117,7 +137,7 @@ TestCase('initialisation', {
             controllers: {}
         });
 
-        assertFalse(mvc.views.called());
+        assertFalse(register_views.called());
     },
     
     'test that views is called with events': function() {
@@ -148,7 +168,7 @@ TestCase('initialisation', {
             controllers: controllers
         });
 
-        assertTrue(mvc.controllers.called_with(controllers));
+        assertTrue(register_controllers.called_with(controllers));
     },
     
     'test that controllers is not called if no controllers are defined': function() {
@@ -157,7 +177,7 @@ TestCase('initialisation', {
             models: {}
         });
 
-        assertFalse(mvc.controllers.called());
+        assertFalse(register_controllers.called());
     },
     
     'test that controllers is called with events': function() {
@@ -186,7 +206,7 @@ TestCase('initialisation', {
             exports: {}
         });
 
-        assertEquals(mvc.exports(), app);
+        assertEquals(exports, app);
     },
     
     'test that exports is called with events': function() {
@@ -204,13 +224,13 @@ TestCase('initialisation', {
             exports: exported
         });
 
-        assertTrue(mvc.exports.called_with(exported));
+        assertTrue(register_exports.called_with(exported));
     },
 
     'test that exports is not called if none are defined': function() {
         var app = mvc({});
 
-        assertFalse(mvc.exports.called());
+        assertFalse(register_exports.called());
         assertUndefined(app);
     },
 
@@ -225,14 +245,14 @@ TestCase('initialisation', {
             imports: imports
         });
 
-        assertTrue(mvc.imports.called());
-        assertTrue(mvc.imports.called_with(imports));
+        assertTrue(register_imports.called());
+        assertTrue(register_imports.called_with(imports));
     },
     
     'test that imports is not called if an imports object is defined': function() {
         var app = mvc({});
 
-        assertFalse(mvc.imports.called());
+        assertFalse(register_imports.called());
     },
 
     'test that imports is called with the mvc function': function() {
@@ -263,14 +283,14 @@ TestCase('initialisation', {
             values: values
         });
 
-        assertTrue(mvc.values.called());
-        assertTrue(mvc.values.called_with(values));
+        assertTrue(register_values.called());
+        assertTrue(register_values.called_with(values));
     },
 
     'test that values is not called if defined': function() {
         var app = mvc({});
 
-        assertFalse(mvc.values.called());
+        assertFalse(register_values.called());
     },
 
     'test that values is called with dependencies': function() {
