@@ -1,5 +1,10 @@
 # mvc.js changelog
 
+## 11/12/2010 - v0.0.6
+
++ Added initial plugin feature
++ Refactored framework objects to return register functions
+
 ## 04/12/2010 - v0.0.5
 
 + Added `values` to config API
