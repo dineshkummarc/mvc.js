@@ -14,31 +14,37 @@
  */
 var mvc = function(config) {
     
-    var events, dependencies;
+    var events, dependencies, models, views, controllers, values, imports, exports;
 
     events = mvc.events();
     dependencies = mvc.dependencies();
+    values = mvc.values(dependencies);
+    models = mvc.models(events, dependencies);
+    views = mvc.views(events, dependencies);
+    controllers = mvc.controllers(events, dependencies);
+    exports = mvc.exports(events);
+    imports = mvc.imports(mvc, dependencies);
 
     if(!config)
       throw new Error('No config object found');
 
     if(config.imports)
-      mvc.imports(config.imports, mvc, dependencies);
+      imports(config.imports);
 
     if(config.values)
-      mvc.values(config.values, dependencies);
+      values(config.values);
     
     if(config.models)
-      mvc.models(config.models, events, dependencies);
+      models(config.models);
 
     if(config.views)
-      mvc.views(config.views, events, dependencies);
+      views(config.views);
 
     if(config.controllers)
-      mvc.controllers(config.controllers, events, dependencies);
+      controllers(config.controllers);
 
     if(config.exports)
-      return mvc.exports(config.exports, events);
+      return exports(config.exports);
 
 }
 
@@ -51,19 +57,28 @@ var mvc = function(config) {
  *  @param dependencies {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.models = function(models, events, dependencies) {
+mvc.models = function(events, dependencies) {
 
-    if(!models)
-      throw new Error('No models found');
+    var register;
     
-    _.each(models, function(model, key) {
-        dependencies.register(key, model.facade);
+    register = function(models) {
+        if(!models)
+          throw new Error('No models found');
 
-        model.facade.dispatch = events.dispatch;
+        _.each(models, function(model, key) {
+            if(!model.facade)
+              throw new Error('No facade found on ' + key + ' model');
 
-        if(model.facade.init)
-          model.facade.init()
-    });
+            dependencies.register(key, model.facade);
+
+            model.facade.dispatch = events.dispatch;
+
+            if(model.facade.init)
+              model.facade.init()
+        });
+    }
+
+    return register;
 
 }
 
@@ -75,21 +90,15 @@ mvc.models = function(models, events, dependencies) {
  *  @param events {Object} Reference to the the events object for the current application.
  *  @param dependencies {Object} Reference to the dependencies object for the current application.
  */
-mvc.views = function(views, events, dependencies) {
+mvc.views = function(events, dependencies) {
 
-    var setup_mediator, register_listeners, check_views;
-
-    /** @private */
-    check_views = function(views) {
-        if(!views)
-          throw new Error('A view object must be passed');
-    }
+    var setup_mediator, register_listeners, register;
 
     /** @private */
-    setup_mediator = function(view) {
+    setup_mediator = function(view, name) {
 
         if(!view.mediator)
-          throw new Error('A mediator must be defined on view objects');
+          throw new Error('No mediator object found for ' + name + ' view');
 
         if(view.element)
           view.mediator.element = view.element;
@@ -114,12 +123,18 @@ mvc.views = function(views, events, dependencies) {
 
     }
 
-    check_views(views);
+    /** @private */
+    register = function(views) {
+        if(!views)
+          throw new Error('A view object must be passed');
 
-    _.each(views, function(view) {
-        register_listeners(view);
-        setup_mediator(view);
-    });
+        _.each(views, function(view, name) {
+            register_listeners(view, name);
+            setup_mediator(view);
+        });
+    }
+
+    return register;
 
 }
 
@@ -132,24 +147,30 @@ mvc.views = function(views, events, dependencies) {
  *  @param dependencies {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.controllers = function(controllers, events, dependencies) {
+mvc.controllers = function(events, dependencies) {
+
+    var context, register;
     
-    var context = {
+    context = {
         dispatch: events.dispatch
     }
-    
-    _.each(controllers, function(controller, event) {
-        if(!_.isFunction(controller.command))
-          throw new Error('No command function found');
 
-        if(controller.requires && !_.isArray(controller.requires))
-          throw new Error('Requirements must be an array');
+    register = function(controllers) {
+        _.each(controllers, function(controller, event) {
+            if(!_.isFunction(controller.command))
+              throw new Error('No command function found on ' + event + ' controller');
 
-        if(controller.requires)
-          dependencies.inject(context, controller.requires);
+            if(controller.requires && !_.isArray(controller.requires))
+              throw new Error('requires property for ' + event + ' controller must be an array of strings');
 
-        events.listen(event, controller.command, context);
-    });
+            if(controller.requires)
+              dependencies.inject(context, controller.requires);
+
+            events.listen(event, controller.command, context);
+        });
+    }
+
+    return register;
 
 }
 
@@ -161,14 +182,52 @@ mvc.controllers = function(controllers, events, dependencies) {
  *  @param events {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.values = function(values, dependencies) {
+mvc.values = function(dependencies) {
 
-    if(!values)
-      throw new Error('No values defined');
+    var register;
 
-    _.each(values, function(value, key) {
-        dependencies.register(key, value);
-    });
+    register = function(values) {
+        if(!values)
+          throw new Error('No values defined');
+
+        _.each(values, function(value, key) {
+            dependencies.register(key, value);
+        });
+    }
+
+    return register;
+
+}
+
+/** @namespace
+ *
+ */
+mvc.plugins = function(events, dependencies) {
+
+    var registered, context;
+
+    registered = {}
+
+    context = {
+        dispatch: events.dispatch,
+        listen: events.listen,
+        dependencies: dependencies
+    }
+
+    return {
+
+        register: function(plugins) {
+            _.extend(registered, plugins);
+        },
+
+        apply: function(config) {
+            _.each(config, function(item, key) {
+                if(registered[key])
+                  registered[key].call(context, item);
+            });
+        }
+
+    }
 
 }
 
@@ -180,9 +239,9 @@ mvc.values = function(values, dependencies) {
  *  @param events {Object} Reference to the events objec for the current application.
  *
  */
-mvc.exports = function(api, events) {
+mvc.exports = function(events) {
 
-    var exports, context;
+    var exports, context, register;
 
     exports = {},
         
@@ -191,15 +250,21 @@ mvc.exports = function(api, events) {
         listen: events.listen
     }
 
-    _.each(api, function(method, key) {
-        
-        exports[key] = function() {
-            method.apply(context, arguments);
-        }
+    register = function(api) {
 
-    });
+        _.each(api, function(method, key) {
+            
+            exports[key] = function() {
+                method.apply(context, arguments);
+            }
 
-    return exports;
+        });
+
+        return exports;
+
+    }
+
+    return register;
 
 }
 
@@ -212,7 +277,9 @@ mvc.exports = function(api, events) {
  *  @param dependencies {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.imports = function(modules, init, dependencies) {
+mvc.imports = function(init, dependencies) {
+
+    var register;
 
     if(!_.isFunction(init))
       throw new Error('no init function found');
@@ -220,11 +287,15 @@ mvc.imports = function(modules, init, dependencies) {
     if(!dependencies)
       throw new Error('no dependency object found');
 
-    _.each(modules, function(module, name) {
-        var instance = init(module);
+    register = function(modules) {
+        _.each(modules, function(module, name) {
+            var instance = init(module);
 
-        dependencies.register(name, instance);
-    });
+            dependencies.register(name, instance);
+        });
+    }
+
+    return register;
 
 }
 
@@ -254,19 +325,19 @@ mvc.events = function() {
     /** @private */
     check_event = function(event) {
         if(typeof event !== 'string')
-          throw new Error('An event string must be passed to events.dispatch');
+          throw new Error(event + ' should be a string.');
     }
 
     /** @private */
     check_params = function(params) {
         if(params && !_.isArray(params))
-          throw new Error('params must be an array');
+          throw new Error(params + ' should be an array.');
     }
 
     /** @private */
     check_callback = function(callback) {
         if(!_.isFunction(callback))
-          throw new Error('A callback function must be passed to events.dispatch');
+          throw new Error(callback + ' should be a function.');
     }
 
     return {
@@ -281,7 +352,7 @@ mvc.events = function() {
          */
         dispatch: function(event, params) {
             check_event(event);
-            check_params(params);    
+            check_params(params, event);    
         
             if(registered[event]) {
                 _.each(registered[event], function(callback) {
@@ -324,16 +395,16 @@ mvc.dependencies = function() {
     /** @private */
     check_registered = function(name) {
         if(!_.isString(name))
-          throw new Error('Name parameter must be a string');
+          throw new Error(name + ' should be a string');
 
         if(registered[name])
-          throw new Error('Dependency already exists');
+          throw new Error(name + ' already exists');
     }
 
     /** @private */
     check_dependency = function(dependency, name) {
         if(!dependency)
-          throw new Error('No dependency object found for ' + name);
+          throw new Error(name + ' does not exist as a registered dependency.');
     }
 
     /** @private */
@@ -345,7 +416,7 @@ mvc.dependencies = function() {
     /** @private */
     check_requires = function(requires) {
         if(!_.isArray(requires))
-          throw new Error('No requires array found');
+          throw new Error(requires + ' should be an array');
     }
    
     return {
