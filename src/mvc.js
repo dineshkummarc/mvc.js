@@ -66,6 +66,9 @@ mvc.models = function(events, dependencies) {
           throw new Error('No models found');
 
         _.each(models, function(model, key) {
+            if(!model.facade)
+              throw new Error('No facade found on ' + key + ' model');
+
             dependencies.register(key, model.facade);
 
             model.facade.dispatch = events.dispatch;
@@ -92,10 +95,10 @@ mvc.views = function(events, dependencies) {
     var setup_mediator, register_listeners, register;
 
     /** @private */
-    setup_mediator = function(view) {
+    setup_mediator = function(view, name) {
 
         if(!view.mediator)
-          throw new Error('A mediator must be defined on view objects');
+          throw new Error('No mediator object found for ' + name + ' view');
 
         if(view.element)
           view.mediator.element = view.element;
@@ -125,8 +128,8 @@ mvc.views = function(events, dependencies) {
         if(!views)
           throw new Error('A view object must be passed');
 
-        _.each(views, function(view) {
-            register_listeners(view);
+        _.each(views, function(view, name) {
+            register_listeners(view, name);
             setup_mediator(view);
         });
     }
@@ -155,10 +158,10 @@ mvc.controllers = function(events, dependencies) {
     register = function(controllers) {
         _.each(controllers, function(controller, event) {
             if(!_.isFunction(controller.command))
-              throw new Error('No command function found');
+              throw new Error('No command function found on ' + event + ' controller');
 
             if(controller.requires && !_.isArray(controller.requires))
-              throw new Error('Requirements must be an array');
+              throw new Error('requires property for ' + event + ' controller must be an array of strings');
 
             if(controller.requires)
               dependencies.inject(context, controller.requires);
@@ -322,19 +325,19 @@ mvc.events = function() {
     /** @private */
     check_event = function(event) {
         if(typeof event !== 'string')
-          throw new Error('An event string must be passed to events.dispatch');
+          throw new Error(event + ' should be a string.');
     }
 
     /** @private */
     check_params = function(params) {
         if(params && !_.isArray(params))
-          throw new Error('params must be an array');
+          throw new Error(params + ' should be an array.');
     }
 
     /** @private */
     check_callback = function(callback) {
         if(!_.isFunction(callback))
-          throw new Error('A callback function must be passed to events.dispatch');
+          throw new Error(callback + ' should be a function.');
     }
 
     return {
@@ -349,7 +352,7 @@ mvc.events = function() {
          */
         dispatch: function(event, params) {
             check_event(event);
-            check_params(params);    
+            check_params(params, event);    
         
             if(registered[event]) {
                 _.each(registered[event], function(callback) {
@@ -392,16 +395,16 @@ mvc.dependencies = function() {
     /** @private */
     check_registered = function(name) {
         if(!_.isString(name))
-          throw new Error('Name parameter must be a string');
+          throw new Error(name + ' should be a string');
 
         if(registered[name])
-          throw new Error('Dependency already exists');
+          throw new Error(name + ' already exists');
     }
 
     /** @private */
     check_dependency = function(dependency, name) {
         if(!dependency)
-          throw new Error('No dependency object found for ' + name);
+          throw new Error(name + ' does not exist as a registered dependency.');
     }
 
     /** @private */
@@ -413,7 +416,7 @@ mvc.dependencies = function() {
     /** @private */
     check_requires = function(requires) {
         if(!_.isArray(requires))
-          throw new Error('No requires array found');
+          throw new Error(requires + ' should be an array');
     }
    
     return {
