@@ -73,6 +73,9 @@ mvc.models = function(events, dependencies) {
 
             model.facade.dispatch = events.dispatch;
 
+            if(model.requires)
+              dependencies.inject(model.facade, model.requires);
+
             if(model.facade.init)
               model.facade.init()
         });
