@@ -95,6 +95,20 @@ TestCase('models', {
 
         assertTrue(dependencies.register.called());
         assertTrue(dependencies.register.called_with_exactly('test', model.facade));
+    },
+
+    'test that models can define dependencies': function() {
+        var model = {
+            requires: ['test'],
+            facade: {}
+        }
+
+        models({
+            'test': model
+        });
+
+        assertTrue(dependencies.inject.called());
+        assertTrue(dependencies.inject.called_with_exactly(model.facade, model.requires));
     }
 
 });
