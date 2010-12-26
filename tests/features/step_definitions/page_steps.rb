@@ -47,6 +47,7 @@ Then 'I should see reset on the events display' do
 end
 
 Then 'After two seconds I should see deerhunter' do
-    deerhunter = @browser.div(:class, 'panels').divs[2]
-    deerhunter.visible?
+    sleep 2
+    deerhunter = @browser.div(:class, 'selected').images[0]
+    deerhunter.src.should == 'images/atlas.jpg'
 end

@@ -76,10 +76,13 @@ var carousel = mvc({
                         var panels = $(this.element).children();
 
                         panels.each(function() {
+                            $(this).removeClass('selected');
                             $(this).hide();
                         });
                         
-                        $(panels[index]).fadeIn(this.speed);
+                        $(panels[index]).fadeIn(this.speed, function() {
+                            $(this).addClass('selected');
+                        });
                     }   
 
                 }
