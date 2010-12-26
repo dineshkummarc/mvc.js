@@ -215,7 +215,7 @@ mvc.plugins = function(events, dependencies) {
         dispatch: events.dispatch,
         listen: events.listen,
         dependencies: dependencies
-    }
+    };
 
     return {
 
@@ -230,7 +230,7 @@ mvc.plugins = function(events, dependencies) {
             });
         }
 
-    }
+    };
 
 }
 
@@ -246,7 +246,7 @@ mvc.exports = function(events) {
 
     var exports, context, register;
 
-    exports = {},
+    exports = {};
         
     context = {
         dispatch: events.dispatch,
