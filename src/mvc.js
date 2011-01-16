@@ -138,22 +138,20 @@ mvc.views = function(events, dependencies) {
  */
 mvc.controllers = function(events, dependencies) {
 
-    var context, register;
-    
-    context = {
-        dispatch: events.dispatch
-    }
+    var register;
 
     register = function(controllers) {
         _.each(controllers, function(controller, event) {
             if(!_.isFunction(controller.command))
               throw new Error('No command function found on ' + event + ' controller');
 
-            if(controller.requires && !_.isArray(controller.requires))
-              throw new Error('requires property for ' + event + ' controller must be an array of strings');
-
-            if(controller.requires)
-              dependencies.inject(context, controller.requires);
+            var context = {
+                dispatch: events.dispatch
+            }
+            
+            _.extend(context, controller);
+            
+            dependencies.inject(context, controller.requires);
 
             events.listen(event, controller.command, context);
         });
@@ -376,7 +374,7 @@ mvc.events = function() {
  * */
 mvc.dependencies = function() {
 
-    var registered, check_registered, check_dependency, check_target, check_requires;
+    var registered, check_registered, check_dependency, check_target;
 
     /** @private */
     registered = {};
