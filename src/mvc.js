@@ -66,18 +66,12 @@ mvc.models = function(events, dependencies) {
           throw new Error('No models found');
 
         _.each(models, function(model, key) {
-            if(!model.facade)
-              throw new Error('No facade found on ' + key + ' model');
+            dependencies.register(key, model);
+            dependencies.inject(model);
+            model.dispatch = events.dispatch;
 
-            dependencies.register(key, model.facade);
-
-            model.facade.dispatch = events.dispatch;
-
-            if(model.requires)
-              dependencies.inject(model.facade, model.requires);
-
-            if(model.facade.init)
-              model.facade.init()
+            if(model.init)
+              model.init()
         });
     }
 
@@ -100,28 +94,20 @@ mvc.views = function(events, dependencies) {
     /** @private */
     setup_mediator = function(view, name) {
 
-        if(!view.mediator)
-          throw new Error('No mediator object found for ' + name + ' view');
+        dependencies.inject(view);
+        view.dispatch = events.dispatch;
 
-        if(view.element)
-          view.mediator.element = view.element;
-
-        if(view.requires)
-          dependencies.inject(view.mediator, view.requires);
-        
-        view.mediator.dispatch = events.dispatch;
-
-        if(view.mediator.init)
-          view.mediator.init();
+        if(view.init)
+          view.init();
 
     }
 
     /** @private */
     register_listeners = function(view) {
 
-        _.each(_.functions(view.mediator), function(method) {
+        _.each(_.functions(view), function(method) {
             if(method !== 'init' && method !== 'dispatch')
-              events.listen(method, view.mediator[method], view.mediator);
+              events.listen(method, view[method], view);
         });
 
     }
@@ -152,22 +138,20 @@ mvc.views = function(events, dependencies) {
  */
 mvc.controllers = function(events, dependencies) {
 
-    var context, register;
-    
-    context = {
-        dispatch: events.dispatch
-    }
+    var register;
 
     register = function(controllers) {
         _.each(controllers, function(controller, event) {
             if(!_.isFunction(controller.command))
               throw new Error('No command function found on ' + event + ' controller');
 
-            if(controller.requires && !_.isArray(controller.requires))
-              throw new Error('requires property for ' + event + ' controller must be an array of strings');
-
-            if(controller.requires)
-              dependencies.inject(context, controller.requires);
+            var context = {
+                dispatch: events.dispatch
+            }
+            
+            _.extend(context, controller);
+            
+            dependencies.inject(context, controller.requires);
 
             events.listen(event, controller.command, context);
         });
@@ -390,7 +374,7 @@ mvc.events = function() {
  * */
 mvc.dependencies = function() {
 
-    var registered, check_registered, check_dependency, check_target, check_requires;
+    var registered, check_registered, check_dependency, check_target;
 
     /** @private */
     registered = {};
@@ -415,12 +399,6 @@ mvc.dependencies = function() {
         if(!target)
           throw new Error('No target defined');
     }
-
-    /** @private */
-    check_requires = function(requires) {
-        if(!_.isArray(requires))
-          throw new Error(requires + ' should be an array');
-    }
    
     return {
 
@@ -432,12 +410,12 @@ mvc.dependencies = function() {
          *  @param requires {Array} List of strings to identify what the target object depends upon
          *
          */
-        inject: function(target, requires) {
+        inject: function(target) {
             check_target(target);
-            check_requires(requires);
 
-            _.each(requires, function(dependency) {
-                target[dependency] = registered[dependency];
+            _.each(_.keys(target), function(dependency) {
+                if(target[dependency] === '__inject__' && registered[dependency])
+                  target[dependency] = registered[dependency];
             });
         },
 
