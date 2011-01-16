@@ -32,21 +32,11 @@ TestCase('views', {
 
         views({
             test: {
-                mediator: {
-                    init: init
-                }
+                init: init
             }
         });
 
         assertTrue(init.called());
-    },
-
-    'test that an exception is thrown is a mediator object is not defined': function() {
-        assertException(function() {
-            views({
-                test: {}
-            });
-        });
     },
 
     'test that each views init function is called if multiple objects are registered': function() {
@@ -54,15 +44,11 @@ TestCase('views', {
 
         views({
             test: {
-                mediator: {
-                    init: init
-                }
+                init: init
             },
 
             another: {
-                mediator: {
-                    init: init
-                }
+                init: init
             }
         });
 
@@ -72,48 +58,21 @@ TestCase('views', {
     'test that errors are not thrown if no init method is detected': function() {
         assertNoException(function() {
             views({
-                test: {
-                    mediator: {}
-                }
-            });
-        });
-    },
-
-    'test that view objects can be assigned with an element': function() {
-        var element = { test: 'this should be insterted as the view element' },
-            view = {};
-
-        views({
-            test: {
-                element: element,
-                mediator: view
-            }
-        });
-
-        assertEquals(element, view.element);
-    },
-
-    'test that an exception is not thrown if no element is defined': function() {
-        assertNoException(function() {
-            views({
-                test: {
-                    mediator: {}
-                }
+                test: {}
             });
         });
     },
 
     'test that views are given a reference to events.dispatch': function() {
-        var view = { mediator: {} };
+        var view = {};
 
         views({
             test: view
         });
 
-        assertFunction(view.mediator.dispatch);
+        assertFunction(view.dispatch);
 
-        view.mediator.dispatch();
-
+        view.dispatch();
         assertTrue(events.dispatch.called());
     },
 
@@ -123,10 +82,8 @@ TestCase('views', {
 
         views({
             test: {
-                mediator: {
-                    'first_method': first_method,
-                    'second_method': second_method
-                }
+                'first_method': first_method,
+                'second_method': second_method
             }
         });
 
@@ -138,26 +95,23 @@ TestCase('views', {
         var mediator = { first_method: function() {} };
 
         views({
-            test: {
-                mediator: mediator
-            }
+            test: mediator
         });
 
         assertTrue(events.listen.called_with_exactly('first_method', mediator.first_method, mediator));
     },
 
     'test that views can define dependencies': function() {
-        var mediator = {},
-            requirements = ['first', 'second'];
+        var mediator = {
+            first: {},
+            second: {}
+        }
 
         views({
-            test: {
-                requires: requirements,
-                mediator: mediator
-            }
+            test: mediator
         });
 
-        assertTrue(dependencies.inject.called_with_exactly(mediator, requirements));
+        assertTrue(dependencies.inject.called_with_exactly(mediator));
     }
 
 });

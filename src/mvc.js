@@ -66,18 +66,12 @@ mvc.models = function(events, dependencies) {
           throw new Error('No models found');
 
         _.each(models, function(model, key) {
-            if(!model.facade)
-              throw new Error('No facade found on ' + key + ' model');
+            dependencies.register(key, model);
+            dependencies.inject(model);
+            model.dispatch = events.dispatch;
 
-            dependencies.register(key, model.facade);
-
-            model.facade.dispatch = events.dispatch;
-
-            if(model.requires)
-              dependencies.inject(model.facade, model.requires);
-
-            if(model.facade.init)
-              model.facade.init()
+            if(model.init)
+              model.init()
         });
     }
 
@@ -100,28 +94,20 @@ mvc.views = function(events, dependencies) {
     /** @private */
     setup_mediator = function(view, name) {
 
-        if(!view.mediator)
-          throw new Error('No mediator object found for ' + name + ' view');
+        dependencies.inject(view);
+        view.dispatch = events.dispatch;
 
-        if(view.element)
-          view.mediator.element = view.element;
-
-        if(view.requires)
-          dependencies.inject(view.mediator, view.requires);
-        
-        view.mediator.dispatch = events.dispatch;
-
-        if(view.mediator.init)
-          view.mediator.init();
+        if(view.init)
+          view.init();
 
     }
 
     /** @private */
     register_listeners = function(view) {
 
-        _.each(_.functions(view.mediator), function(method) {
+        _.each(_.functions(view), function(method) {
             if(method !== 'init' && method !== 'dispatch')
-              events.listen(method, view.mediator[method], view.mediator);
+              events.listen(method, view[method], view);
         });
 
     }
