@@ -401,12 +401,6 @@ mvc.dependencies = function() {
         if(!target)
           throw new Error('No target defined');
     }
-
-    /** @private */
-    check_requires = function(requires) {
-        if(!_.isArray(requires))
-          throw new Error(requires + ' should be an array');
-    }
    
     return {
 
@@ -418,11 +412,10 @@ mvc.dependencies = function() {
          *  @param requires {Array} List of strings to identify what the target object depends upon
          *
          */
-        inject: function(target, requires) {
+        inject: function(target) {
             check_target(target);
-            check_requires(requires);
 
-            _.each(requires, function(dependency) {
+            _.each(_.keys(target), function(dependency) {
                 target[dependency] = registered[dependency];
             });
         },
