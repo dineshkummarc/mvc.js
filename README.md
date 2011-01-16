@@ -294,9 +294,9 @@ Views can also dispatch events, generally to trigger required controllers. This 
 
 ** Defining dependencies **
 
-mvc.js uses a form of dependency injection to define requirements between objects. This is done by defining properties on the view object with a string value of '__inject__'. Each of these dependencies are then replaced by the required dependencies if an object has been registered with the same key.
+mvc.js uses a form of dependency injection to define requirements between objects. This is done by defining properties on the view object with a string value of `__inject__`. Each of these dependencies are then replaced by the required objects if an object has been registered with the same key.
 
-In this example a model is registered which a view then defines as a dependency and directly interacts with.
+In this example a model is registered, which a view then defines as a dependency and directly interacts with.
 
     mvc({
 
