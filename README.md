@@ -25,22 +25,22 @@ To create an application with mvc.js you pass an object that defines the models,
 Here's a simple example:
 
 	mvc.create({
+
+        values: {
+            items_view: $('.items')
+        },
         
 		models: {
 
 			cart: {
+                init: function() {
+                    // set up initial state
+                },
                 
-                facade: {
-                    init: function() {
-                        // set up initial state
-                    },
-                    
-                    add_product: function(product) {
-                        // add product to current_products
-                    }
+                add_product: function(product) {
+                    // add product to current_products
                 }
-				
-			}
+            }
 			
 		},
 
@@ -48,18 +48,16 @@ Here's a simple example:
             
             items: {
 
-                element: $('.items'),
-                requires: ['cart'],
-                mediator: { 
-                    init: function() {
-                        this.cart.add_products();
-                    },
-                    
-                    disable: function() {
-                        $(this.element).find('.items').hide();
-                    }
-                }
+                items_view: '__inject__',
+                cart: '__inject__',
 
+                init: function() {
+                    this.cart.add_products();
+                },
+                
+                disable: function() {
+                    $(this.items_view).find('.items').hide();
+                }
             }
 
         },
@@ -67,8 +65,8 @@ Here's a simple example:
         controllers: {
 
             setup_items: {
+                cart: '__inject__',
                 requires: ['cart'],
-                command: function() {
                     this.cart.add_product();
                 }
             }            
@@ -80,7 +78,7 @@ Here's a simple example:
 
 Models are used to store data, process business logic, and maintain state.
 
-To create models in mvc.js you define a collection of models in the config object passed to the create function. Each model is registered as a dependency based on it's key and should have define a facade object, which defines a public API.
+To create models in mvc.js you define a collection of models in the config object passed to the create function. Each model is registered as a dependency based on it's key and should define a public API to manipulate it's data.
 
 This example registers a `cart` model and defines an API for setting and retrieving it's data.
 
@@ -88,25 +86,23 @@ This example registers a `cart` model and defines an API for setting and retriev
 		
         models: {
 
-            cart: {
-                facade: (function(){
+            cart: (function(){
 
-                    var products = [];
+                var products = [];
 
-                    return {
+                return {
 
-                        add_item: function(item) {
-                            products.push(item);
-                        },
-                        
-                        get_item: function(index) {
-                            return products[index];
-                        }
-
+                    add_item: function(item) {
+                        products.push(item);
+                    },
+                    
+                    get_item: function(index) {
+                        return products[index];
                     }
 
-                })()
-            }
+                }
+
+            })()
 
         }
 
@@ -114,7 +110,7 @@ This example registers a `cart` model and defines an API for setting and retriev
 
 ** Init method **
 
-You'll often need to set up initial state when models are registered. To do this you can define an `init` method on your model's facade, which will be called immediately.
+You'll often need to set up initial state when models are registered. To do this you can define an `init` method on your model, which will be called immediately.
 
 This example sets the same example as before, but adds a default product to the data store on creation.
 
@@ -122,30 +118,27 @@ This example sets the same example as before, but adds a default product to the 
 		
         models: {
 
-            cart: {
-                facade: (function(){
+            cart: (function(){
 
-                    var products = [];
+                var products = [];
 
-                    return {
+                return {
 
-                        init: function() {
-                            products.push('Some item');
-                        },
+                    init: function() {
+                        products.push('Some item');
+                    },
 
-                        add_item: function(item) {
-                            products.push(item);
-                        },
-                        
-                        get_item: function(index) {
-                            return products[index];
-                        }
-
+                    add_item: function(item) {
+                        products.push(item);
+                    },
+                    
+                    get_item: function(index) {
+                        return products[index];
                     }
 
-                })()
-            }
+                }
 
+            })()
         }
 
     });
@@ -160,23 +153,20 @@ This example dispatches a `product_added` event when the product data is updated
 		
         models: {
 
-            cart: {
-                facade: (function(){
+            cart: (function(){
 
-                    var products = [];
+                var products = [];
 
-                    return {
+                return {
 
-                        add_item: function(item) {
-                            products.push(item);
-                            this.dispatch('product_added', [item]);
-                        },
+                    add_item: function(item) {
+                        products.push(item);
+                        this.dispatch('product_added', [item]);
+                    },
 
-                    }
+                }
 
-                })()
-            }
-
+            })()
         }
 
     });
@@ -185,7 +175,7 @@ This example dispatches a `product_added` event when the product data is updated
 
 Views are representations of the current state held by the application models. The most common representation will be an HTML element (or group of elements), but could also be the url bar, console, etc.
 
-To register a view in mvc.js you call the create method with a collection of views, each defines a mediator object which define a public API. Optionally a view element and external dependencies can be defined.
+To register a view in mvc.js you call the create method with a collection of views, each defines a public API which inteprets information from the application and updates the system when neccesary. Optionally external dependencies can be defined.
 
     mvc({
 
@@ -193,15 +183,10 @@ To register a view in mvc.js you call the create method with a collection of vie
 
             'items': {
 
-                element: $('.items'),
-                mediator: {
-
-                    display_products: function() {
-
-                        $(this.element).show();
-
-                    }
+                display_products: function() {
+                    $(this.element).show();
                 }
+
             }
 
         }
@@ -210,26 +195,19 @@ To register a view in mvc.js you call the create method with a collection of vie
 
 ** Init method **
 
-As with models you'll often need to define the initial state of views. This can be achieved in the same way by assigning an `init` method on your mediator object.
+As with models you'll often need to define the initial state of views. This can be achieved in the same way by assigning an `init` method on your view object.
 
     mvc({
 
         views: {
 
             'items': {
+                init: function() {
+                    // set up initial state
+                }
 
-                element: $('.items'),
-                mediator: {
-
-                    init: function() {
-                        // set up initial state
-                    }
-
-                    display_products: function() {
-
-                        $(this.element).show();
-
-                    }
+                display_products: function() {
+                    this.element.show();
                 }
             }
 
@@ -239,7 +217,7 @@ As with models you'll often need to define the initial state of views. This can 
 
 ** Handling events **
 
-Views are less portable than the model layer because they have to react to specific events. To do this they must be able to register event listener, which can be achieved in to ways.
+Views are less portable than the model layer because they have to react to specific events. To do this they must be able to register event listeners, which can be achieved in two ways.
 
 First, you can manually define event listeners by using the `listen` method, which requires an event type and callback as parameters. For example: 
 	
@@ -247,55 +225,48 @@ First, you can manually define event listeners by using the `listen` method, whi
 
         views: {
 
-            'items': {
+            'items': (function() {
 
-                element: $('.items'),
-                mediator: (function() {
+                var handler = function() {
+                    $(this.element).show();
+                }
 
-                    var handler = function() {
-                        $(this.element).show();
+                return {
+
+                    init: function() {
+                        $(this.element).hide();
+                        
+                        this.listen('product_added', handler);
                     }
 
-                    return {
-                        init: function() {
-                            $(this.element).hide();
-                            
-                            this.listen('product_added', handler);
-                        }
+                }
 
-                    }
-
-                })()
-            }
+            })()
 
         }
 
     });
 	
-Alternatively, you can automatically create listeners by defining public methods on your mediator object. All methods (apart from init) will be registered as listeners using their name as the event type. For example the following view will react to `product_added` when dispatched.
+Alternatively, you can automatically create listeners by defining public methods on your view object. All methods (apart from init) will be registered as listeners using their name as the event type. For example the following view will react to `product_added` event when dispatched.
     
     mvc({
 
         views: {
 
-            'items': {
+            'items': (function() {
 
-                element: $('.items'),
-                mediator: (function() {
+                return {
+                    init: function() {
+                        $(this.element).hide();
+                    },
 
-                    return {
-                        init: function() {
-                            $(this.element).hide();
-                        },
-
-                        product_added: function() {
-                            $(this.element).show();
-                        }
-
+                    product_added: function() {
+                        $(this.element).show();
                     }
 
-                })()
-            }
+                }
+
+            })()
 
         }
 
@@ -303,7 +274,7 @@ Alternatively, you can automatically create listeners by defining public methods
 
 ** Dispatching events **
 
-Views can also dispatch events, generally to call required controllers. This is done by calling `events.dispatch` with a required event type and optionally any parameters to be used by the callback functions.
+Views can also dispatch events, generally to trigger required controllers. This is done by calling `events.dispatch` with a required event type and optionally any parameters to be used by the callback functions.
 
     mvc({
 
@@ -311,17 +282,10 @@ Views can also dispatch events, generally to call required controllers. This is 
 
             'items': {
 
-                element: $('.items'),
-                mediator: (function() {
+                init: function() {
+                    this.dispatch('add_products');
+                }
 
-                    return {
-                        init: function() {
-                            this.dispatch('add_products');
-                        }
-
-                    }
-
-                })()
             }
 
         }
@@ -330,7 +294,7 @@ Views can also dispatch events, generally to call required controllers. This is 
 
 ** Defining dependencies **
 
-mvc.js uses a form of dependency injection to define requirements between objects. This is done in views by creating a requirements property on the view object, which contains an array of string references to registered objects. Each of these dependencies is then added on to the mediator object so the you can interact with it as needed.
+mvc.js uses a form of dependency injection to define requirements between objects. This is done by defining properties on the view object with a string value of '__inject__'. Each of these dependencies are then replaced by the required dependencies if an object has been registered with the same key.
 
 In this example a model is registered which a view then defines as a dependency and directly interacts with.
 
@@ -339,11 +303,7 @@ In this example a model is registered which a view then defines as a dependency 
         models: {
 
             cart: {
-                facade: {
-
-                    add_item: function() {}
-
-                }
+                add_item: function() {}
             }
         
         },
@@ -352,18 +312,12 @@ In this example a model is registered which a view then defines as a dependency 
 
             'items': {
 
-                element: $('.items'),
-                requires: ['cart'],
-                mediator: (function() {
+                cart: '__inject__',
 
-                    return {
-                        init: function() {
-                            this.cart.add_item('some product');
-                        }
+                init: function() {
+                    this.cart.add_item('some product');
+                }
 
-                    }
-
-                })()
             }
 
         }
@@ -390,14 +344,14 @@ Controllers are defined in mvc.js by passing a collection of controllers, which 
 
 ** Defining dependencies **
 
-You can additionally define dependencies by passing in an array of string IDs as the requires property of the controller.
+You can additionally define dependencies by defining '__inject__' strings for the requireed objects.
 
     mvc({
 
         controllers: {
 
             'remove_all_products': {
-                requires: ['cart']
+                cart: '__inject__',
                 command: function() {
                     this.cart.remove_product();
                 }
@@ -418,22 +372,22 @@ You can also map simple values as dependencies, which can be used to alter the b
         },
 
         models: {
-            cart: {
-                requires: ['shipping'],
-                facade: (function(){
+            cart: (function() {
 
-                    var total = 0,
-                        sub_total = 0;
+                var total, sub_total = 0;
 
-                    return {
-                        add_item: function(item) {
-                            sub_total += item.price;
-                            total = sub_total + this.shipping;
-                        }
-                    };
+                return {
 
-                })
-            }
+                    shipping: '__inject__',
+                    
+                    add_item: function(item) {
+                        sub_total += item.price;
+                        total = sub_total + this.shipping;
+                    }
+
+                };
+
+            })()
         }
 
     });
@@ -466,9 +420,7 @@ To keep your application encapsulated the external functions cannot directly acc
         models {
 
             cart: {
-                facade: {
-                    add_item: function() {}
-                }
+                add_item: function() {}
             }
 
         },
@@ -476,7 +428,7 @@ To keep your application encapsulated the external functions cannot directly acc
         controllers: {
 
             add_product: {
-                requires: ['cart'],
+                cart: '__inject__',
                 command: function(product) {
                     this.cart.add_item(product);
                 }
@@ -503,10 +455,8 @@ Export functions also have access to events.listen and can therefore define exte
         models: {
 
             cart: {
-                facade: {
-                    add_item: function() {
-                        this.dispatch('product_added');
-                    }
+                add_item: function() {
+                    this.dispatch('product_added');
                 }
             }
 
@@ -598,15 +548,15 @@ Again this is a full application. The exported API for `item_list` defines a met
         views: {
 
             products: {
-                requires: ['items', 'cart'],
-                mediator: {
-                    init: function() {
-                        var that = this;
+                items: '__inject__',
+                cart: '__inject__',
 
-                        this.items.on_select(function(item) {
-                            that.cart.add_item(item);
-                        });
-                    }
+                init: function() {
+                    var that = this;
+
+                    this.items.on_select(function(item) {
+                        that.cart.add_item(item);
+                    });
                 }
             }
 
