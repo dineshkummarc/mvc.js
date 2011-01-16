@@ -18,7 +18,7 @@ TestCase('dependencies', {
 
     'test that registered dependencies are added on to the target object': function() {
         var target = {
-            test: {}
+            test: '__inject__'
         };
 
         dependencies.register('test', 'this is a requirement');
@@ -29,8 +29,8 @@ TestCase('dependencies', {
 
     'test that multiple dependencies can be required': function() {
         var target = {
-            foo: {},
-            bar: {}
+            foo: '__inject__',
+            bar: '__inject__'
         };
 
         dependencies.register('foo', 'first dependency');
@@ -53,11 +53,11 @@ TestCase('dependencies', {
         var target_1, target_2;
         
         target_1 = {
-            shipping: {}
+            shipping: '__inject__'
         };
         
         target_2 = {
-            shipping: {}
+            shipping: '__inject__'
         };
 
         dependencies.register('shipping', 5);

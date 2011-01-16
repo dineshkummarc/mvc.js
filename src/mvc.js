@@ -414,7 +414,8 @@ mvc.dependencies = function() {
             check_target(target);
 
             _.each(_.keys(target), function(dependency) {
-                target[dependency] = registered[dependency];
+                if(target[dependency] === '__inject__' && registered[dependency])
+                  target[dependency] = registered[dependency];
             });
         },
 
