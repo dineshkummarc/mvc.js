@@ -8,7 +8,10 @@ var hello_world = {
                 var that = this;
 
                 this.element.find('#update').click(function() {
-                    that.status.update(that.element.find('#meesage').val());
+                    var update = that.element.find('#message').val();
+
+                    if(update)
+                      that.status.update(update);
                 });
             }
                      
