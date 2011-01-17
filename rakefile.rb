@@ -35,8 +35,14 @@ task :commit, :message do |t, args|
 end
 
 task :parse_markdown do
-  markdown = RDiscount.new('Hello world')
-  puts markdown.to_html
+  readme = File.read('README.md')
+  html = RDiscount.new(readme)
+  sh 'git checkout gh-pages'
+  File.open('readme.html', '+w') do |f|
+    f.write(html.to_html)
+  end
+  sh 'git commit -am "copied readme"'
+  sh 'git checkout master'
 end
 
 task :create_ghpages, :message do |t, args|
