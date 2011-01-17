@@ -22,14 +22,12 @@ TestCase('models', {
         assertFunction(models);
     },
 
-    'test that the init is called on the models facade': function() {
+    'test that the init is called on the model': function() {
         var stub = xray_specs.stub();
 
         models({
             'test': {
-                facade: {
-                    init: stub
-                }
+                init: stub
             }
         });
 
@@ -41,15 +39,11 @@ TestCase('models', {
 
         models({
             'test': {
-                facade: {
-                    init: stub
-                }
+                init: stub
             },
             
             'another_test': {
-                facade: {
-                    init: stub
-                }
+                init: stub
             }
         });
 
@@ -65,9 +59,7 @@ TestCase('models', {
     'test that an exception is not thrown if no init method is provided': function() {
         assertNoException(function() {
             models({
-                'test': {
-                    facade: {}
-                }
+                'test': {}
             });
         });
     },
@@ -76,25 +68,35 @@ TestCase('models', {
         var facade = {};
 
         models({
-            'test': {
-                facade: facade
-            }
+            'test': facade
         });
 
         assertEquals(events.dispatch, facade.dispatch);
     },
 
     'test that models are defined as dependencies': function() {
-        var model = {
-            facade: {}
-        }
+        var model = {}
 
         models({
             'test': model
         });
 
         assertTrue(dependencies.register.called());
-        assertTrue(dependencies.register.called_with_exactly('test', model.facade));
+        assertTrue(dependencies.register.called_with_exactly('test', model));
+    },
+
+    'test that models dependencies are automatically injected': function() {
+        var model = {
+            test: {},
+            another: {}
+        }
+
+        models({
+            'test': model
+        });
+
+        assertTrue(dependencies.inject.called());
+        assertTrue(dependencies.inject.called_with(model));
     }
 
 });

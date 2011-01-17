@@ -4,5 +4,4 @@
 + Look into possible value inheritence/conflicts between modules. Consider a way to define certain variables as protected.
 + TDD example (video player, todo list?)
 + Better automation of gh-pages (getting started, examples, etc.)
-+ Refactorand DRY out cucumber step definitions
-+ Improve error handling to be less generic
++ Refactor and DRY out cucumber step definitions

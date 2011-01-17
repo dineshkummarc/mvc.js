@@ -1,3 +1,5 @@
+require 'rdiscount'
+
 task :create_docs do
   puts 'creating inline docs'
   sh 'java -jar $JSDOC_TOOLKIT/jsrun.jar $JSDOC_TOOLKIT/app/run.js -a -t=docs/template -d=docs/output src/mvc.js'
@@ -32,8 +34,20 @@ task :commit, :message do |t, args|
   sh 'git push origin master'
 end
 
+task :parse_markdown do
+  readme = File.read('README.md')
+  html = RDiscount.new(readme)
+  sh 'git checkout gh-pages'
+  File.open('readme.html', 'w+') do |f|
+    f.write(html.to_html)
+  end
+  sh 'git commit -am "copied readme"'
+  sh 'git checkout master'
+end
+
 task :create_ghpages, :message do |t, args|
   puts 'transfering code to gh-pages'
+
   sh 'git checkout gh-pages'
   sh 'git checkout master src/'
   sh 'git checkout master docs/'

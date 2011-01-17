@@ -36,12 +36,6 @@ TestCase('controllers', {
         });
     },
 
-    'test that an exception is not thrown if no requirements are defined': function() {
-        assertNoException(function() {
-            mvc.controllers({}, events, dependencies);
-        });
-    },
-
     'test that an exception is thrown if no command function is defined': function() {
         assertException(function() {
             controllers({
@@ -50,35 +44,18 @@ TestCase('controllers', {
         });
     },
 
-    'test that an exception is thrown if an event object is not defined': function() {
-        assertException(function() {
-            mvc.controllers();
-        });
-    },
-
     'test that requirements are injected from dependencies': function() {
-        var requires = ['first', 'second'];
+        var test = {
+            foo: 'dependency',
+            bar: 'dependency',
+            command: function() {}
+        };
 
         controllers({
-            'test': {
-                requires: requires,
-                command: function() {}
-            }
+            'test': test
         });
 
         assertTrue(dependencies.inject.called());
-        assertTrue(dependencies.inject.called_with(requires));
-    },
-
-    'test that an error is thrown if requirements is not an array': function() {
-        assertException(function() {
-            controllers({
-                'test': {
-                    requires: 'requires',
-                    command: function() {}
-                }
-            });
-        });
     },
 
     'test that a register function is returned': function() {
