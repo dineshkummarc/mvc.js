@@ -66,7 +66,7 @@ Here's a simple example:
 
             setup_items: {
                 cart: '__inject__',
-                requires: ['cart'],
+                command: ['cart'],
                     this.cart.add_product();
                 }
             }            
