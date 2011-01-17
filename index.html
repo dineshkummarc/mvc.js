@@ -96,7 +96,7 @@
 
         setup_items: {
             cart: '__inject__',
-            requires: ['cart'],
+            command: function() {
                 this.cart.add_product();
             }
         }            
