@@ -3,26 +3,23 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>MVC - Hello World</title>
-		<link href='http://fonts.googleapis.com/css?family=Inconsolata&subset=latin' rel='stylesheet' type='text/css'>
-		<link href='master.css' rel='stylesheet' type='text/css'>
+		<link href='styles/master.css' rel='stylesheet' type='text/css'>
 		
 	</head>
 	<body>
 		
 		<div class="wrapper">
-			<div class="controls">
-				<input type="button" name="add" value="Add" id="add" />
-				<input type="button" name="subtract" value="Subtract" id="subtract" />
-				<input type="button" name="reset" value="Reset" id="reset" />
+            <h1 class="message">Message</h1>
+
+			<div>
+				<input type="text" name="message" />
+				<input type="button" name="update" value="Update" />
 			</div>
-			
-			<div class="count"></div>
-			<div class="events"></div>
 		</div>
 		
 		<script src="http://github.com/documentcloud/underscore/raw/master/underscore.js" type="text/javascript" charset="utf-8"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../src/mvc.js" type="text/javascript" charset="utf-8"></script>
-		<script src="hello_world.js" type="text/javascript" charset="utf-8"></script>
+		<script src="src/hello_world.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 </html>
