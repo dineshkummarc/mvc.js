@@ -38,7 +38,7 @@ task :parse_markdown do
   readme = File.read('README.md')
   html = RDiscount.new(readme)
   sh 'git checkout gh-pages'
-  File.open('readme.html', '+w') do |f|
+  File.open('readme.html', 'w+') do |f|
     f.write(html.to_html)
   end
   sh 'git commit -am "copied readme"'
