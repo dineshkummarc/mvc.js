@@ -1,5 +1,29 @@
 var hello_world = {
 
+    models: {
+
+        status: (function() {
+
+            var current;
+                    
+            return {
+            
+                update: function(message) {
+                    current = message;
+
+                    this.dispatch('status_updated');
+                },
+
+                current: function() {
+                    return current;
+                }
+
+            }
+
+        })()
+
+    },
+
     views: {
 
         update_form: {
