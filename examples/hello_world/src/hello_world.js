@@ -1,7 +1,7 @@
 var hello_world = {
 
     values: {
-        status_element: $('#display_status'),
+        status_element: $('#display_status h1'),
         form_element: $('#update_status')
     },
 
@@ -37,24 +37,29 @@ var hello_world = {
             status: '__inject__',
 
             init: function() {
-                var that = this;
+                var that, $message_field, $update;
 
-                this.form_element.find('#update').click(function() {
-                    var update = that.form_element.find('#message').val();
+                that = this;
 
-                    if(update)
-                      that.status.update(update);
+                $message_field = this.form_element.find('#message');
+                $update = this.form_element.find('#update');
+
+                $update.click(function() {
+                    var status_update = $message_field.val();
+
+                    if(status_update)
+                      that.status.update(status_update);
                 });
             }
                      
         },
 
-        status: {
+        status_display: {
             
             status_element: '__inject__',
 
             status_updated: function(message) {
-                this.status_element.find('h1').html(message);
+                this.status_element.html(message);
             }
 
         }
