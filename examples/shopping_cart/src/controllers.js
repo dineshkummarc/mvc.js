@@ -1,7 +1,6 @@
-define(function() {
+shopping_cart.controllers = {
 
-    return {
-
+    add_item: {
         cart: '__inject__',
 
         command: function(item) {
@@ -16,6 +15,6 @@ define(function() {
             
             this.cart.add_item(album);
         }
-
     }
-});
+
+}
