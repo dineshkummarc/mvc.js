@@ -37,6 +37,8 @@ shopping_cart.views = {
             
             $(this.items_view).find('li').click(function() {
                 that.dispatch('add_item', [this]);
+
+                return false;
             });
         }
     }
