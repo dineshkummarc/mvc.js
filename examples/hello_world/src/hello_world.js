@@ -48,6 +48,8 @@ var hello_world = {
 
                     if(status_update)
                       that.status.update(status_update);
+
+                    return false;
                 });
             }
                      
