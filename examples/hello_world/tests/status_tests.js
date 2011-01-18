@@ -19,9 +19,9 @@ TestCase('status model', {
     },
 
     'test that status_updated is dispatched when update is called': function() {
-        hello_world.models.status.update();
+        hello_world.models.status.update('Hello world');
         
-        assertTrue(hello_world.models.status.dispatch.called_with('status_updated'));
+        assertTrue(hello_world.models.status.dispatch.called_with('status_updated', ['Hello world']));
     }
 
 });

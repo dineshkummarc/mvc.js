@@ -10,7 +10,7 @@ TestCase('update message', {
 
         view = hello_world.views.update_form;
 
-        view.element = $(this.form);
+        view.form_element = $(this.form);
 
         xray_specs.mock(view, 'status', {
             update: {}
@@ -27,8 +27,8 @@ TestCase('update message', {
         view.status.expects('update')
             .with_args.matching('Hello world');
 
-        view.element.find('#message').val('Hello world');
-        view.element.find('#update').click();
+        view.form_element.find('#message').val('Hello world');
+        view.form_element.find('#update').click();
 
         assertTrue(view.status.verify());
     },
@@ -37,7 +37,7 @@ TestCase('update message', {
         view.status.expects('update')
             .to_be_called.times(0);
 
-        view.element.find('#update').click();
+        view.form_element.find('#update').click();
 
         assertTrue(view.status.verify());
     }
