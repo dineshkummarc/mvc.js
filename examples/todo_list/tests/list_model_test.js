@@ -1,7 +1,7 @@
 TestCase('list model', {
 
     setUp: function() {
-        list = todo_list.models.list;
+        list = todo_list.models.tasks;
 
         xray_specs.stub(list, 'dispatch');
     },

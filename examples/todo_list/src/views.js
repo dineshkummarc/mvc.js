@@ -3,6 +3,7 @@ todo_list.views = {
     items: {
 
         task_form: '__inject__',
+        tasks: '__inject__',
 
         init: function() {
             var that, $task_field, $task_submit;
@@ -15,17 +16,26 @@ todo_list.views = {
                 new_task = $task_field.val();
 
                 if(new_task)
-                  that.list.add(new_task);
+                  that.tasks.add(new_task);
 
                 return false;
-            })
+            });
         }
            
     },
 
     list: {
 
-        tasks_updated: function() {}
+        tasks: '__inject__',
+        task_list: '__inject__',
+
+        tasks_updated: function() {
+            $list = this.task_list.find('ul');
+
+            _.each(this.tasks.get_tasks(), function(task) {
+                $list.append('<li>' + task + '</li>');
+            });
+        }
 
     }
 

@@ -1,6 +1,6 @@
 todo_list.models = {
 
-    list: (function() {
+    tasks: (function() {
 
         var tasks = [];
 
