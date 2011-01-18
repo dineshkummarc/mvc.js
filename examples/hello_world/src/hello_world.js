@@ -40,7 +40,6 @@ var hello_world = {
                 var that, $message_field, $update;
 
                 that = this;
-
                 $message_field = this.form_element.find('#message');
                 $update = this.form_element.find('#update');
 
