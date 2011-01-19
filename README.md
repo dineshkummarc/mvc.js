@@ -26,7 +26,7 @@ Here's a simple example:
 
 	mvc.create({
 
-        values: {
+        config: {
             items_view: $('.items')
         },
         
@@ -367,7 +367,7 @@ You can also map simple values as dependencies, which can be used to alter the b
 
     mvc({
 
-        values: {
+        config: {
             shipping: 5
         },
 

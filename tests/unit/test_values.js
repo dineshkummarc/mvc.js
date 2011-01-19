@@ -1,15 +1,15 @@
-TestCase('values', {
+TestCase('config', {
 
     setUp: function() {
         dependencies = {
             register: xray_specs.stub()
         }
 
-        values = mvc.values(dependencies);
+        config = mvc.config(dependencies);
     },
 
-    'test that values are sent to dependencies.register': function() {
-        values({
+    'test that config are sent to dependencies.register': function() {
+        config({
             'first': 1,
             'second': 2
         });
@@ -20,12 +20,12 @@ TestCase('values', {
     },
 
     'test that it returns a register function': function() {
-        assertFunction(values);
+        assertFunction(config);
     },
 
-    'test that an exception is thrown if no values are defined': function() {
+    'test that an exception is thrown if no config are defined': function() {
         assertException(function() {
-            values();
+            config();
         });
     }
 

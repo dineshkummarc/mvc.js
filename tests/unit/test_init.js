@@ -8,7 +8,7 @@ TestCase('initialisation', {
         dependencies = mvc.dependencies;
         exports = mvc.exports;
         imports = mvc.imports;
-        values = mvc.values;
+        config = mvc.config;
 
         mvc.models = xray_specs.stub();
         register_models = xray_specs.stub();
@@ -38,9 +38,9 @@ TestCase('initialisation', {
         register_exports.returns(exports);
         mvc.exports.returns(register_exports);
 
-        mvc.values = xray_specs.stub();
-        register_values = xray_specs.stub();
-        mvc.values.returns(register_values);
+        mvc.config = xray_specs.stub();
+        register_config = xray_specs.stub();
+        mvc.config.returns(register_config);
     },
 
     tearDown: function() {
@@ -51,7 +51,7 @@ TestCase('initialisation', {
         mvc.events = events;
         mvc.exports = exports;
         mvc.imports = imports;
-        mvc.values = values;
+        mvc.config = config;
     },
 
     'test that mvc is a function': function() {
@@ -276,31 +276,31 @@ TestCase('initialisation', {
      *
      */
 
-    'test that values is called if defined': function() {
-        var values = {};
+    'test that config is called if defined': function() {
+        var config = {};
 
         var app = mvc({
-            values: values
+            config: config
         });
 
-        assertTrue(register_values.called());
-        assertTrue(register_values.called_with(values));
+        assertTrue(register_config.called());
+        assertTrue(register_config.called_with(config));
     },
 
-    'test that values is not called if defined': function() {
+    'test that config is not called if defined': function() {
         var app = mvc({});
 
-        assertFalse(register_values.called());
+        assertFalse(register_config.called());
     },
 
-    'test that values is called with dependencies': function() {
-        var values = {};
+    'test that config is called with dependencies': function() {
+        var config = {};
 
         var app = mvc({
-            values: values
+            config: config
         });
 
-        assertTrue(mvc.values.called_with(mvc.dependencies()));
+        assertTrue(mvc.config.called_with(mvc.dependencies()));
     }
 
 });

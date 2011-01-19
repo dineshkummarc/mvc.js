@@ -9,16 +9,16 @@
  *
  *  Used to create instances of mvc.js applications. It takes a config object that defines the application objects.
  *  
- *  @param config {Object} Used to define the application's models, views, and controllers as well as arbitrary values. It also provides the mechanism for importing ubmodules using the imports object and defining a return API by defining an exports object.
+ *  @param config {Object} Used to define the application's models, views, and controllers as well as arbitrary config. It also provides the mechanism for importing ubmodules using the imports object and defining a return API by defining an exports object.
  *  
  */
-var mvc = function(config) {
+var mvc = function(app) {
     
-    var events, dependencies, models, views, controllers, values, imports, exports;
+    var events, dependencies, models, views, controllers, config, imports, exports;
 
     events = mvc.events();
     dependencies = mvc.dependencies();
-    values = mvc.values(dependencies);
+    config = mvc.config(dependencies);
     models = mvc.models(events, dependencies);
     views = mvc.views(events, dependencies);
     controllers = mvc.controllers(events, dependencies);
@@ -28,23 +28,23 @@ var mvc = function(config) {
     if(!config)
       throw new Error('No config object found');
 
-    if(config.imports)
-      imports(config.imports);
+    if(app.imports)
+      imports(app.imports);
 
-    if(config.values)
-      values(config.values);
+    if(app.config)
+      config(app.config);
     
-    if(config.models)
-      models(config.models);
+    if(app.models)
+      models(app.models);
 
-    if(config.views)
-      views(config.views);
+    if(app.views)
+      views(app.views);
 
-    if(config.controllers)
-      controllers(config.controllers);
+    if(app.controllers)
+      controllers(app.controllers);
 
-    if(config.exports)
-      return exports(config.exports);
+    if(app.exports)
+      return exports(app.exports);
 
 }
 
@@ -163,21 +163,21 @@ mvc.controllers = function(events, dependencies) {
 
 /** @namespace
  *
- *  Maps a collection of arbitrary values as dependencies. Can be used to set application wide configuration properties.
+ *  Maps a collection of arbitrary config as dependencies. Can be used to set application wide configuration properties.
  *  
- *  @param values {Object} Object of values to register as available dependencies
+ *  @param config {Object} Object of config to register as available dependencies
  *  @param events {Object} Reference to the dependencies object for the current application.
  *
  */
-mvc.values = function(dependencies) {
+mvc.config = function(dependencies) {
 
     var register;
 
-    register = function(values) {
-        if(!values)
-          throw new Error('No values defined');
+    register = function(config) {
+        if(!config)
+          throw new Error('No config defined');
 
-        _.each(values, function(value, key) {
+        _.each(config, function(value, key) {
             dependencies.register(key, value);
         });
     }
