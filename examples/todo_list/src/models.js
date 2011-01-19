@@ -2,14 +2,19 @@ todo_list.models = {
 
     tasks: (function() {
 
-        var tasks = [];
+        var tasks;
 
         return {
+
+            init: function() {
+                tasks = [];
+            },
         
             add: function(task) {
-                tasks.push(task);
-
-                this.dispatch('tasks_updated');
+                if(_.indexOf(tasks, task) === -1) {
+                    tasks.push(task);
+                    this.dispatch('tasks_updated');
+                }
             },
 
             get_tasks: function() {

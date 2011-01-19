@@ -4,6 +4,8 @@ TestCase('list model', {
         list = todo_list.models.tasks;
 
         xray_specs.stub(list, 'dispatch');
+
+        list.init();
     },
 
     tearDown: function() {
@@ -20,6 +22,13 @@ TestCase('list model', {
         list.add('New task');
         
         assertTrue(list.dispatch.called_with('tasks_updated'));
+    },
+
+    'test that duplicate tasks are not added': function() {
+        list.add('New task');
+        list.add('New task');
+
+        assertEquals(['New task'], list.get_tasks());
     }
 
 });

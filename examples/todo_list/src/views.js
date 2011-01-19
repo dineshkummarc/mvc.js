@@ -18,6 +18,8 @@ todo_list.views = {
                 if(new_task)
                   that.tasks.add(new_task);
 
+                $task_field.val('');
+
                 return false;
             });
         }
@@ -31,6 +33,8 @@ todo_list.views = {
 
         tasks_updated: function() {
             $list = this.task_list.find('ul');
+
+            $list.empty();
 
             _.each(this.tasks.get_tasks(), function(task) {
                 $list.append('<li>' + task + '</li>');
