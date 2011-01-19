@@ -3,7 +3,7 @@ Given 'I am on the hello world page' do
 end
 
 Then 'I click the submit button' do 
-    @browser.button(:name, 'update').click
+    @browser.link(:name, 'update').click
 end
         
 When 'I enter Hello world into the message field' do
