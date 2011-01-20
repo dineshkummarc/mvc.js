@@ -5,7 +5,7 @@
 		<title>MVC - Shopping cart</title>
 		
 		<link href='http://fonts.googleapis.com/css?family=Lobster&subset=latin' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="styles/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="assets/styles/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
 		
 	</head>
 	
@@ -15,7 +15,6 @@
             <h1>Todo list</h1>
 
             <div class="task_list">
-                <ul id="tasks"></ul>
             </div>
             
             <div class="task_form">
@@ -30,6 +29,7 @@
             $LAB
                 .script("http://github.com/documentcloud/underscore/raw/master/underscore.js").wait()
                 .script("lib/jquery.js")
+                .script("lib/mustache.js")
                 .script("../../src/mvc.js").wait()
                 .script("src/app.js").wait()
                 .script("src/models.js").wait()

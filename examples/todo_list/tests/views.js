@@ -3,7 +3,6 @@ TestCase('list view', {
     setUp: function() {
         /*:DOC list =
             <div>
-                <ul class="task_list"></ul>
             </div>
         */
 
@@ -12,15 +11,16 @@ TestCase('list view', {
         list_view.task_list = $(this.list);
 
         list_view.tasks = {
-            get_tasks: xray_specs.stub()
+            get_tasks: xray_specs.stub(),
+            remove: xray_specs.stub()
         }
 
-        xray_specs.stub(list_view.tasks, 'get_tasks');
-        list_view.tasks.get_tasks.returns (['One', 'Two', 'Three']);
+        list_view.tasks.get_tasks.returns(['One', 'Two', 'Three']);
+
+        list_view.template = '<ul>{{#tasks}}<li>{{.}}</li>{{/tasks}}</ul>';
     },
 
     tearDown: function() {
-        list_view.tasks.get_tasks.reset();
     },
 
     'test that list view has a method called tasks_updated': function() {
@@ -44,6 +44,17 @@ TestCase('list view', {
         assertEquals('One', $(this.list).find('ul li').eq(0).html());
         assertEquals('Two', $(this.list).find('ul li').eq(1).html());
         assertEquals('Three', $(this.list).find('ul li').eq(2).html());
+    },
+
+    'test that clicking the remove link deletes that task': function() {
+        list_view.template = '<ul>{{#tasks}}<li><span class="task">{{.}}</span><a href="#" class="remove">Remove</a></li>{{/tasks}}</ul>';
+
+        list_view.init();
+        list_view.tasks_updated();
+
+        $(this.list).find('a.remove').eq(0).click();
+
+        assertTrue(list_view.tasks.remove.called_with('One'));
     }
 
 });

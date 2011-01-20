@@ -26,21 +26,43 @@ todo_list.views = {
            
     },
 
-    list: {
+    list: (function() {
 
-        tasks: '__inject__',
-        task_list: '__inject__',
+        var that, load_template;
 
-        tasks_updated: function() {
-            $list = this.task_list.find('ul');
-
-            $list.empty();
-
-            _.each(this.tasks.get_tasks(), function(task) {
-                $list.append('<li>' + task + '</li>');
+        load_template = function(view, dir, file) {
+            $.ajax({
+                url: dir + file,
+                success: function(data) {
+                    view.template = data;
+                }
             });
         }
 
-    }
+        return {
+
+            tasks: '__inject__',
+            task_list: '__inject__',
+            template_dir: '__inject__',
+            tasks_list_template: '__inject__',
+
+            init: function() {
+                that = this;
+
+                load_template(this, this.template_dir, this.tasks_list_template);
+            },
+
+            tasks_updated: function() {
+                var html = Mustache.to_html(this.template, {tasks: this.tasks.get_tasks()});
+                this.task_list.html(html);
+
+                this.task_list.find('a.remove').click(function() {
+                    that.tasks.remove($(this).parent().find('.task').html());
+                });
+            }
+
+        }
+
+    })()
 
 }

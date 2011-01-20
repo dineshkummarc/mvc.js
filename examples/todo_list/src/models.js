@@ -17,6 +17,12 @@ todo_list.models = {
                 }
             },
 
+            remove: function(task) {
+                tasks = _.without(tasks, task);
+                console.log(task);
+                this.dispatch('tasks_updated');
+            },
+
             get_tasks: function() {
                 return tasks;
             }
