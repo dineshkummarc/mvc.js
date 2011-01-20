@@ -1,6 +1,6 @@
 var todo_list = {
 
-    values: {
+    config: {
 
         task_list: $('.task_list'),
         task_form: $('.task_form')

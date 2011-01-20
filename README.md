@@ -15,8 +15,7 @@ This is a brief guide on how to use the framework. For more information on frame
 + [Hello world](http://rlayte.github.com/mvc.js/examples/hello_world/)
 + [Shopping cart](http://rlayte.github.com/mvc.js/examples/shopping_cart/)
 + [Carousel](http://rlayte.github.com/mvc.js/examples/carousel/)
-+ Twitter client (coming soon)
-+ Video player (coming soon)
++ [Todo list](http://rlayte.github.com/mvc.js/examples/todo_list/)
 
 ## Creating an application
 

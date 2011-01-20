@@ -1,6 +1,6 @@
 var shopping_cart = {
 
-    values: {
+    config: {
         cart_view: $('.cart'),
         items_view: $('.items')
     }

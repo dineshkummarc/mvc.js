@@ -1,6 +1,6 @@
 var carousel = {
 
-    values: {
+    config: {
         speed: 2000,
         $panels: $('.simple.carousel .panels').children(),
         $controls: $('.simple.carousel .controls'),

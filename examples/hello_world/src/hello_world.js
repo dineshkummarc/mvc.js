@@ -1,6 +1,6 @@
 var hello_world = {
 
-    values: {
+    config: {
         status_element: $('#display_status h1'),
         form_element: $('#update_status')
     },
