@@ -1,9 +1,11 @@
 var todo_list = {
 
-    values: {
+    config: {
 
         task_list: $('.task_list'),
-        task_form: $('.task_form')
+        task_form: $('.task_form'),
+        template_dir: 'templates/',
+        tasks_list_template: 'tasks_list.html'
 
     }
 

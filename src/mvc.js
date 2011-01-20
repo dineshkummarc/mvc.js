@@ -151,7 +151,7 @@ mvc.controllers = function(events, dependencies) {
             
             _.extend(context, controller);
             
-            dependencies.inject(context, controller.requires);
+            dependencies.inject(context);
 
             events.listen(event, controller.command, context);
         });
@@ -302,7 +302,7 @@ mvc.events = function() {
     register_event = function(event, callback, context) {
         check_event(event);
         check_callback(callback);
-        
+
         if(!registered[event])
           registered[event] = [];
 
@@ -339,7 +339,7 @@ mvc.events = function() {
          */
         dispatch: function(event, params) {
             check_event(event);
-            check_params(params, event);    
+            check_params(params);    
         
             if(registered[event]) {
                 _.each(registered[event], function(callback) {
