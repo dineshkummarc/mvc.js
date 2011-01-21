@@ -28,7 +28,12 @@ todo_list.views = {
 
     list: (function() {
 
-        var that, load_template;
+        var that, load_template, render_template, mark_completed, remove_handler, complete_handler;
+
+        render_template = function(template, context) {
+            var html = Mustache.to_html(template, context);
+            return html;
+        }
 
         load_template = function(view, dir, file) {
             $.ajax({
@@ -37,6 +42,26 @@ todo_list.views = {
                     view.template = data;
                 }
             });
+        }
+
+        mark_completed = function(elements, completed) {
+            _.each(elements, function(element) {
+                var task = $(element).find('.task').html();
+
+                if(_.indexOf(completed, task) !== -1) {
+                    $(element).addClass('completed');
+                }
+            });
+        }
+
+        remove_handler = function() {
+            that.tasks.remove($(this).parent().find('.task').html());
+            return false;
+        }
+
+        complete_handler = function() {
+            that.tasks.complete($(this).parent().find('.task').html());
+            return false;
         }
 
         return {
@@ -49,16 +74,21 @@ todo_list.views = {
             init: function() {
                 that = this;
 
+                this.task_list.find('a.remove').live('click', remove_handler);
+                this.task_list.find('a.complete').live('click', complete_handler);
+
                 load_template(this, this.template_dir, this.tasks_list_template);
             },
 
             tasks_updated: function() {
-                var html = Mustache.to_html(this.template, {tasks: this.tasks.get_tasks()});
+                var tasks, completed, html;
+
+                tasks = this.tasks.get_tasks();
+                completed = this.tasks.get_completed();
+                html = render_template(this.template, {tasks: this.tasks.get_tasks()});
                 this.task_list.html(html);
 
-                this.task_list.find('a.remove').click(function() {
-                    that.tasks.remove($(this).parent().find('.task').html());
-                });
+                mark_completed(this.task_list.find('li'), completed);
             }
 
         }

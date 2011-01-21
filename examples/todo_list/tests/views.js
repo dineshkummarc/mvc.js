@@ -12,10 +12,13 @@ TestCase('list view', {
 
         list_view.tasks = {
             get_tasks: xray_specs.stub(),
-            remove: xray_specs.stub()
+            get_completed: xray_specs.stub(),
+            remove: xray_specs.stub(),
+            complete: xray_specs.stub()
         }
 
         list_view.tasks.get_tasks.returns(['One', 'Two', 'Three']);
+        list_view.tasks.get_completed.returns(['One', 'Two']);
 
         list_view.template = '<ul>{{#tasks}}<li>{{.}}</li>{{/tasks}}</ul>';
     },
@@ -25,6 +28,10 @@ TestCase('list view', {
 
     'test that list view has a method called tasks_updated': function() {
         assertFunction(list_view.tasks_updated);
+    },
+
+    'test that list view has a method called tasks_completed': function() {
+        assertFunction(list_view.tasks_completed);
     },
 
     'test that all list items are displayed': function() {
@@ -55,6 +62,27 @@ TestCase('list view', {
         $(this.list).find('a.remove').eq(0).click();
 
         assertTrue(list_view.tasks.remove.called_with('One'));
+    },
+
+    'test that clicking the complete button calls tasks.complete with the correct task': function() {
+        list_view.template = '<ul>{{#tasks}}<li><span class="task">{{.}}</span><a href="#" class="complete">Complete</a></li>{{/tasks}}</ul>';
+
+        list_view.init();
+        list_view.tasks_updated();
+
+        $(this.list).find('a.complete').eq(0).click();
+
+        assertTrue(list_view.tasks.complete.called_with('One'));
+    },
+
+    'test that tasks_completed sets a class of completed on all listed tasks': function() {
+        list_view.template = '<ul>{{#tasks}}<li><span class="task">{{.}}</span><a href="#" class="complete">Complete</a></li>{{/tasks}}</ul>';
+
+        list_view.init();
+        list_view.tasks_completed();
+
+        assertEquals('completed', $(this.list).find('ul li').eq(0).attr('class'));
+        assertEquals('completed', $(this.list).find('ul li').eq(1).attr('class'));
     }
 
 });

@@ -2,12 +2,13 @@ todo_list.models = {
 
     tasks: (function() {
 
-        var tasks;
+        var tasks, completed;
 
         return {
 
             init: function() {
                 tasks = [];
+                completed = [];
             },
         
             add: function(task) {
@@ -19,12 +20,22 @@ todo_list.models = {
 
             remove: function(task) {
                 tasks = _.without(tasks, task);
-                console.log(task);
                 this.dispatch('tasks_updated');
+            },
+
+            complete: function(task) {
+                if(_.indexOf(tasks, task) !== -1) {
+                    completed.push(task);
+                    this.dispatch('tasks_updated');
+                }
             },
 
             get_tasks: function() {
                 return tasks;
+            },
+
+            get_completed: function() {
+                return completed;
             }
 
         }

@@ -46,6 +46,27 @@ TestCase('list model', {
 
         assertTrue(list.dispatch.called_exactly(2));
         assertTrue(list.dispatch.called_with('tasks_updated'));
+    },
+
+    'test that complete adds tasks to the completed array': function() {
+        list.add('New task');
+        list.complete('New task');
+
+        assertEquals(['New task'], list.get_completed());
+    },
+
+    'test that complete dispatches tasks_completed': function() {
+        list.add('New task');
+        list.complete('New task');
+
+        assertTrue(list.dispatch.called_exactly(2));
+        assertTrue(list.dispatch.called_with('tasks_completed'));
+    },
+
+    'test that you cannot complete tasks that do not exist': function() {
+        list.complete('New task');
+
+        assertEquals([], list.get_completed());
     }
 
 });
