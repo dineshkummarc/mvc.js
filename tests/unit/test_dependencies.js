@@ -87,5 +87,31 @@ TestCase('dependencies', {
         assertException(function() {
             dependencies.register('test');
         });
+    },
+
+    'test that specific dependencies can be injected by passing string parameters': function() {
+        var target = {
+            foo: '__inject:shipping__',
+            bar: '__inject:vat__'
+        };
+
+        dependencies.register('shipping', 10);
+        dependencies.register('vat', 17.5);
+        dependencies.inject(target);
+
+        assertEquals(10, target.foo);
+        assertEquals(17.5, target.bar);
+    },
+
+    'test that existing objects are not overriden': function() {
+        var target = {
+            foo: 'do not inject',
+        };
+
+        dependencies.register('foo', 10);
+        dependencies.inject(target);
+
+        assertEquals('do not inject', target.foo);
     }
+
 });

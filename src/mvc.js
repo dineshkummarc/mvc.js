@@ -412,10 +412,21 @@ mvc.dependencies = function() {
          */
         inject: function(target) {
             check_target(target);
-
+                        
             _.each(_.keys(target), function(dependency) {
-                if(target[dependency] === '__inject__' && registered[dependency])
-                  target[dependency] = registered[dependency];
+                var inject_string = target[dependency];
+
+                if (inject_string === '__inject__') {
+                    target[dependency] = registered[dependency];
+                }
+                else {
+                    var regex = /(?:^__inject:)(.+)(?:__$)/g;
+                    var match = regex.exec(inject_string);
+
+                    if(match)
+                      target[dependency] = registered[match[1]];
+                }
+
             });
         },
 
