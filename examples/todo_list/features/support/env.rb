@@ -1,7 +1,7 @@
 require 'rubygems'
-require 'firewatir'
+require 'safariwatir'
 
-Browser = FireWatir::Firefox
+Browser = Watir::Safari
 
 # "before all"
 browser = Browser.new

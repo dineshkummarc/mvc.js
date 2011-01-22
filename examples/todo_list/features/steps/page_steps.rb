@@ -15,7 +15,7 @@ When 'I enter new task into the new task field' do
 end
         
 Then 'I should see new task in the task list' do
-    task = @browser.div(:class, 'task_list')ul.li[0]
+    task = @browser.div(:class, 'task_list').ul.li[0]
     task.text.should == 'new task'
 end
 
