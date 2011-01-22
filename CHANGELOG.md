@@ -1,5 +1,10 @@
 # mvc.js changelog
 
+## 22/01/2011 - v0.0.8
++ Added optional inject parameters to allow for more flexible naming.
++ Added package.json for npm installation
++ Removed cucumber features from framework tests, added to specific examples.
+
 ## 17/01/2011 - v0.0.7
 
 + Refactored require API to automatically inject variables marked with '__inject__' string.
