@@ -5,6 +5,7 @@
 + Refactored require API to automatically inject variables marked with '__inject__' string.
 + Removed mediator nested objects from views to work on view objects directly.
 + Removed facade nested object from models to work on model objects directly.
++ Changed values to config
 
 ## 11/12/2010 - v0.0.6
 
