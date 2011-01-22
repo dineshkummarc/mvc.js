@@ -323,6 +323,34 @@ In this example a model is registered, which a view then defines as a dependency
 
     });
 
+Alternatively, if you want to use a different name for the view object property you can specify the dependency to inject like this:
+
+    mvc({
+
+        models: {
+
+            cart: {
+                add_item: function() {}
+            }
+        
+        },
+
+        views: {
+
+            'items': {
+
+                model: '__inject:cart__',
+
+                init: function() {
+                    this.model.add_item('some product');
+                }
+
+            }
+
+        }
+
+    });
+
 ## Controllers
 
 Controllers are used to pass information between the model and view layers of you applications.
