@@ -1,0 +1,12 @@
+{
+  "name"          : "mvc.js",
+  "description"   : "MVC micro-architecture framework for javascript applications.",
+  "url"           : "http://rlayte.github.com/mvc.js/",
+  "keywords"      : ["mvc", "client", "browser"],
+  "author"        : "Richard Layte <rich.layte@gmail.com>",
+  "dependencies"  : {
+    "underscore"  : ">=1.1.2"
+  },
+  "main"          : "src/mvc.js",
+  "version"       : "0.0.7"
+}
