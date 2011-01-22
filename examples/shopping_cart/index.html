@@ -5,7 +5,7 @@
 		<title>MVC - Shopping cart</title>
 		
 		<link href='http://fonts.googleapis.com/css?family=Lobster&subset=latin' rel='stylesheet' type='text/css'>
-		<link rel="stylesheet" href="master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<link rel="stylesheet" href="styles/master.css" type="text/css" media="screen" title="no title" charset="utf-8">
 		
 	</head>
 	
@@ -68,6 +68,22 @@
 		<script src="http://github.com/documentcloud/underscore/raw/master/underscore.js" type="text/javascript" charset="utf-8"></script>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../src/mvc.js" type="text/javascript" charset="utf-8"></script>
-		<script data-main="main" src="https://github.com/rlayte/mvc.js/raw/gh-pages/examples/shopping_cart/src/require.js" type="text/javascript" charset="utf-8"></script>
+        
+        <script src="lib/LAB.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript">
+
+            $LAB
+                .script("http://github.com/documentcloud/underscore/raw/master/underscore.js")
+                .script("lib/jquery.js").wait()
+                .script("../../lib/mvc.js").wait()
+                .script("src/app.js").wait()
+                .script("src/models.js").wait()
+                .script("src/views.js")
+                .script("src/controllers.js").wait(function() {
+                    var cart = mvc(shopping_cart);
+                });
+        
+        </script>
+
 	</body>
 </html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>mvc.js - carousel</title>
 
-    <link href="master.css" rel="stylesheet" />
+    <link href="styles/master.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -57,27 +57,23 @@
             </div>
         </div>
 
-        <div>
-            <p>You can interact with the application externally by clicking on <a href="#" class="next">next</a> or <a href="#" class="prev">prev</a></p>
-        </div>
-
-
-
     </div>
+    
+    <script src="lib/LAB.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
 
-	<script src="http://github.com/documentcloud/underscore/raw/master/underscore.js" type="text/javascript" charset="utf-8"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../../src/mvc.js" type="text/javascript" charset="utf-8"></script>
-    <script src="carousel.js" type="text/javascript" charset="utf-8"></script>
+        $LAB
+            .script("http://github.com/documentcloud/underscore/raw/master/underscore.js")
+            .script("lib/jquery.js").wait()
+            .script("../../lib/mvc.js").wait()
+            .script("src/app.js").wait()
+            .script("src/models.js").wait()
+            .script("src/views.js")
+            .script("src/controllers.js").wait(function() {
+                var carousel_instance = mvc(carousel);
+            });
 
-    <script type="text/javascript" charset="utf-8">
-        $('.next').click(function() {
-            carousel.next();
-        });
-
-        $('.prev').click(function() {
-            carousel.prev();
-        });
     </script>
+
 </body>
 </html> 

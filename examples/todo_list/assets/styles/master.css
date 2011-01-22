@@ -1,0 +1,73 @@
+body {
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+.wrapper {
+	width: 600px;
+	margin: 10px auto;
+}
+
+.task_list ul {
+    padding: 0; margin: 0;
+}
+
+.task_list li {
+    width: 403px;
+	list-style-type: none;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #eee;
+}
+
+.task_list li.completed {
+    background-color: #e9ffcf;
+}
+
+.task_list li .complete,
+.task_list li .remove {
+    float: right;
+    color: #000;
+    text-decoration: none;
+    background: url(../images/x_alt_16x16.png) no-repeat;
+    width: 16px;
+    height: 16px;
+}
+
+.task_list li .remove {
+    background: url(../images/x_alt_16x16.png) no-repeat;
+}
+
+.task_list li .complete {
+    background: url(../images/check_alt_16x16.png) no-repeat;
+    margin-right: 5px;
+}
+
+.task_list li .remove span,
+.task_list li .complete span {
+    display: none;
+}
+
+.task_form input#task {
+    width: 400px;
+    height: 40px;
+    font-size: 1.4em;
+    padding: 10px;
+    float: left;
+}
+
+.task_form a#add_task {
+    color: #fff;
+    background-color: #333;
+    padding: 10px;
+    font-size: 1.4em;
+    text-decoration: none;
+    display: block;
+    float: left;
+    margin: 10px;
+    -moz-border-radius: 8px; 
+    -webkit-border-radius: 8px; 
+    border-radius: 8px; 
+    -moz-box-shadow: 0px 0px 4px #ffffff; 
+    -webkit-box-shadow: 0px 0px 4px #aaa; 
+    box-shadow: 0px 0px 4px #333; 
+}
