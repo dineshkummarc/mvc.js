@@ -11,7 +11,11 @@ TestCase('models', {
             register: xray_specs.stub()
         }
 
-        models = mvc.models(events, dependencies);
+        collection = {
+            create: xray_specs.stub()
+        }
+
+        models = mvc.models(events, dependencies, collection);
     },
 
     'test that mvc.models is a function': function() {
@@ -97,6 +101,24 @@ TestCase('models', {
 
         assertTrue(dependencies.inject.called());
         assertTrue(dependencies.inject.called_with(model));
+    },
+
+    'test that if a contructor is registered then a collection object is registered as a dependency': function() {
+        models({
+            User: function() {}
+        });
+
+        assertTrue(dependencies.register.called());
+    },
+
+    'test that a collection object is created if a constructer is registered': function() {
+        constructor = function() {};
+
+        models({
+            User: constructor
+        });
+
+        assertTrue(collection.create.called_with('User', constructor));
     }
 
 });
