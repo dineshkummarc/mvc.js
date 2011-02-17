@@ -108,7 +108,7 @@ TestCase('models', {
             User: function() {}
         });
 
-        assertTrue(dependencies.register.called());
+        assertTrue(dependencies.register.called_with('users'));
     },
 
     'test that a collection object is created if a constructer is registered': function() {
